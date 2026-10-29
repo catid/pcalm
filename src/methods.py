@@ -34,6 +34,10 @@ class MethodState:
     error_norms: List[float] = field(default_factory=list)
     error_mean: List[float] = field(default_factory=list)
     error_var: List[float] = field(default_factory=list)
+    # Precision-weighted PC keeps one positive scalar (or a broadcastable
+    # tensor in future variants) for each local block.
+    precisions: List[torch.Tensor] | None = None
+    precision_mean: List[float] = field(default_factory=list)
 
 
 class PCALMReference:
@@ -137,7 +141,7 @@ class PCALMReference:
         an external optimizer can set ``apply=False`` and consume the returned
         diagnostics (or extend this method with a gradient sink).
         """
-        del input_ids, labels
+        del input_ids
         losses: List[float] = []
         grad_norms: List[float] = []
         for i, block in enumerate(self.model.blocks):
@@ -168,9 +172,22 @@ class PCALMReference:
             # Explicitly drop local references before proceeding to the next
             # block, avoiding accidental graph retention.
             del pred, shifted, local_loss, grads
+        output_grad_norm = 0.0
+        if labels is not None:
+            h_out = state.hidden[-1].detach()
+            logits = self.model.lm_head(self.model.norm(h_out))
+            output_loss = F.cross_entropy(logits[:, :-1].float().reshape(-1, logits.size(-1)), labels[:, 1:].reshape(-1))
+            out_param = (self.model.lm_head.weight,)
+            out_grads = torch.autograd.grad(output_loss, out_param, allow_unused=True)
+            if out_grads[0] is not None:
+                output_grad_norm = float(out_grads[0].float().norm().detach().cpu())
+                if apply and self.parameter_step:
+                    with torch.no_grad():
+                        self.model.lm_head.weight.add_(out_grads[0].to(dtype=self.model.lm_head.weight.dtype), alpha=-self.parameter_step)
         return {
             "local_loss": sum(losses) / max(1, len(losses)),
             "layer_grad_norm": grad_norms,
+            "output_grad_norm": output_grad_norm,
             "updated_layers": len(losses) if apply and self.parameter_step else 0,
         }
 
@@ -295,7 +312,7 @@ class EPCReference:
         *,
         apply: bool = True,
     ) -> Dict[str, Any]:
-        del input_ids, labels
+        del input_ids
         losses: List[float] = []
         grad_norms: List[float] = []
         for i, block in enumerate(self.model.blocks):
@@ -319,10 +336,22 @@ class EPCReference:
             losses.append(float(local_loss.detach().cpu()))
             grad_norms.append(float(sq.sqrt().detach().cpu()))
             del pred, residual, local_loss, grads
+        output_grad_norm = 0.0
+        if labels is not None:
+            h_out = state.hidden[-1].detach()
+            logits = self.model.lm_head(self.model.norm(h_out))
+            output_loss = F.cross_entropy(logits[:, :-1].float().reshape(-1, logits.size(-1)), labels[:, 1:].reshape(-1))
+            out_grads = torch.autograd.grad(output_loss, (self.model.lm_head.weight,), allow_unused=True)
+            if out_grads[0] is not None:
+                output_grad_norm = float(out_grads[0].float().norm().detach().cpu())
+                if apply and self.parameter_step:
+                    with torch.no_grad():
+                        self.model.lm_head.weight.add_(out_grads[0].to(dtype=self.model.lm_head.weight.dtype), alpha=-self.parameter_step)
         return {
             "local_loss": sum(losses) / max(1, len(losses)),
             "layer_grad_norm": grad_norms,
             "error_norm": sum(state.error_norms) / max(1, len(state.error_norms)),
+            "output_grad_norm": output_grad_norm,
             "updated_layers": len(losses) if apply and self.parameter_step else 0,
         }
 
