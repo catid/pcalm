@@ -6,7 +6,7 @@
   },
   "device": "cpu",
   "gate": "method_registry_smokes",
-  "generated_at_utc": "2026-10-29T22:00:17Z",
+  "generated_at_utc": "2026-10-29T22:00:25Z",
   "methods": [
     {
       "class": "src.methods.PCALMReference",
@@ -50,13 +50,13 @@
       "status": "pending",
       "step_cost": {
         "batch_tokens": 8,
-        "elapsed_s": 0.0033760899677872658,
+        "elapsed_s": 0.003947473946027458,
         "inner_steps": 1,
         "local_update_count": 2,
         "locality": "block_local",
         "method": "pc_alm",
         "strict_no_autograd": false,
-        "tokens_per_s": 2369.605098303499,
+        "tokens_per_s": 2026.612489247916,
         "version": "reference-0.2"
       },
       "strict_no_autograd": false,
@@ -109,13 +109,13 @@
       "status": "pending",
       "step_cost": {
         "batch_tokens": 8,
-        "elapsed_s": 0.002299192943610251,
+        "elapsed_s": 0.002561839995905757,
         "inner_steps": 1,
         "local_update_count": 2,
         "locality": "block_local",
         "method": "epc",
         "strict_no_autograd": false,
-        "tokens_per_s": 3479.4817991387004,
+        "tokens_per_s": 3122.7555244610594,
         "version": "independent-transformer-adaptation-0.1"
       },
       "strict_no_autograd": false,
@@ -185,7 +185,7 @@
       "status": "pending",
       "step_cost": {
         "batch_tokens": 8,
-        "elapsed_s": 0.002144250087440014,
+        "elapsed_s": 0.0027232440188527107,
         "inner_steps": 1,
         "local_update_count": 2,
         "locality": "block_local",
@@ -193,7 +193,7 @@
         "stable_init_scale": 0.7071067811865476,
         "stable_residual_scale": 0.7071067811865476,
         "strict_no_autograd": false,
-        "tokens_per_s": 3730.9080908333194,
+        "tokens_per_s": 2937.6728433503954,
         "version": "residual-scale-init-0.1"
       },
       "strict_no_autograd": false,
