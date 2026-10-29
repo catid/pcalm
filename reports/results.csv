@@ -66,3 +66,9 @@ phase1-meta_pcn-100k-work-g0-seed20262300,meta_pcn,1,completed,100000,,,4624.802
 phase1-precision_weighted_pc-100k-work-g1-seed20262301,precision_weighted_pc,1,completed,100000,,,4385.910,0.006333,,20262301,Corrected output-clamp pilot; nonzero residual/error diagnostics; below 10M method gate.
 phase1-meta_pcn-100k-loki-g0-seed20262302,meta_pcn,1,completed,100000,,,4415.146,0.006291,,20262302,Corrected output-clamp pilot; nonzero residual/error diagnostics; below 10M method gate.
 phase1-precision_weighted_pc-100k-loki-g1-seed20262303,precision_weighted_pc,1,completed,100000,,,4179.096,0.006647,,20262303,Corrected output-clamp pilot; nonzero residual/error diagnostics; below 10M method gate.
+phase1-meta_pcn-1m-corrected-work-g0-seed20262400,meta_pcn,1,completed,1000000,,,16033.241,0.017325,,20262400,1M local-method pilot with output-local teaching clamp; nonzero diagnostics; below 10M gate.
+phase1-precision_weighted_pc-1m-corrected-work-g1-seed20262401,precision_weighted_pc,1,completed,1000000,,,17118.787,0.016226,,20262401,1M local-method pilot with output-local teaching clamp; nonzero diagnostics; below 10M gate.
+phase1-meta_pcn-1m-corrected-loki-g0-seed20262402,meta_pcn,1,completed,1000000,,,14379.619,0.019317,,20262402,1M local-method pilot with output-local teaching clamp; nonzero diagnostics; below 10M gate.
+phase1-precision_weighted_pc-1m-corrected-loki-g1-seed20262403,precision_weighted_pc,1,completed,1000000,,,15256.969,0.018207,,20262403,1M local-method pilot with output-local teaching clamp; nonzero diagnostics; below 10M gate.
+phase1-epc-stable-1m-work-g0-seed20262500,epc_stable,1,completed,1000000,,,16867.482,0.016468,,20262500,1M stable-parameterization ePC pilot; nonzero diagnostics; below 10M gate.
+phase1-epc-stable-1m-work-g1-seed20262501,epc_stable,1,completed,1000000,,,16649.206,0.016684,,20262501,1M stable-parameterization ePC pilot; nonzero diagnostics; below 10M gate.
