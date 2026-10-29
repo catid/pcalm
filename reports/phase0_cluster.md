@@ -18,3 +18,7 @@ Source tree: `/home/catid/pcalm` exists only on foureyes (the project directory 
 Constraints before distributed training: install/use a pinned project environment on every worker (host Python environments differ/missing); choose Ethernet NCCL settings after an actual all-reduce benchmark; copy source and dataset metadata to workers; run a persistent rendezvous connectivity test. Do not assume foureyes host Python can launch GPU jobs without the project container/environment.
 
 Persistent rendezvous connectivity was subsequently verified: a temporary TCP listener on foureyes `10.10.0.216:29517` accepted clients from ripper (`10.10.0.161`), work (`10.10.0.236`), and loki (`10.10.0.113`), each receiving `OK`. This validates basic cross-node TCP reachability for a later `torchrun` rendezvous (NCCL performance still unmeasured).
+
+## Provisioning update
+
+The exact `/home/catid/venvs/dnn` environment (5.8 GiB) was copied to `/home/catid/venvs/dnn` on ripper, work, and loki, and `/var/tmp/pcalm` source trees were copied to the workers. All four hosts now report `torch 2.12.0+cu130`, CUDA 13.0, NCCL 2.29.7, and the same `libtorch_global_deps.so` SHA256 `22e580920a618c7c45e2aae16752f0bdfb23ae9a31150ae8f4066bbe8020e104`. Direct-rank NCCL tests over the active Ethernet interface completed at worlds 2, 4, 8, and 12; rates and the topology decision are in `reports/scaling.csv`.

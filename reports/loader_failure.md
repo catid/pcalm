@@ -1,0 +1,3 @@
+# FineWeb loader failure (2026-10-29 UTC)
+
+`scripts/train.py --source fineweb --tokens 2046` consumed exactly 2,046 post-shift targets and wrote metrics/checkpoints, then aborted at interpreter shutdown with `Fatal Python error: PyGILState_Release: thread state ... must be current when releasing` after `datasets` streaming/pyarrow/aiohttp extensions were loaded (exit 134). The result is recorded as `pilot-fineweb-2046` with `failed_runtime_finalize`; its loss is not a clean pilot result. The synthetic control exits normally. Next action is to isolate the streaming reader in a worker process or switch to a pinned materialized shard reader, then rerun the same token-count test before any 10M pilot.

@@ -27,7 +27,7 @@ for n in 1 2 4; do CUDA_VISIBLE_DEVICES=$(seq -s, 0 $((n-1))) \
   /home/catid/venvs/dnn/bin/torchrun --standalone --nproc-per-node=$n scripts/bench_scaling.py; done
 ```
 
-The 1–4 GPU benchmark is local to foureyes. Cross-node 8/12 GPU commands are intentionally omitted until every worker has the same pinned runtime and the source tree copied or checked out. Do not launch a 1B-token run while the engineering gate says `BLOCKED`.
+The local and direct-rank cross-node all-reduce measurements are in `reports/scaling.csv`; the measured Ethernet rates make independent 4-GPU jobs the default. Do not launch a 1B-token run while the engineering gate says `BLOCKED`.
 
 ## Pilot and final-run commands
 

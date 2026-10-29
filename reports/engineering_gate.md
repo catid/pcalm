@@ -14,7 +14,7 @@ Date: 2026-10-29 UTC. This gate is a living record; a missing or failed item blo
 | Local eager benchmark | PASS | `reports/phase0_inventory.json`: BF16/CUDA-capable model forward, 165,274 tokens/s at B=1,T=1024, peak allocated 985 MB (warm eager reference) |
 | NCCL all-reduce 1/2/4 GPU | PASS, local only | `reports/scaling.csv`: 20 MB payload median 2,261 GB/s (world 1 baseline), 34.4 GB/s (world 2), 21.3 GB/s (world 4) on foureyes |
 | NCCL cross-node 2/4/8/12 GPU | MEASURED, poor scaling | `reports/scaling.csv`, `reports/cross_node_attempt.md`: direct-rank Ethernet payload rates 11.1, 7.1, 6.3, 5.7 MB/s; use independent 4-GPU jobs by default |
-| Dataloader/token counting | PARTIAL | `src/data_stream.py`, `scripts/smoke_data.py`: live FineWeb streaming and Mistral tokenization produced three deterministic 128-token chunks (381 post-shift targets); exact 1B budget accounting, validation reservation, and resume checks remain |
+| Dataloader/token counting | PARTIAL/FAILED CLEANUP | `src/data_stream.py`, `scripts/smoke_data.py`: live FineWeb streaming and Mistral tokenization produced three deterministic 128-token chunks (381 post-shift targets). A 2,046-token BP FineWeb pilot reached its target but exited 134 with `PyGILState_Release` during datasets/pyarrow finalization; exact budget/resume is implemented, clean loader shutdown remains a blocker |
 | Optimized/compiled/CUDA graph equivalence | NOT YET PASSED | Eager reference exists; no optimization is admitted before equivalence tests |
 | Ten-arm method registry | REGISTERED, not passed | `configs/method_registry.json`; only PC-ALM reference scaffold exists; all arms require cards, tests, and 10M smoke |
 

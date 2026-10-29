@@ -46,6 +46,13 @@ def main():
             if seen % args.checkpoint_every < contributed or seen == args.tokens:
                 torch.save({"model": model.state_dict(), "optimizer": opt.state_dict(), "tokens": seen, "step": step}, outdir / f"checkpoint-{seen}.pt")
     if seen != args.tokens: raise RuntimeError(f"stream ended at {seen} tokens, target {args.tokens}")
-    print(json.dumps({"run_id": args.run_id, "method": args.method, "tokens": seen, "status": "completed", "metrics": str(metrics)}))
+    result = {"run_id": args.run_id, "method": args.method, "tokens": seen, "status": "completed", "metrics": str(metrics)}
+    print(json.dumps(result), flush=True)
+    # datasets' streaming parquet reader can leave an aiohttp/pyarrow worker
+    # during interpreter finalization on this environment. Close references and
+    # let the process exit through the normal path; the failure is tracked if it
+    # recurs rather than being counted as a training result.
+    if args.source == "fineweb":
+        del ds
 
 if __name__ == "__main__": main()
