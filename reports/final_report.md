@@ -43,6 +43,8 @@ A four-inference-step ePC ablation reached 1M tokens at 13.7–13.8k tokens/s; t
 
 The matched four-step PC-ALM ablation reached 1M tokens at 12.3–14.0k tokens/s, compared with 15.1–17.3k at two steps. Its primal residual and dual norms remained finite and nonzero across all four seeds.
 
+Four-step Meta-PCN reached 1M tokens at about 12.7k tokens/s but developed large normalized error norms (about 11.5 average, with the deepest layer near 184) while remaining finite. Four-step precision-weighted PC reached about 12.0k tokens/s and raised its mean precision to about 345 with deepest-layer residual norms around 6.6. These are stability signals to investigate, not quality claims.
+
 ## Phase 1 control pilots
 
 Twelve independent single-GPU BP AdamW controls completed exactly 10M FineWeb training targets (four on each 4-GPU host and two on each 2-GPU host). Final training losses were 5.87–6.23. Mean throughput was 60.9k tokens/s on foureyes, 54.1k on ripper, 61.7k on work, and 63.4k on loki. These are control/pipeline measurements, not validation results or method rankings; raw metrics, manifests, and registry entries are retained per run.
