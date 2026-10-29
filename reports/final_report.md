@@ -30,3 +30,7 @@ The ten-arm registry and method cards are committed, with PC-ALM as the only ref
 4. Re-run optimized/compiled equivalence and cross-node DDP equivalence before any 50M screen.
 
 No validation loss, perplexity, time-to-1B, GPU-hour, or method ranking is claimed in this snapshot.
+
+## Phase 1 control pilots
+
+Twelve independent single-GPU BP AdamW controls completed exactly 10M FineWeb training targets (four on each 4-GPU host and two on each 2-GPU host). Final training losses were 5.87–6.23. Mean throughput was 60.9k tokens/s on foureyes, 54.1k on ripper, 61.7k on work, and 63.4k on loki. These are control/pipeline measurements, not validation results or method rankings; raw metrics, manifests, and registry entries are retained per run.
