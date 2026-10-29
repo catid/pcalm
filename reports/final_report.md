@@ -20,14 +20,14 @@ The initial in-process FineWeb BP pilot consumed exactly 2,046 targets and wrote
 
 ## Method status
 
-The ten-arm registry and method cards are committed, with PC-ALM as the only reference implementation scaffold. ePC, Meta-PCN, precision weighting, stable parameterization, WF-Act-PC, closed-form precision, direct feedback alignment, stream amortization, and the new control-variate hybrid have no screening results yet. The checked bibliography distinguishes published papers, contemporary preprints, official code commits, adaptations, and strict-locality limitations.
+The ten-arm registry and method cards are committed. PC-ALM has an auditable block-local reference path; ePC has an explicitly labeled independent Transformer adaptation with EMA error states; and stable parameterization is implemented as a residual-scaling wrapper. Their deterministic CPU/GPU protocol smokes pass, while the required 10M-token method gates remain pending. Meta-PCN, precision weighting, WF-Act-PC, closed-form precision, direct feedback alignment, stream amortization, and the new control-variate hybrid have no implementation or screening results yet. The checked bibliography distinguishes published papers, contemporary preprints, official code commits, adaptations, and strict-locality limitations.
 
 ## Required next gates
 
 1. Extend the isolated worker to reserve and evaluate the full 10M validation stream, then pass exact-budget, validation-isolation, and resume checks at 10M.
 2. Add the tiny Transformer PC-ALM equilibrium/gradient-cosine diagnostic and strict local-autograd audit.
 3. Implement each method card behind the common interface and run a 10M-token smoke per arm.
-4. Re-run optimized/compiled equivalence and cross-node DDP equivalence before any 50M screen.
+4. Complete the 10M ePC/PC-ALM method smokes and implement the remaining registry arms before any method ranking.
 
 No validation loss, perplexity, time-to-1B, GPU-hour, or method ranking is claimed in this snapshot.
 
@@ -37,4 +37,4 @@ Twelve independent single-GPU BP AdamW controls completed exactly 10M FineWeb tr
 
 ## Phase 2 control pilots
 
-The first 50M-token wave completed 12 independent BP AdamW FineWeb controls, four per 4-GPU host and two per 2-GPU host. Every run reached exactly 50,000,000 tokens with clean exit; final training losses were 4.79–4.97 and throughput was approximately 61–62k tokens/s on foureyes/ripper and 67k on work/loki. A second 50M seed wave is active across all 12 GPUs; its metrics will be collected only after exact completion.
+The first 50M-token wave completed 12 independent BP AdamW FineWeb controls, four per 4-GPU host and two per 2-GPU host. Every run reached exactly 50,000,000 tokens with clean exit; final training losses were 4.79–4.97 and throughput was approximately 61–62k tokens/s on foureyes/ripper and 67k on work/loki. A second 50M seed wave completed on ripper, work, and loki and is registered with exact manifests and metrics; a third independent 50M replication wave is currently active across all 12 GPUs. These are additional BP controls for throughput and variance coverage, not method results.
