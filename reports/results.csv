@@ -1,5 +1,5 @@
 run_id,method,phase,status,tokens,val_loss,val_ppl,tokens_per_s,gpu_hours,peak_memory_bytes,seed,notes
-smoke-bp-2046,bp_adamw,1,completed_synthetic,2046,,,,,,20261029,Exact post-shift synthetic smoke; diagnostic only
+smoke-bp-2046,bp_adamw,1,completed_synthetic,2046,,,199.64,0.00285,,20261029,Exact post-shift synthetic smoke; diagnostic only
 pilot-fineweb-2046,bp_adamw,1,failed_runtime_finalize,2046,,,,,,20261029,FineWeb stream reached target then exit 134 PyGILState_Release during finalization
 pilot-fineweb-2046-retry,bp_adamw,1,failed_runtime_finalize,2046,,,,,,20261029,Repeated same loader finalization failure after dataset deletion
-pilot-fineweb-worker-10240,bp_adamw,1,completed,10240,,,,,,20261029,Live FineWeb isolated-worker smoke; exact target, diagnostic only
+pilot-fineweb-worker-10240,bp_adamw,1,completed,10240,,,931.78,0.00305,,20261029,"Live FineWeb isolated-worker smoke; exact target, diagnostic only"
