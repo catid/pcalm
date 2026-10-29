@@ -476,6 +476,62 @@
       "peak_memory_bytes": "",
       "seed": "20261311",
       "notes": "Independent single-GPU BP AdamW FineWeb control; second 50M replication wave"
+    },
+    {
+      "run_id": "phase2-bp50m-work-g0-seed20261400",
+      "method": "bp_adamw",
+      "phase": "2",
+      "status": "completed",
+      "tokens": "50000000",
+      "val_loss": "",
+      "val_ppl": "",
+      "tokens_per_s": "67832.303",
+      "gpu_hours": "0.204753",
+      "peak_memory_bytes": "",
+      "seed": "20261400",
+      "notes": "Independent single-GPU BP AdamW FineWeb control; second 50M replication wave"
+    },
+    {
+      "run_id": "phase2-bp50m-work-g1-seed20261401",
+      "method": "bp_adamw",
+      "phase": "2",
+      "status": "completed",
+      "tokens": "50000000",
+      "val_loss": "",
+      "val_ppl": "",
+      "tokens_per_s": "66431.049",
+      "gpu_hours": "0.209072",
+      "peak_memory_bytes": "",
+      "seed": "20261401",
+      "notes": "Independent single-GPU BP AdamW FineWeb control; second 50M replication wave"
+    },
+    {
+      "run_id": "phase2-bp50m-loki-g0-seed20261402",
+      "method": "bp_adamw",
+      "phase": "2",
+      "status": "completed",
+      "tokens": "50000000",
+      "val_loss": "",
+      "val_ppl": "",
+      "tokens_per_s": "68330.261",
+      "gpu_hours": "0.203261",
+      "peak_memory_bytes": "",
+      "seed": "20261402",
+      "notes": "Independent single-GPU BP AdamW FineWeb control; second 50M replication wave"
+    },
+    {
+      "run_id": "phase2-bp50m-loki-g1-seed20261403",
+      "method": "bp_adamw",
+      "phase": "2",
+      "status": "completed",
+      "tokens": "50000000",
+      "val_loss": "",
+      "val_ppl": "",
+      "tokens_per_s": "67585.864",
+      "gpu_hours": "0.205500",
+      "peak_memory_bytes": "",
+      "seed": "20261403",
+      "notes": "Independent single-GPU BP AdamW FineWeb control; second 50M replication wave"
     }
   ]
 }
