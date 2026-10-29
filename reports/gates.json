@@ -15,8 +15,14 @@
     "streaming_data_smoke": "pass_isolated_worker",
     "exact_budget_resume_validation": "pass_2046_resume_and_10240_live_smoke",
     "ddp_single_2gpu_equivalence": "pass_loss_and_checksum",
-    "optimized_equivalence": "pending",
+    "optimized_equivalence": "pass_cuda_eager_compile_fixed_batch",
     "method_registry_smokes": "pending"
   },
-  "evidence": ["reports/engineering_gate.md", "reports/phase0_cluster.md", "reports/cross_node_attempt.md", "reports/data_manifest.json", "reports/data_smoke.json"]
+  "evidence": [
+    "reports/engineering_gate.md",
+    "reports/phase0_cluster.md",
+    "reports/cross_node_attempt.md",
+    "reports/data_manifest.json",
+    "reports/data_smoke.json"
+  ]
 }
