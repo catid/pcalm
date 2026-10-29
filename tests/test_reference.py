@@ -43,3 +43,10 @@ def test_tied_embedding_receives_output_gradient():
     torch.manual_seed(4); cfg = GPTConfig(vocab_size=53, n_layers=1, d_model=16, n_heads=2, d_ff=32, max_seq_len=8)
     m = CausalTransformer(cfg); ids = torch.randint(cfg.vocab_size, (1, 8)); loss, _ = m(ids, ids); loss.backward()
     assert m.token_embedding.weight.grad is not None and torch.isfinite(m.token_embedding.weight.grad).all()
+
+def test_tiny_transformer_parameter_finite_difference():
+    torch.manual_seed(5); cfg = GPTConfig(vocab_size=31, n_layers=1, d_model=16, n_heads=2, d_ff=32, max_seq_len=6)
+    m = CausalTransformer(cfg).double(); ids = torch.randint(cfg.vocab_size, (1, 6)); loss, _ = m(ids, ids); p = m.blocks[0].mlp.fc.weight
+    (g,) = torch.autograd.grad(loss, (p,)); idx = (0, 0); old = p.data[idx].item(); eps = 1e-4
+    p.data[idx] = old + eps; lp = m(ids, ids)[0].item(); p.data[idx] = old - eps; lm = m(ids, ids)[0].item(); p.data[idx] = old
+    assert abs(g[idx].item() - (lp-lm)/(2*eps)) < 1e-6

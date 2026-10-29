@@ -10,6 +10,7 @@
     "pcalm_relax_no_global_backward": "pass",
     "rank_chunk_disjointness": "pass",
     "exact_budget_worker_smoke": "pass_2046_and_resume",
+    "ddp_single_2gpu_equivalence": {"status":"pass", "loss_abs_diff":0.0, "checksum_abs_diff":0.0},
     "compiled_fused_cuda_graph": "pending",
     "distributed_single_multi_equivalence": "pending",
     "tiny_transformer_pc_gradient_cosine": "pending"

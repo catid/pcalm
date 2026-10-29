@@ -14,6 +14,7 @@
     "cross_node_nccl_8_12": "measured_poor_scaling",
     "streaming_data_smoke": "pass_isolated_worker",
     "exact_budget_resume_validation": "pass_2046_resume_and_10240_live_smoke",
+    "ddp_single_2gpu_equivalence": "pass_loss_and_checksum",
     "optimized_equivalence": "pending",
     "method_registry_smokes": "pending"
   },
