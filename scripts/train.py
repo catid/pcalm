@@ -5,7 +5,7 @@ This is deliberately conservative: only the ordinary AdamW control is enabled
 until each local-credit method has its own passed gate. It records exact target
 counts and writes a checkpoint at token boundaries.
 """
-import argparse, json, os, sys, time
+import argparse, json, os, sys, time, math
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import subprocess, signal
@@ -14,7 +14,7 @@ from src.model import GPTConfig, CausalTransformer
 from src.data_stream import StreamSpec, iter_token_chunks
 
 def main():
-    ap = argparse.ArgumentParser(); ap.add_argument("--run-id", required=True); ap.add_argument("--tokens", type=int, required=True); ap.add_argument("--method", default="bp_adamw"); ap.add_argument("--source", choices=["fineweb", "synthetic"], default="fineweb"); ap.add_argument("--resume"); ap.add_argument("--checkpoint-every", type=int, default=1_000_000); ap.add_argument("--allow-1b", action="store_true"); args = ap.parse_args()
+    ap = argparse.ArgumentParser(); ap.add_argument("--run-id", required=True); ap.add_argument("--tokens", type=int, required=True); ap.add_argument("--method", default="bp_adamw"); ap.add_argument("--source", choices=["fineweb", "synthetic"], default="fineweb"); ap.add_argument("--validation-tokens", type=int, default=10_000_000); ap.add_argument("--resume"); ap.add_argument("--checkpoint-every", type=int, default=1_000_000); ap.add_argument("--allow-1b", action="store_true"); args = ap.parse_args()
     if args.method != "bp_adamw": raise SystemExit("Only bp_adamw control is implemented in this Phase 0 pilot; method arms remain gated.")
     if args.tokens > 1_000_000_000: raise SystemExit("token budget exceeds exactly 1B contract")
     if args.tokens == 1_000_000_000:
@@ -23,6 +23,7 @@ def main():
         required = ("repository_plan", "runtime_parity", "architecture_parameter_count", "reference_math_transformer_smoke", "streaming_data_smoke", "exact_budget_resume_validation", "optimized_equivalence", "method_registry_smokes")
         bad = [k for k in required if not str(gates.get(k, "")).startswith("pass")]
         if bad: raise SystemExit("1B gate blocked; unresolved gates: " + ", ".join(bad))
+        if args.validation_tokens < 10_000_000: raise SystemExit("1B run requires at least 10M reserved validation tokens")
     device = "cuda" if torch.cuda.is_available() else "cpu"; torch.manual_seed(20261029)
     model = CausalTransformer(GPTConfig(vocab_size=32000)).to(device)
     opt = torch.optim.AdamW(model.parameters(), lr=3e-4, weight_decay=0.1)
@@ -31,7 +32,8 @@ def main():
         ckpt = torch.load(args.resume, map_location=device); model.load_state_dict(ckpt["model"]); opt.load_state_dict(ckpt["optimizer"]); start_tokens, step = ckpt["tokens"], ckpt["step"]
     worker = None
     if args.source == "fineweb":
-        worker = subprocess.Popen([sys.executable, str(Path(__file__).with_name("fineweb_worker.py"))], stdout=subprocess.PIPE, text=True, bufsize=1)
+        skip_chunks = math.ceil(args.validation_tokens / 1023)
+        worker = subprocess.Popen([sys.executable, str(Path(__file__).with_name("fineweb_worker.py")), "--skip-chunks", str(skip_chunks)], stdout=subprocess.PIPE, text=True, bufsize=1)
         def worker_chunks():
             for line in worker.stdout:
                 yield json.loads(line)

@@ -1,6 +1,6 @@
 {
   "validation_tokens": 10000000,
-  "allocation": "first deterministic token chunks are validation-only; training starts after validation_chunks and rank assignment is modulo world size",
+  "allocation": "first deterministic token chunks are validation-only; with 1,024-token chunks, 9,776 chunks reserve 10,000,848 post-shift targets before training; rank assignment is modulo world size",
   "leakage_test": "tests/test_math.py::test_validation_chunk_isolation",
   "status": "protocol_unit_pass; live 10M validation materialization pending"
 }

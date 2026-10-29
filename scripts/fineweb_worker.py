@@ -5,7 +5,7 @@ The worker owns datasets/pyarrow. The parent process can terminate it after an
 exact token budget, avoiding the known extension finalization crash in the
 training process.
 """
-import json, os, sys
+import argparse, json, os, sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from datasets import load_dataset
@@ -13,9 +13,11 @@ from transformers import AutoTokenizer
 from src.data_stream import StreamSpec, iter_token_chunks
 
 def main():
+    ap = argparse.ArgumentParser(); ap.add_argument("--skip-chunks", type=int, default=0); args = ap.parse_args()
     tok = AutoTokenizer.from_pretrained("mistralai/Mistral-7B-v0.1")
     ds = load_dataset("HuggingFaceFW/fineweb", name="sample-10BT", split="train", streaming=True)
-    for chunk in iter_token_chunks(ds, tok, StreamSpec(chunk_tokens=1024, validation_chunks=0)):
+    for i, chunk in enumerate(iter_token_chunks(ds, tok, StreamSpec(chunk_tokens=1024, validation_chunks=0))):
+        if i < args.skip_chunks: continue
         try:
             sys.stdout.write(json.dumps(chunk) + "\n"); sys.stdout.flush()
         except BrokenPipeError:
