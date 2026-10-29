@@ -31,9 +31,10 @@ def test_validation_chunk_isolation():
     # A synthetic tokenizer/stream demonstrates the protocol: validation owns
     # the first deterministic chunk range and no training rank receives it.
     class Tok:
-        def encode(self, text, add_special_tokens=False): return list(range(int(text)))
+        def encode(self, text, add_special_tokens=False):
+            n, start = map(int, text.split(",")); return list(range(start, start+n))
     spec = StreamSpec(chunk_tokens=4, validation_chunks=1)
-    rows = [{"text": "4"}, {"text": "4"}, {"text": "4"}, {"text": "4"}]
+    rows = [{"text": "4,0"}, {"text": "4,4"}, {"text": "4,8"}, {"text": "4,12"}]
     all_chunks = list(__import__("src.data_stream", fromlist=["iter_token_chunks"]).iter_token_chunks(rows, Tok(), spec))
     train0 = list(rank_token_chunks(rows, Tok(), spec, 0, 2)); train1 = list(rank_token_chunks(rows, Tok(), spec, 1, 2))
     assert all_chunks[0] not in train0 and all_chunks[0] not in train1 and set(map(tuple, train0)).isdisjoint(set(map(tuple, train1)))
