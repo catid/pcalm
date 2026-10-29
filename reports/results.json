@@ -770,6 +770,62 @@
       "peak_memory_bytes": "",
       "seed": "20261504",
       "notes": "Interrupted at 21.1M tokens after duplicate GPU assignment; retained as failed run"
+    },
+    {
+      "run_id": "phase2-bp50m-work-g0-seed20261500",
+      "method": "bp_adamw",
+      "phase": "2",
+      "status": "completed",
+      "tokens": "50000000",
+      "val_loss": "",
+      "val_ppl": "",
+      "tokens_per_s": "67683.887",
+      "gpu_hours": "0.205202",
+      "peak_memory_bytes": "",
+      "seed": "20261500",
+      "notes": "Independent BP AdamW control; third 50M replication wave"
+    },
+    {
+      "run_id": "phase2-bp50m-work-g1-seed20261501",
+      "method": "bp_adamw",
+      "phase": "2",
+      "status": "completed",
+      "tokens": "50000000",
+      "val_loss": "",
+      "val_ppl": "",
+      "tokens_per_s": "66530.107",
+      "gpu_hours": "0.208761",
+      "peak_memory_bytes": "",
+      "seed": "20261501",
+      "notes": "Independent BP AdamW control; third 50M replication wave"
+    },
+    {
+      "run_id": "phase2-bp50m-loki-g0-seed20261502",
+      "method": "bp_adamw",
+      "phase": "2",
+      "status": "completed",
+      "tokens": "50000000",
+      "val_loss": "",
+      "val_ppl": "",
+      "tokens_per_s": "67782.936",
+      "gpu_hours": "0.204902",
+      "peak_memory_bytes": "",
+      "seed": "20261502",
+      "notes": "Independent BP AdamW control; third 50M replication wave"
+    },
+    {
+      "run_id": "phase2-bp50m-loki-g1-seed20261503",
+      "method": "bp_adamw",
+      "phase": "2",
+      "status": "completed",
+      "tokens": "50000000",
+      "val_loss": "",
+      "val_ppl": "",
+      "tokens_per_s": "66978.391",
+      "gpu_hours": "0.207364",
+      "peak_memory_bytes": "",
+      "seed": "20261503",
+      "notes": "Independent BP AdamW control; third 50M replication wave"
     }
   ]
 }

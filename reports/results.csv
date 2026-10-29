@@ -54,3 +54,7 @@ phase1-epc100k-ripper-g1-seed20262005,epc_adapted,1,completed,100000,,,2553.226,
 phase1-epc100k-ripper-g2-seed20262006,epc_adapted,1,completed,100000,,,3191.277,0.008704,,20262006,100k full-model ePC adaptation pilot; inner_steps=2; no ranking claim
 phase1-epc100k-ripper-g3-seed20262007,epc_adapted,1,completed,100000,,,2127.779,0.013055,,20262007,100k full-model ePC adaptation pilot; inner_steps=2; no ranking claim
 phase2-bp50m-ripper-g3-seed20261504,bp_adamw,2,failed_interrupted,21104490,,,62128.584,0.094358,,20261504,Interrupted at 21.1M tokens after duplicate GPU assignment; retained as failed run
+phase2-bp50m-work-g0-seed20261500,bp_adamw,2,completed,50000000,,,67683.887,0.205202,,20261500,Independent BP AdamW control; third 50M replication wave
+phase2-bp50m-work-g1-seed20261501,bp_adamw,2,completed,50000000,,,66530.107,0.208761,,20261501,Independent BP AdamW control; third 50M replication wave
+phase2-bp50m-loki-g0-seed20261502,bp_adamw,2,completed,50000000,,,67782.936,0.204902,,20261502,Independent BP AdamW control; third 50M replication wave
+phase2-bp50m-loki-g1-seed20261503,bp_adamw,2,completed,50000000,,,66978.391,0.207364,,20261503,Independent BP AdamW control; third 50M replication wave
