@@ -29,3 +29,7 @@ phase2-bp50m-ripper-g2-seed20261206,bp_adamw,2,completed,50000000,,,61555.053,0.
 phase2-bp50m-ripper-g3-seed20261207,bp_adamw,2,completed,50000000,,,61484.712,0.225892,,20261207,Independent single-GPU 50M FineWeb control
 phase2-bp50m-work-g0-seed20261208,bp_adamw,2,completed,50000000,,,67667.575,0.205252,,20261208,Independent single-GPU 50M FineWeb control
 phase2-bp50m-work-g1-seed20261209,bp_adamw,2,completed,50000000,,,67104.747,0.206973,,20261209,Independent single-GPU 50M FineWeb control
+phase2-bp50m-ripper-g0-seed20261308,bp_adamw,2,completed,50000000,,,61619.670,0.225397,,20261308,Independent single-GPU BP AdamW FineWeb control; second 50M replication wave
+phase2-bp50m-ripper-g1-seed20261309,bp_adamw,2,completed,50000000,,,61676.768,0.225188,,20261309,Independent single-GPU BP AdamW FineWeb control; second 50M replication wave
+phase2-bp50m-ripper-g2-seed20261310,bp_adamw,2,completed,50000000,,,60535.764,0.229433,,20261310,Independent single-GPU BP AdamW FineWeb control; second 50M replication wave
+phase2-bp50m-ripper-g3-seed20261311,bp_adamw,2,completed,50000000,,,61637.342,0.225332,,20261311,Independent single-GPU BP AdamW FineWeb control; second 50M replication wave
