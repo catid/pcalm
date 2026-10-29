@@ -92,8 +92,18 @@ class PCALMReference:
         ``input_ids`` is accepted for protocol uniformity and future output
         constraints; the block constraints only consume the state tensors.
         """
-        del input_ids, labels
+        del input_ids
         residuals: List[torch.Tensor] = []
+        # Apply the output cross-entropy clamp through a short, output-local
+        # graph.  Forward initialization makes all hidden constraints exact;
+        # without this term there is no teaching signal to relax backward.
+        if labels is not None:
+            h_last = state.hidden[-1].detach().requires_grad_(True)
+            with torch.enable_grad():
+                logits = self.model.lm_head(self.model.norm(h_last))
+                loss = F.cross_entropy(logits[:, :-1].float().reshape(-1, logits.size(-1)), labels[:, 1:].reshape(-1))
+                output_grad = torch.autograd.grad(loss, h_last, only_inputs=True)[0]
+            state.hidden[-1] = (h_last.detach() - self.eta_h * output_grad.detach()).detach()
         # One sweep in depth order.  Every block sees a detached tensor and the
         # temporary prediction is discarded before the next block.
         for i, block in enumerate(self.model.blocks):
@@ -251,10 +261,17 @@ class EPCReference:
 
     @torch.no_grad()
     def relax_step(self, state: MethodState, input_ids: torch.Tensor, labels: torch.Tensor | None = None):
-        del input_ids, labels
+        del input_ids
         if state.errors is None or len(state.errors) != len(self.model.blocks):
             raise ValueError("ePC state is missing one error tensor per block")
         residuals: List[torch.Tensor] = []
+        if labels is not None:
+            h_last = state.hidden[-1].detach().requires_grad_(True)
+            with torch.enable_grad():
+                logits = self.model.lm_head(self.model.norm(h_last))
+                loss = F.cross_entropy(logits[:, :-1].float().reshape(-1, logits.size(-1)), labels[:, 1:].reshape(-1))
+                output_grad = torch.autograd.grad(loss, h_last, only_inputs=True)[0]
+            state.hidden[-1] = (h_last.detach() - self.eta_h * output_grad.detach()).detach()
         for i, block in enumerate(self.model.blocks):
             pred = block(state.hidden[i])
             residual = state.hidden[i + 1] - pred
