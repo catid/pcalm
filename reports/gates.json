@@ -12,7 +12,7 @@
     "local_forward_benchmark": "pass",
     "local_nccl_1_2_4": "pass",
     "cross_node_nccl_8_12": "measured_poor_scaling",
-    "streaming_data_smoke": "partial",
+    "streaming_data_smoke": "failed_runtime_finalize",
     "exact_budget_resume_validation": "pending",
     "optimized_equivalence": "pending",
     "method_registry_smokes": "pending"
