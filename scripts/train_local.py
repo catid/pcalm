@@ -20,7 +20,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import torch
 
 from src.data_stream import StreamSpec, iter_token_chunks
-from src.methods import EPCReference, PCALMReference, StableParameterizationWrapper
+from src.methods import EPCReference, PCALMReference, StableParameterizationWrapper, MetaPCNReference, PrecisionWeightedPCReference
 from src.model import CausalTransformer, GPTConfig
 
 
@@ -63,13 +63,17 @@ def _build_method(name, model, args):
         if args.stable:
             method = StableParameterizationWrapper(method)
         return method
+    if name == "meta_pcn":
+        return MetaPCNReference(model, inner_steps=args.inner_steps, parameter_step=args.parameter_step)
+    if name == "precision_weighted_pc":
+        return PrecisionWeightedPCReference(model, inner_steps=args.inner_steps, parameter_step=args.parameter_step)
     raise ValueError(f"unsupported local method: {name}")
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--run-id", required=True)
-    ap.add_argument("--method", choices=("pc_alm", "epc"), required=True)
+    ap.add_argument("--method", choices=("pc_alm", "epc", "meta_pcn", "precision_weighted_pc"), required=True)
     ap.add_argument("--tokens", type=int, required=True)
     ap.add_argument("--source", choices=("fineweb", "synthetic"), default="fineweb")
     ap.add_argument("--validation-tokens", type=int, default=10_000_000)
