@@ -1,0 +1,69 @@
+{
+  "run_id": "phase2-bp50m-foureyes-g2-seed20261406",
+  "created_utc": "2026-10-29T21:54:39.859360+00:00",
+  "phase": "2",
+  "tokens_budget": 50000000,
+  "commit": "e858a860f820033f9d0b9d05b4c0aa904a351456",
+  "command": "scripts/run_manifest.py --run-id phase2-bp50m-foureyes-g2-seed20261406 --phase 2 --tokens 50000000",
+  "cwd": "/home/catid/pcalm",
+  "host": "foureyes",
+  "kernel": "6.8.0-147-generic",
+  "config": {
+    "model": {
+      "vocab_size": 32000,
+      "n_layers": 16,
+      "d_model": 384,
+      "n_heads": 6,
+      "d_ff": 1536,
+      "max_seq_len": 1024,
+      "norm": "rmsnorm",
+      "position": "rope",
+      "tie_embeddings": true,
+      "dropout": 0.0
+    },
+    "data": {
+      "dataset": "HuggingFaceFW/fineweb",
+      "config": "sample-10BT",
+      "tokenizer": "mistralai/Mistral-7B-v0.1",
+      "train_tokens": 1000000000,
+      "validation_tokens": 10000000,
+      "seed": 20261029
+    },
+    "train": {
+      "precision": "bfloat16",
+      "microbatch_per_gpu": 1,
+      "grad_accumulation": 1,
+      "tokens_per_update": 1024,
+      "optimizer": "adamw",
+      "learning_rate": 0.0003,
+      "weight_decay": 0.1,
+      "checkpoint_tokens": [
+        1000000,
+        10000000,
+        50000000,
+        100000000,
+        250000000,
+        1000000000
+      ]
+    },
+    "method": {
+      "name": "pc_alm",
+      "version": "reference-0.1",
+      "locality": "block_local",
+      "strict_no_autograd": false,
+      "inner_steps": 4,
+      "eta_h": 0.1,
+      "alpha": 0.01,
+      "rho": 1.0,
+      "parameter_step": 0.0003
+    }
+  },
+  "torch": {
+    "version": "2.12.0+cu130",
+    "cuda": "13.0",
+    "cuda_available": true
+  },
+  "gpu_inventory": "0, NVIDIA RTX PRO 6000 Blackwell Max-Q Workstation Edition, 615.71.10, 97887 MiB\n1, NVIDIA RTX PRO 6000 Blackwell Max-Q Workstation Edition, 615.71.10, 97887 MiB\n2, NVIDIA RTX PRO 6000 Blackwell Max-Q Workstation Edition, 615.71.10, 97887 MiB\n3, NVIDIA RTX PRO 6000 Blackwell Max-Q Workstation Edition, 615.71.10, 97887 MiB",
+  "environment_lock": "# Captured 2026-10-29 UTC on foureyes. Commands use /home/catid/venvs/dnn/bin/python.\npython==3.12.3\ntorch==2.12.0+cu130\ntransformers==5.8.1\ndatasets==4.8.5\ntokenizers==0.22.2\ncuda_runtime=13.0 (torch.version.cuda)\nnvidia_driver=615.71.10 (nvidia-smi)\ngpu=RTX PRO 6000 Blackwell Max-Q Workstation Edition, 97887 MiB\ntokenizer_vocab=32000 (mistralai/Mistral-7B-v0.1)\n# The exact environment was copied to all workers for Phase 0 parity testing.\n# After Phase 0 provisioning, all four hosts report torch 2.12.0+cu130, CUDA 13.0,\n# NCCL 2.29.7, and libtorch_global_deps.so SHA256\n# 22e580920a618c7c45e2aae16752f0bdfb23ae9a31150ae8f4066bbe8020e104.\n",
+  "nccl_env": {}
+}
