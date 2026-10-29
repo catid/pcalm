@@ -37,6 +37,8 @@ Meta-PCN and precision-weighted PC each completed corrected 100k-token pilots on
 
 Corrected one-million-token Meta-PCN and precision-weighted pilots reached exact budgets at roughly 14–17k tokens/s, with nonzero residuals and output-gradient diagnostics. A stable-parameterization ePC pair also reached 1M tokens at roughly 16.6–16.9k tokens/s. These are still tuning and implementation pilots; no held-out validation or ranking claim is made.
 
+The faithful PC-ALM reference completed four 1M-token pilots at roughly 15.1–17.3k tokens/s. Primal residual and dual norms were finite and nonzero, with the output-local gradient norm recorded per step. This remains a short implementation pilot, not a final quality comparison.
+
 ## Phase 1 control pilots
 
 Twelve independent single-GPU BP AdamW controls completed exactly 10M FineWeb training targets (four on each 4-GPU host and two on each 2-GPU host). Final training losses were 5.87–6.23. Mean throughput was 60.9k tokens/s on foureyes, 54.1k on ripper, 61.7k on work, and 63.4k on loki. These are control/pipeline measurements, not validation results or method rankings; raw metrics, manifests, and registry entries are retained per run.
