@@ -17,7 +17,12 @@ def main():
     ap = argparse.ArgumentParser(); ap.add_argument("--run-id", required=True); ap.add_argument("--tokens", type=int, required=True); ap.add_argument("--method", default="bp_adamw"); ap.add_argument("--source", choices=["fineweb", "synthetic"], default="fineweb"); ap.add_argument("--resume"); ap.add_argument("--checkpoint-every", type=int, default=1_000_000); ap.add_argument("--allow-1b", action="store_true"); args = ap.parse_args()
     if args.method != "bp_adamw": raise SystemExit("Only bp_adamw control is implemented in this Phase 0 pilot; method arms remain gated.")
     if args.tokens > 1_000_000_000: raise SystemExit("token budget exceeds exactly 1B contract")
-    if args.tokens == 1_000_000_000 and not args.allow_1b: raise SystemExit("1B run requires --allow-1b and a separately passed engineering/method gate")
+    if args.tokens == 1_000_000_000:
+        if not args.allow_1b: raise SystemExit("1B run requires --allow-1b and a separately passed engineering/method gate")
+        gates = json.loads(Path("reports/gates.json").read_text())["gates"]
+        required = ("repository_plan", "runtime_parity", "architecture_parameter_count", "reference_math_transformer_smoke", "streaming_data_smoke", "exact_budget_resume_validation", "optimized_equivalence", "method_registry_smokes")
+        bad = [k for k in required if not str(gates.get(k, "")).startswith("pass")]
+        if bad: raise SystemExit("1B gate blocked; unresolved gates: " + ", ".join(bad))
     device = "cuda" if torch.cuda.is_available() else "cpu"; torch.manual_seed(20261029)
     model = CausalTransformer(GPTConfig(vocab_size=32000)).to(device)
     opt = torch.optim.AdamW(model.parameters(), lr=3e-4, weight_decay=0.1)
