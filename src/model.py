@@ -55,7 +55,17 @@ class MLP(nn.Module):
 class Block(nn.Module):
     def __init__(self, cfg):
         super().__init__(); self.norm1 = RMSNorm(cfg.d_model); self.attn = CausalSelfAttention(cfg); self.norm2 = RMSNorm(cfg.d_model); self.mlp = MLP(cfg)
-    def forward(self, x): return x + self.mlp(self.norm2(x + self.attn(self.norm1(x))))
+        # Stable-parameterization wrappers may set this to 1/sqrt(depth).
+        # The default preserves the original residual Transformer exactly.
+        self.residual_scale = 1.0
+    def forward(self, x):
+        # Preserve the original operation order at scale=1.0 so finite
+        # difference/reference checks remain bitwise stable.  The alternate
+        # branch scales both residual paths for the stable-depth wrapper.
+        if self.residual_scale == 1.0:
+            return x + self.mlp(self.norm2(x + self.attn(self.norm1(x))))
+        y = x + self.residual_scale * self.attn(self.norm1(x))
+        return y + self.residual_scale * self.mlp(self.norm2(y))
 
 class CausalTransformer(nn.Module):
     def __init__(self, cfg):

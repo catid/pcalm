@@ -8,7 +8,7 @@ These cards define the interface and locality claims before implementation. They
 
 ## 2. Error-based PC (`epc`)
 
-**Source/equations:** Goemaere et al., ICML 2026 PMLR 306, official code commit `95c5551`. Replace depth-propagated state signal with explicit error-state optimization and local block energy updates. **Boundary:** adjacent errors/states; causal attention token scope is unchanged. **Autograd:** public code calls `E.backward()` on error tensors and uses detached local energy, so label local-autograd rather than strict no-autograd. **State:** error tensors per batch; no dual unless the matched PC-ALM hybrid. **Risks:** error variance imbalance, nonlinear attention adaptation, optimizer sensitivity. **Status:** independent Transformer adaptation; reproduce public smallest state/error diagnostic first.
+**Source/equations:** Goemaere et al., ICML 2026 PMLR 306, official code commit `95c5551`. Replace depth-propagated state signal with explicit error-state optimization and local block energy updates. Our independent Transformer adaptation stores one error tensor per block, `r_i=h[i+1]-f_i(h[i];W_i)`, then applies `e_i <- (1-beta)e_i + beta*r_i` and `h[i+1] <- h[i+1]-eta_h*e_i`; local weights use `0.5||r_i||^2` with detached block inputs/targets. **Boundary:** adjacent errors/states; causal attention token scope is unchanged. **Autograd:** public code calls `E.backward()` on error tensors and uses detached local energy, so label local-autograd rather than strict no-autograd. **State:** error tensors per batch; no dual unless the matched PC-ALM hybrid. **Risks:** error variance imbalance, nonlinear attention adaptation, optimizer sensitivity. **Status:** adapted/independent reproduction; the implementation is smoke-tested only and does not claim the published state/error diagnostic until the source cell is reproduced.
 
 ## 3. Meta-PCN (`meta_pcn`)
 
@@ -20,7 +20,7 @@ These cards define the interface and locality claims before implementation. They
 
 ## 5. Stable parameterization wrapper (`stable_parameterization`)
 
-**Source/equations:** Innocenti, Achour & Bogacz, ICML 2026 PMLR 306, *On the Infinite Width and Depth Limits of Predictive Coding Networks*. Apply explicit residual scaling, initialization, and normalization prescriptions as a wrapper to PC-ALM/ePC/Meta-PCN. **Boundary:** unchanged from wrapped method. **Autograd/state:** unchanged; wrapper owns no credit state. **Risks:** changing optimization scale or effective architecture; isolate factorial ablation. **Status:** adaptation; no claim of a standalone learning rule.
+**Source/equations:** Innocenti, Achour & Bogacz, ICML 2026 PMLR 306, *On the Infinite Width and Depth Limits of Predictive Coding Networks*. The current wrapper applies `s=1/sqrt(L)` to both attention and MLP residual branches and multiplies block linear weights by `s` once at initialization; this is an explicit stable-depth adaptation, not a full reproduction of every theorem prescription. **Boundary:** unchanged from wrapped method. **Autograd/state:** unchanged; wrapper owns no credit state. **Risks:** changing optimization scale or effective architecture; isolate factorial ablation. **Status:** adaptation; no claim of a standalone learning rule. Smoke-tested with ePC; 10M gate remains pending.
 
 ## 6. WF-Act-PC (`wf_act_pc`)
 

@@ -1,6 +1,6 @@
 import torch
 from src.model import GPTConfig, CausalTransformer, count_parameters
-from src.methods import PCALMReference
+from src.methods import PCALMReference, EPCReference, StableParameterizationWrapper
 
 def test_parameter_interval_and_tying():
     torch.manual_seed(0); m = CausalTransformer(GPTConfig())
@@ -50,3 +50,16 @@ def test_tiny_transformer_parameter_finite_difference():
     (g,) = torch.autograd.grad(loss, (p,)); idx = (0, 0); old = p.data[idx].item(); eps = 1e-4
     p.data[idx] = old + eps; lp = m(ids, ids)[0].item(); p.data[idx] = old - eps; lm = m(ids, ids)[0].item(); p.data[idx] = old
     assert abs(g[idx].item() - (lp-lm)/(2*eps)) < 1e-6
+
+def test_epc_and_stable_wrapper_smoke():
+    torch.manual_seed(6); cfg = GPTConfig(vocab_size=31, n_layers=2, d_model=16, n_heads=2, d_ff=32, max_seq_len=6)
+    m = CausalTransformer(cfg); ids = torch.randint(cfg.vocab_size, (1, 6))
+    method = StableParameterizationWrapper(EPCReference(m, inner_steps=2, parameter_step=1e-4))
+    state = method.init_state(ids)
+    state.hidden[-1].add_(0.01 * torch.randn_like(state.hidden[-1]))
+    for _ in range(2): method.relax_step(state, ids, ids)
+    update = method.local_update(state, ids, ids)
+    diag = method.diagnostics(state)
+    assert state.errors is not None and len(state.errors) == len(m.blocks)
+    assert update["updated_layers"] == len(m.blocks)
+    assert diag["step"] == 2 and all(torch.isfinite(x).all() for x in state.errors)

@@ -28,6 +28,12 @@ class MethodState:
     dual: List[torch.Tensor]
     step: int = 0
     residual_norms: List[float] = field(default_factory=list)
+    # ePC keeps explicit error states instead of depth-propagated error
+    # messages.  PC-ALM leaves this field unset.
+    errors: List[torch.Tensor] | None = None
+    error_norms: List[float] = field(default_factory=list)
+    error_mean: List[float] = field(default_factory=list)
+    error_var: List[float] = field(default_factory=list)
 
 
 class PCALMReference:
@@ -192,3 +198,200 @@ class PCALMReference:
         for _ in range(self.inner_steps):
             self.relax_step(state, input_ids, labels)
         return self.step_cost(int(input_ids.numel()), time.perf_counter() - t0)
+
+
+class EPCReference:
+    """Independent Transformer adaptation of error-based predictive coding.
+
+    This is an *adapted reproduction*, not a claim that the public ePC code
+    directly supports this architecture.  We keep an explicit error state
+    ``e_i`` for every local block constraint instead of propagating one state
+    error through all deeper blocks.  With ``r_i = h[i+1]-f_i(h[i];W_i)`` the
+    reference update is
+
+    ``e_i <- (1-beta)e_i + beta*r_i``
+    ``h[i+1] <- h[i+1] - eta_h*e_i``
+    ``W_i <- W_i - eta_w*d(0.5*||r_i||^2)/dW_i``.
+
+    The target and input to each block are detached before its local graph is
+    built.  ``autograd.grad`` is therefore local to one block; no global
+    backward graph is retained.  Causal attention remains token-global within
+    a block, so locality is ``block_local`` rather than strict token-local.
+    """
+
+    name = "epc"
+    version = "independent-transformer-adaptation-0.1"
+    locality = "block_local"
+    strict_no_autograd = False
+    uses_local_autograd = True
+
+    def __init__(
+        self,
+        model,
+        inner_steps: int = 4,
+        eta_h: float = 0.1,
+        beta: float = 0.5,
+        parameter_step: float = 3e-4,
+    ):
+        if inner_steps < 1 or eta_h <= 0 or not (0 < beta <= 1) or parameter_step < 0:
+            raise ValueError("invalid ePC step sizes")
+        self.model = model
+        self.inner_steps = int(inner_steps)
+        self.eta_h = float(eta_h)
+        self.beta = float(beta)
+        self.parameter_step = float(parameter_step)
+
+    def init_state(self, input_ids: torch.Tensor) -> MethodState:
+        with torch.no_grad():
+            _, _, hidden = self.model(input_ids, labels=input_ids, return_hidden=True)
+        hs = [h.detach().clone() for h in hidden]
+        # Explicit per-block errors are separate tensors, not aliases of h.
+        errors = [torch.zeros_like(h) for h in hs[1:]]
+        return MethodState(hs, [], errors=errors)
+
+    @torch.no_grad()
+    def relax_step(self, state: MethodState, input_ids: torch.Tensor, labels: torch.Tensor | None = None):
+        del input_ids, labels
+        if state.errors is None or len(state.errors) != len(self.model.blocks):
+            raise ValueError("ePC state is missing one error tensor per block")
+        residuals: List[torch.Tensor] = []
+        for i, block in enumerate(self.model.blocks):
+            pred = block(state.hidden[i])
+            residual = state.hidden[i + 1] - pred
+            # EMA error-state optimization avoids repeatedly multiplying a
+            # state signal by all preceding Jacobians.
+            state.errors[i].lerp_(residual, self.beta)
+            state.hidden[i + 1].add_(-self.eta_h * state.errors[i])
+            residuals.append(residual.detach())
+        state.step += 1
+        state.residual_norms = [float(r.float().norm().cpu()) for r in residuals]
+        state.error_norms = [float(e.float().norm().cpu()) for e in state.errors]
+        state.error_mean = [float(e.float().mean().cpu()) for e in state.errors]
+        state.error_var = [float(e.float().var(unbiased=False).cpu()) for e in state.errors]
+        return residuals
+
+    def local_update(
+        self,
+        state: MethodState,
+        input_ids: torch.Tensor,
+        labels: torch.Tensor | None = None,
+        *,
+        apply: bool = True,
+    ) -> Dict[str, Any]:
+        del input_ids, labels
+        losses: List[float] = []
+        grad_norms: List[float] = []
+        for i, block in enumerate(self.model.blocks):
+            h_prev = state.hidden[i].detach()
+            target = state.hidden[i + 1].detach()
+            pred = block(h_prev)
+            residual = target - pred
+            # The ePC state is the explicit controller; the local weight
+            # objective is the squared prediction error from this block.
+            local_loss = 0.5 * residual.float().pow(2).mean()
+            params = tuple(p for p in block.parameters() if p.requires_grad)
+            grads = torch.autograd.grad(local_loss, params, allow_unused=True)
+            sq = torch.zeros((), device=local_loss.device, dtype=torch.float32)
+            for p, g in zip(params, grads):
+                if g is None:
+                    continue
+                sq = sq + g.float().pow(2).sum()
+                if apply and self.parameter_step:
+                    with torch.no_grad():
+                        p.add_(g.to(dtype=p.dtype), alpha=-self.parameter_step)
+            losses.append(float(local_loss.detach().cpu()))
+            grad_norms.append(float(sq.sqrt().detach().cpu()))
+            del pred, residual, local_loss, grads
+        return {
+            "local_loss": sum(losses) / max(1, len(losses)),
+            "layer_grad_norm": grad_norms,
+            "error_norm": sum(state.error_norms) / max(1, len(state.error_norms)),
+            "updated_layers": len(losses) if apply and self.parameter_step else 0,
+        }
+
+    @torch.no_grad()
+    def diagnostics(self, state: MethodState) -> Dict[str, Any]:
+        errors = state.errors or []
+        if errors and not state.error_norms:
+            state.error_norms = [float(e.float().norm().cpu()) for e in errors]
+            state.error_mean = [float(e.float().mean().cpu()) for e in errors]
+            state.error_var = [float(e.float().var(unbiased=False).cpu()) for e in errors]
+        return {
+            "step": state.step,
+            "primal_residual_norm": sum(state.residual_norms) / max(1, len(state.residual_norms)),
+            "error_norm": sum(state.error_norms) / max(1, len(state.error_norms)),
+            "error_norm_by_layer": list(state.error_norms),
+            "error_mean_by_layer": list(state.error_mean),
+            "error_var_by_layer": list(state.error_var),
+        }
+
+    def step_cost(self, batch_tokens: int, elapsed_s: float, *, inference_steps: int | None = None) -> Dict[str, Any]:
+        return {
+            "batch_tokens": int(batch_tokens),
+            "elapsed_s": float(elapsed_s),
+            "tokens_per_s": int(batch_tokens) / max(float(elapsed_s), 1e-9),
+            "inner_steps": self.inner_steps if inference_steps is None else int(inference_steps),
+            "local_update_count": len(self.model.blocks),
+            "method": self.name,
+            "version": self.version,
+            "locality": self.locality,
+            "strict_no_autograd": self.strict_no_autograd,
+        }
+
+    def run_inference(self, state: MethodState, input_ids: torch.Tensor, labels: torch.Tensor | None = None) -> Dict[str, Any]:
+        t0 = time.perf_counter()
+        for _ in range(self.inner_steps):
+            self.relax_step(state, input_ids, labels)
+        return self.step_cost(int(input_ids.numel()), time.perf_counter() - t0)
+
+
+class StableParameterizationWrapper:
+    """Apply the stable-depth initialization wrapper to a local-credit method.
+
+    The wrapper scales each Transformer residual branch by ``1/sqrt(L)`` and
+    optionally scales block linear weights at initialization by the same
+    factor.  It delegates the common method interface to the wrapped method;
+    no credit state is added and no claims are made for a standalone learner.
+    """
+
+    name = "stable_parameterization"
+    version = "residual-scale-init-0.1"
+    locality = "block_local"
+    strict_no_autograd = False
+
+    def __init__(self, base_method, residual_scale: float | None = None, init_scale: float | None = None):
+        if not hasattr(base_method, "model") or not hasattr(base_method, "local_update"):
+            raise TypeError("base_method must implement the local method interface")
+        self.base_method = base_method
+        self.model = base_method.model
+        depth = max(1, len(self.model.blocks))
+        self.residual_scale = float(residual_scale if residual_scale is not None else depth ** -0.5)
+        self.init_scale = float(init_scale if init_scale is not None else depth ** -0.5)
+        if self.residual_scale <= 0 or self.init_scale <= 0:
+            raise ValueError("stable scales must be positive")
+        for block in self.model.blocks:
+            block.residual_scale = self.residual_scale
+            # Idempotent marker prevents accidental double scaling on repeated
+            # wrapper construction.
+            if not getattr(block, "_stable_init_applied", False):
+                with torch.no_grad():
+                    for module in (block.attn.qkv, block.attn.proj, block.mlp.fc, block.mlp.proj):
+                        module.weight.mul_(self.init_scale)
+                block._stable_init_applied = True
+
+    def __getattr__(self, name):
+        # Delegate init_state, relax_step, local_update, diagnostics, and
+        # step_cost while preserving this wrapper's metadata above.
+        if name in {"base_method", "model", "residual_scale", "init_scale"}:
+            raise AttributeError(name)
+        return getattr(self.base_method, name)
+
+    def diagnostics(self, state: MethodState) -> Dict[str, Any]:
+        out = dict(self.base_method.diagnostics(state))
+        out.update({"stable_residual_scale": self.residual_scale, "stable_init_scale": self.init_scale})
+        return out
+
+    def step_cost(self, batch_tokens: int, elapsed_s: float, *, inference_steps: int | None = None) -> Dict[str, Any]:
+        out = dict(self.base_method.step_cost(batch_tokens, elapsed_s, inference_steps=inference_steps))
+        out.update({"method": self.name, "version": self.version, "stable_residual_scale": self.residual_scale, "stable_init_scale": self.init_scale})
+        return out
