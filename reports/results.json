@@ -756,6 +756,20 @@
       "peak_memory_bytes": "",
       "seed": "20262007",
       "notes": "100k full-model ePC adaptation pilot; inner_steps=2; no ranking claim"
+    },
+    {
+      "run_id": "phase2-bp50m-ripper-g3-seed20261504",
+      "method": "bp_adamw",
+      "phase": "2",
+      "status": "failed_interrupted",
+      "tokens": "21104490",
+      "val_loss": "",
+      "val_ppl": "",
+      "tokens_per_s": "62128.584",
+      "gpu_hours": "0.094358",
+      "peak_memory_bytes": "",
+      "seed": "20261504",
+      "notes": "Interrupted at 21.1M tokens after duplicate GPU assignment; retained as failed run"
     }
   ]
 }

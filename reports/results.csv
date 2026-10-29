@@ -53,3 +53,4 @@ phase1-epc100k-ripper-g0-seed20262004,epc_adapted,1,completed,100000,,,2056.097,
 phase1-epc100k-ripper-g1-seed20262005,epc_adapted,1,completed,100000,,,2553.226,0.010879,,20262005,100k full-model ePC adaptation pilot; inner_steps=2; no ranking claim
 phase1-epc100k-ripper-g2-seed20262006,epc_adapted,1,completed,100000,,,3191.277,0.008704,,20262006,100k full-model ePC adaptation pilot; inner_steps=2; no ranking claim
 phase1-epc100k-ripper-g3-seed20262007,epc_adapted,1,completed,100000,,,2127.779,0.013055,,20262007,100k full-model ePC adaptation pilot; inner_steps=2; no ranking claim
+phase2-bp50m-ripper-g3-seed20261504,bp_adamw,2,failed_interrupted,21104490,,,62128.584,0.094358,,20261504,Interrupted at 21.1M tokens after duplicate GPU assignment; retained as failed run
