@@ -1,0 +1,204 @@
+{
+  "counts": {
+    "fail": 0,
+    "pass": 1,
+    "pending": 13
+  },
+  "device": "cpu",
+  "gate": "method_registry_smokes",
+  "generated_at_utc": "2026-10-29T21:57:28Z",
+  "methods": [
+    {
+      "class": "src.methods.PCALMReference",
+      "diagnostics": {
+        "dual_norm": 0.0,
+        "dual_norm_by_layer": [
+          0.0,
+          0.0
+        ],
+        "primal_residual_by_layer": [
+          0.0,
+          0.0
+        ],
+        "primal_residual_norm": 0.0,
+        "step": 1
+      },
+      "id": "pc_alm",
+      "implementation": "reference scaffold",
+      "local_update": {
+        "layer_grad_norm": [
+          0.0,
+          0.0
+        ],
+        "local_loss": 0.0,
+        "updated_layers": 0
+      },
+      "locality": "block_local",
+      "protocol": [
+        "init_state",
+        "relax_step",
+        "local_update",
+        "diagnostics",
+        "step_cost"
+      ],
+      "registry_status": "pending",
+      "residual_count": 2,
+      "schema_errors": [],
+      "state_step": 1,
+      "status": "pass",
+      "step_cost": {
+        "batch_tokens": 8,
+        "elapsed_s": 0.0052285389974713326,
+        "inner_steps": 1,
+        "local_update_count": 2,
+        "locality": "block_local",
+        "method": "pc_alm",
+        "strict_no_autograd": false,
+        "tokens_per_s": 1530.0641352907617,
+        "version": "reference-0.2"
+      },
+      "strict_no_autograd": false,
+      "version": "reference-0.2"
+    },
+    {
+      "id": "epc",
+      "implementation": "not started",
+      "locality": "block_local",
+      "reason": "no registered implementation",
+      "registry_status": "pending",
+      "schema_errors": [],
+      "status": "pending",
+      "version": "pending"
+    },
+    {
+      "id": "meta_pcn",
+      "implementation": "not started",
+      "locality": "block_local",
+      "reason": "no registered implementation",
+      "registry_status": "pending",
+      "schema_errors": [],
+      "status": "pending",
+      "version": "pending"
+    },
+    {
+      "id": "precision_weighted_pc",
+      "implementation": "not started",
+      "locality": "block_local",
+      "reason": "no registered implementation",
+      "registry_status": "pending",
+      "schema_errors": [],
+      "status": "pending",
+      "version": "pending"
+    },
+    {
+      "id": "stable_parameterization",
+      "implementation": "wrapper pending",
+      "locality": "block_local",
+      "reason": "no registered implementation",
+      "registry_status": "pending",
+      "schema_errors": [],
+      "status": "pending",
+      "version": "pending"
+    },
+    {
+      "id": "wf_act_pc",
+      "implementation": "not started",
+      "locality": "block_local",
+      "reason": "no registered implementation",
+      "registry_status": "pending",
+      "schema_errors": [],
+      "status": "pending",
+      "version": "pending"
+    },
+    {
+      "id": "closed_form_precision_pc",
+      "implementation": "not started",
+      "locality": "block_local",
+      "reason": "no registered implementation",
+      "registry_status": "pending",
+      "schema_errors": [],
+      "status": "pending",
+      "version": "pending"
+    },
+    {
+      "id": "direct_feedback_alignment",
+      "implementation": "not started",
+      "locality": "relaxed_feedback",
+      "reason": "no registered implementation",
+      "registry_status": "pending",
+      "schema_errors": [],
+      "status": "pending",
+      "version": "pending"
+    },
+    {
+      "id": "stream_amortized_pc",
+      "implementation": "not started",
+      "locality": "block_local",
+      "reason": "no registered implementation",
+      "registry_status": "pending",
+      "schema_errors": [],
+      "status": "pending",
+      "version": "pending"
+    },
+    {
+      "id": "pc_alm_control_variate",
+      "implementation": "not started",
+      "locality": "block_local",
+      "reason": "no registered implementation",
+      "registry_status": "pending",
+      "schema_errors": [],
+      "status": "pending",
+      "version": "pending"
+    },
+    {
+      "id": "bp_adamw",
+      "implementation": "planned",
+      "locality": "global_reverse",
+      "reason": "no registered implementation",
+      "registry_status": "pending",
+      "schema_errors": [],
+      "status": "pending",
+      "version": "pending"
+    },
+    {
+      "id": "checkpointed_bp_adamw",
+      "implementation": "planned",
+      "locality": "global_reverse",
+      "reason": "no registered implementation",
+      "registry_status": "pending",
+      "schema_errors": [],
+      "status": "pending",
+      "version": "pending"
+    },
+    {
+      "id": "standard_pc_bp",
+      "implementation": "planned",
+      "locality": "block_local",
+      "reason": "no registered implementation",
+      "registry_status": "pending",
+      "schema_errors": [],
+      "status": "pending",
+      "version": "pending"
+    },
+    {
+      "id": "ipc",
+      "implementation": "planned",
+      "locality": "block_local",
+      "reason": "no registered implementation",
+      "registry_status": "pending",
+      "schema_errors": [],
+      "status": "pending",
+      "version": "pending"
+    }
+  ],
+  "protocol": [
+    "init_state",
+    "relax_step",
+    "local_update",
+    "diagnostics",
+    "step_cost"
+  ],
+  "python": "3.12.3",
+  "status": "pending",
+  "torch": "2.12.0+cu130"
+}

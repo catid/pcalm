@@ -2,19 +2,19 @@
   "schema_version": 1,
   "status_policy": "pending until source, equations, tests, and 10M-token smoke pass",
   "methods": [
-    {"id":"pc_alm", "rank":1, "literature":"arXiv:2605.31022", "implementation":"reference scaffold", "locality":"block_local", "strict_no_autograd":false, "status":"pending"},
-    {"id":"epc", "rank":2, "literature":"ICML 2026 PMLR 306", "implementation":"not started", "locality":"block_local", "strict_no_autograd":false, "status":"pending"},
-    {"id":"meta_pcn", "rank":3, "literature":"ICLR 2026", "implementation":"not started", "locality":"block_local", "strict_no_autograd":false, "status":"pending"},
-    {"id":"precision_weighted_pc", "rank":4, "literature":"deep-PC precision weighting", "implementation":"not started", "locality":"block_local", "strict_no_autograd":false, "status":"pending"},
-    {"id":"stable_parameterization", "rank":5, "literature":"ICML 2026 PMLR 306", "implementation":"wrapper pending", "locality":"block_local", "strict_no_autograd":false, "status":"pending"},
-    {"id":"wf_act_pc", "rank":6, "literature":"arXiv:2607.13380", "implementation":"not started", "locality":"block_local", "strict_no_autograd":false, "status":"pending"},
-    {"id":"closed_form_precision_pc", "rank":7, "literature":"arXiv:2605.20293", "implementation":"not started", "locality":"block_local", "strict_no_autograd":true, "status":"pending"},
-    {"id":"direct_feedback_alignment", "rank":8, "literature":"arXiv:2602.15571", "implementation":"not started", "locality":"relaxed_feedback", "strict_no_autograd":true, "status":"pending"},
-    {"id":"stream_amortized_pc", "rank":9, "literature":"arXiv:2601.20895", "implementation":"not started", "locality":"block_local", "strict_no_autograd":false, "status":"pending"},
-    {"id":"pc_alm_control_variate", "rank":10, "literature":"new hybrid", "implementation":"not started", "locality":"block_local", "strict_no_autograd":true, "status":"pending"},
-    {"id":"bp_adamw", "rank":null, "literature":"control", "implementation":"planned", "locality":"global_reverse", "strict_no_autograd":false, "status":"pending"},
-    {"id":"checkpointed_bp_adamw", "rank":null, "literature":"control", "implementation":"planned", "locality":"global_reverse", "strict_no_autograd":false, "status":"pending"},
-    {"id":"standard_pc_bp", "rank":null, "literature":"control", "implementation":"planned", "locality":"block_local", "strict_no_autograd":false, "status":"pending"},
-    {"id":"ipc", "rank":null, "literature":"ICML 2026 DeepPCNs", "implementation":"planned", "locality":"block_local", "strict_no_autograd":false, "status":"pending"}
+    {"id":"pc_alm", "rank":1, "literature":"arXiv:2605.31022", "implementation":"reference scaffold", "version":"reference-0.2", "locality":"block_local", "strict_no_autograd":false, "status":"pending"},
+    {"id":"epc", "rank":2, "literature":"ICML 2026 PMLR 306", "implementation":"not started", "version":"pending", "locality":"block_local", "strict_no_autograd":false, "status":"pending"},
+    {"id":"meta_pcn", "rank":3, "literature":"ICLR 2026", "implementation":"not started", "version":"pending", "locality":"block_local", "strict_no_autograd":false, "status":"pending"},
+    {"id":"precision_weighted_pc", "rank":4, "literature":"deep-PC precision weighting", "implementation":"not started", "version":"pending", "locality":"block_local", "strict_no_autograd":false, "status":"pending"},
+    {"id":"stable_parameterization", "rank":5, "literature":"ICML 2026 PMLR 306", "implementation":"wrapper pending", "version":"pending", "locality":"block_local", "strict_no_autograd":false, "status":"pending"},
+    {"id":"wf_act_pc", "rank":6, "literature":"arXiv:2607.13380", "implementation":"not started", "version":"pending", "locality":"block_local", "strict_no_autograd":false, "status":"pending"},
+    {"id":"closed_form_precision_pc", "rank":7, "literature":"arXiv:2605.20293", "implementation":"not started", "version":"pending", "locality":"block_local", "strict_no_autograd":true, "status":"pending"},
+    {"id":"direct_feedback_alignment", "rank":8, "literature":"arXiv:2602.15571", "implementation":"not started", "version":"pending", "locality":"relaxed_feedback", "strict_no_autograd":true, "status":"pending"},
+    {"id":"stream_amortized_pc", "rank":9, "literature":"arXiv:2601.20895", "implementation":"not started", "version":"pending", "locality":"block_local", "strict_no_autograd":false, "status":"pending"},
+    {"id":"pc_alm_control_variate", "rank":10, "literature":"new hybrid", "implementation":"not started", "version":"pending", "locality":"block_local", "strict_no_autograd":true, "status":"pending"},
+    {"id":"bp_adamw", "rank":null, "literature":"control", "implementation":"planned", "version":"pending", "locality":"global_reverse", "strict_no_autograd":false, "status":"pending"},
+    {"id":"checkpointed_bp_adamw", "rank":null, "literature":"control", "implementation":"planned", "version":"pending", "locality":"global_reverse", "strict_no_autograd":false, "status":"pending"},
+    {"id":"standard_pc_bp", "rank":null, "literature":"control", "implementation":"planned", "version":"pending", "locality":"block_local", "strict_no_autograd":false, "status":"pending"},
+    {"id":"ipc", "rank":null, "literature":"ICML 2026 DeepPCNs", "implementation":"planned", "version":"pending", "locality":"block_local", "strict_no_autograd":false, "status":"pending"}
   ]
 }
