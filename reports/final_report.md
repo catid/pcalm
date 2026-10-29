@@ -33,6 +33,8 @@ No validation loss, perplexity, time-to-1B, GPU-hour, or method ranking is claim
 
 An ePC adaptation pilot ran on the full 40M model for 100,000 FineWeb targets on eight independent seeds across foureyes and ripper. It reached exact budgets with nonzero error/residual diagnostics at roughly 2.4k tokens/s, versus roughly 60–68k tokens/s for BP controls. This is an implementation-cost and stability observation only; it is below the 10M gate and used no held-out validation claim. One separate BP control was interrupted at 21.1M tokens after a duplicate GPU assignment was detected; it is retained and labeled as a failed run in the registry.
 
+Meta-PCN and precision-weighted PC each completed corrected 100k-token pilots on work and loki with nonzero residual/error or precision diagnostics, at roughly 4.2–4.6k tokens/s. Their preceding 1M interface pilots are retained as failed zero-signal runs because the output-local teaching clamp was not yet wired into those adapters. A separate orchestration check caught and fixed a missing `CUDA_VISIBLE_DEVICES` binding that had initially placed two local pilots on GPU 0; all subsequent pilots verify per-GPU utilization.
+
 ## Phase 1 control pilots
 
 Twelve independent single-GPU BP AdamW controls completed exactly 10M FineWeb training targets (four on each 4-GPU host and two on each 2-GPU host). Final training losses were 5.87–6.23. Mean throughput was 60.9k tokens/s on foureyes, 54.1k on ripper, 61.7k on work, and 63.4k on loki. These are control/pipeline measurements, not validation results or method rankings; raw metrics, manifests, and registry entries are retained per run.
