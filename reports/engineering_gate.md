@@ -22,6 +22,6 @@ Date: 2026-10-29 UTC. This gate is a living record; a missing or failed item blo
 
 ## Measured bottleneck and next action
 
-The immediate bottleneck is cross-node Ethernet communication, followed by method implementation and exact-budget FineWeb resume/validation checks. The runtime is now parity-tested and the source tree is copied to worker NVMe. Foureyes local all-reduce falls from 34.4 to 21.3 GB/s at two versus four ranks for the measured 20 MB bucket, while cross-node payload rates fall below 6 MB/s by world 8–12. Independent 4-GPU jobs therefore maximize useful progress without filler communication.
+The immediate bottleneck is cross-node Ethernet communication, followed by local-method throughput and exact-budget FineWeb resume/validation checks. The runtime is now parity-tested and the source tree is copied to worker NVMe. Foureyes local all-reduce falls from 34.4 to 21.3 GB/s at two versus four ranks for the measured 20 MB bucket, while cross-node payload rates fall below 6 MB/s by world 8–12. Independent 4-GPU jobs therefore maximize useful progress without filler communication.
 
 **1B-token status: BLOCKED.** No expensive 1B-token run has been launched.

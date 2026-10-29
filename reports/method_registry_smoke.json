@@ -6,7 +6,7 @@
   },
   "device": "cpu",
   "gate": "method_registry_smokes",
-  "generated_at_utc": "2026-10-29T22:17:11Z",
+  "generated_at_utc": "2026-10-29T22:17:22Z",
   "methods": [
     {
       "class": "src.methods.PCALMReference",
@@ -51,13 +51,13 @@
       "status": "pending",
       "step_cost": {
         "batch_tokens": 8,
-        "elapsed_s": 0.003800204023718834,
+        "elapsed_s": 0.004274930921383202,
         "inner_steps": 1,
         "local_update_count": 2,
         "locality": "block_local",
         "method": "pc_alm",
         "strict_no_autograd": false,
-        "tokens_per_s": 2105.150131431969,
+        "tokens_per_s": 1871.3752683076127,
         "version": "reference-0.2"
       },
       "strict_no_autograd": false,
@@ -111,13 +111,13 @@
       "status": "pending",
       "step_cost": {
         "batch_tokens": 8,
-        "elapsed_s": 0.0026224340545013547,
+        "elapsed_s": 0.0030036299722269177,
         "inner_steps": 1,
         "local_update_count": 2,
         "locality": "block_local",
         "method": "epc",
         "strict_no_autograd": false,
-        "tokens_per_s": 3050.601019411017,
+        "tokens_per_s": 2663.443924175763,
         "version": "independent-transformer-adaptation-0.1"
       },
       "strict_no_autograd": false,
@@ -181,13 +181,13 @@
       "status": "pending",
       "step_cost": {
         "batch_tokens": 8,
-        "elapsed_s": 0.0023425210965797305,
+        "elapsed_s": 0.0026589790359139442,
         "inner_steps": 1,
         "local_update_count": 2,
         "locality": "block_local",
         "method": "meta_pcn",
         "strict_no_autograd": false,
-        "tokens_per_s": 3415.1239925568416,
+        "tokens_per_s": 3008.673589353908,
         "version": "meta-error-controller-0.1"
       },
       "strict_no_autograd": false,
@@ -237,13 +237,13 @@
       "status": "pending",
       "step_cost": {
         "batch_tokens": 8,
-        "elapsed_s": 0.002154406043700874,
+        "elapsed_s": 0.0025304940063506365,
         "inner_steps": 1,
         "local_update_count": 2,
         "locality": "block_local",
         "method": "precision_weighted_pc",
         "strict_no_autograd": false,
-        "tokens_per_s": 3713.3204408661377,
+        "tokens_per_s": 3161.4380353886854,
         "version": "precision-weighted-0.1"
       },
       "strict_no_autograd": false,
@@ -294,7 +294,7 @@
       "status": "pending",
       "step_cost": {
         "batch_tokens": 8,
-        "elapsed_s": 0.002522793016396463,
+        "elapsed_s": 0.002932731993496418,
         "inner_steps": 1,
         "local_update_count": 2,
         "locality": "block_local",
@@ -302,7 +302,7 @@
         "stable_init_scale": 0.7071067811865476,
         "stable_residual_scale": 0.7071067811865476,
         "strict_no_autograd": false,
-        "tokens_per_s": 3171.0885308486922,
+        "tokens_per_s": 2727.831938868154,
         "version": "residual-scale-init-0.1"
       },
       "strict_no_autograd": false,
