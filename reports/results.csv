@@ -80,3 +80,7 @@ phase1-epc-1m-k4-work-g0-seed20262700,epc,1,completed,1000000,,,13822.867,0.0200
 phase1-epc-1m-k4-work-g1-seed20262701,epc,1,completed,1000000,,,13664.566,0.020328,,20262701,1M epc inner_steps=4 ablation; nonzero diagnostics; below 10M gate.
 phase1-epc-stable-1m-k4-loki-g0-seed20262702,epc_stable,1,completed,1000000,,,11956.892,0.023232,,20262702,1M epc_stable inner_steps=4 ablation; nonzero diagnostics; below 10M gate.
 phase1-epc-stable-1m-k4-loki-g1-seed20262703,epc_stable,1,completed,1000000,,,11867.478,0.023407,,20262703,1M epc_stable inner_steps=4 ablation; nonzero diagnostics; below 10M gate.
+phase1-pcalm-1m-k4-work-g0-seed20262800,pc_alm,1,completed,1000000,,,14008.554,0.019829,,20262800,1M PC-ALM inner_steps=4 ablation; nonzero primal/dual diagnostics; below 10M gate.
+phase1-pcalm-1m-k4-work-g1-seed20262801,pc_alm,1,completed,1000000,,,14049.399,0.019772,,20262801,1M PC-ALM inner_steps=4 ablation; nonzero primal/dual diagnostics; below 10M gate.
+phase1-pcalm-1m-k4-loki-g0-seed20262802,pc_alm,1,completed,1000000,,,12259.376,0.022658,,20262802,1M PC-ALM inner_steps=4 ablation; nonzero primal/dual diagnostics; below 10M gate.
+phase1-pcalm-1m-k4-loki-g1-seed20262803,pc_alm,1,completed,1000000,,,12350.148,0.022492,,20262803,1M PC-ALM inner_steps=4 ablation; nonzero primal/dual diagnostics; below 10M gate.
