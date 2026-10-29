@@ -423,10 +423,17 @@ class MetaPCNReference(EPCReference):
 
     @torch.no_grad()
     def relax_step(self, state: MethodState, input_ids: torch.Tensor, labels: torch.Tensor | None = None):
-        del input_ids, labels
+        del input_ids
         if state.errors is None or len(state.errors) != len(self.model.blocks):
             raise ValueError("Meta-PCN state is missing one error tensor per block")
         residuals: List[torch.Tensor] = []
+        if labels is not None:
+            h_last = state.hidden[-1].detach().requires_grad_(True)
+            with torch.enable_grad():
+                logits = self.model.lm_head(self.model.norm(h_last))
+                loss = F.cross_entropy(logits[:, :-1].float().reshape(-1, logits.size(-1)), labels[:, 1:].reshape(-1))
+                output_grad = torch.autograd.grad(loss, h_last, only_inputs=True)[0]
+            state.hidden[-1] = (h_last.detach() - self.eta_h * output_grad.detach()).detach()
         means: List[float] = []
         variances: List[float] = []
         for i, block in enumerate(self.model.blocks):
@@ -506,10 +513,17 @@ class PrecisionWeightedPCReference:
 
     @torch.no_grad()
     def relax_step(self, state: MethodState, input_ids: torch.Tensor, labels: torch.Tensor | None = None):
-        del input_ids, labels
+        del input_ids
         if state.precisions is None or len(state.precisions) != len(self.model.blocks):
             raise ValueError("precision-PC state is missing one precision per block")
         residuals: List[torch.Tensor] = []
+        if labels is not None:
+            h_last = state.hidden[-1].detach().requires_grad_(True)
+            with torch.enable_grad():
+                logits = self.model.lm_head(self.model.norm(h_last))
+                loss = F.cross_entropy(logits[:, :-1].float().reshape(-1, logits.size(-1)), labels[:, 1:].reshape(-1))
+                output_grad = torch.autograd.grad(loss, h_last, only_inputs=True)[0]
+            state.hidden[-1] = (h_last.detach() - self.eta_h * output_grad.detach()).detach()
         for i, block in enumerate(self.model.blocks):
             pred = block(state.hidden[i])
             residual = state.hidden[i + 1] - pred
