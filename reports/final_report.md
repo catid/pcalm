@@ -24,9 +24,9 @@ The ten-arm registry and method cards are committed, with PC-ALM as the only ref
 
 ## Required next gates
 
-1. Replace or isolate the FineWeb streaming reader and pass exact-budget, validation-isolation, and resume tests.
-2. Add the tiny Transformer PC-ALM equilibrium/gradient-cosine checks and instrument global versus local autograd.
+1. Extend the isolated worker to reserve and evaluate the full 10M validation stream, then pass exact-budget, validation-isolation, and resume checks at 10M.
+2. Add the tiny Transformer PC-ALM equilibrium/gradient-cosine diagnostic and strict local-autograd audit.
 3. Implement each method card behind the common interface and run a 10M-token smoke per arm.
-4. Re-run optimized/compiled equivalence and distributed single-versus-multi-GPU checks before any 50M screen.
+4. Re-run optimized/compiled equivalence and cross-node DDP equivalence before any 50M screen.
 
 No validation loss, perplexity, time-to-1B, GPU-hour, or method ranking is claimed in this snapshot.

@@ -1,7 +1,7 @@
 import math
 import torch
 from src.data import fixed_chunks, rank_chunks, next_token_batch
-from src.data_stream import count_loss_tokens
+from src.data_stream import count_loss_tokens, StreamSpec, rank_token_chunks
 
 def test_linear_alm_equilibrium():
     # min_h 1/2(h-y)^2 subject to h-wx=0, w fixed. KKT gives h=wx and
@@ -26,3 +26,14 @@ def test_rank_chunks_are_disjoint_and_counted():
     assert b == [[20,21,22,23,24,25,26,27,28,29]]
     i, lab, n = next_token_batch(a[0]); assert i == list(range(10,19)) and lab == list(range(11,20)) and n == 9
     assert count_loss_tokens(a) == 18
+
+def test_validation_chunk_isolation():
+    # A synthetic tokenizer/stream demonstrates the protocol: validation owns
+    # the first deterministic chunk range and no training rank receives it.
+    class Tok:
+        def encode(self, text, add_special_tokens=False): return list(range(int(text)))
+    spec = StreamSpec(chunk_tokens=4, validation_chunks=1)
+    rows = [{"text": "4"}, {"text": "4"}, {"text": "4"}, {"text": "4"}]
+    all_chunks = list(__import__("src.data_stream", fromlist=["iter_token_chunks"]).iter_token_chunks(rows, Tok(), spec))
+    train0 = list(rank_token_chunks(rows, Tok(), spec, 0, 2)); train1 = list(rank_token_chunks(rows, Tok(), spec, 1, 2))
+    assert all_chunks[0] not in train0 and all_chunks[0] not in train1 and set(map(tuple, train0)).isdisjoint(set(map(tuple, train1)))
