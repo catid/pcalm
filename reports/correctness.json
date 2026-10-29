@@ -1,0 +1,18 @@
+{
+  "date": "2026-10-29",
+  "reference_tests": "pass",
+  "checks": {
+    "linear_alm_kkt": "pass",
+    "local_linear_finite_difference": "pass",
+    "causal_mask": "pass",
+    "next_token_shift_loss": "pass",
+    "tied_embedding_gradient": "pass",
+    "pcalm_relax_no_global_backward": "pass",
+    "rank_chunk_disjointness": "pass",
+    "exact_budget_worker_smoke": "pass_2046_and_resume",
+    "compiled_fused_cuda_graph": "pending",
+    "distributed_single_multi_equivalence": "pending",
+    "tiny_transformer_pc_gradient_cosine": "pending"
+  },
+  "command": "/home/catid/venvs/dnn/bin/python scripts/run_reference_tests.py"
+}

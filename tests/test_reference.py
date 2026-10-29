@@ -28,3 +28,18 @@ def test_pcalm_state_and_diagnostics():
     state = method.init_state(ids); assert len(state.hidden) == 3 and len(state.dual) == 2
     method.relax_step(state, ids, ids); d = method.diagnostics(state)
     assert d["step"] == 1 and all(torch.isfinite(x).all() for x in state.hidden)
+
+def test_pcalm_relax_has_no_global_backward():
+    torch.manual_seed(3); cfg = GPTConfig(vocab_size=53, n_layers=2, d_model=32, n_heads=4, d_ff=64, max_seq_len=8)
+    m = CausalTransformer(cfg); ids = torch.randint(cfg.vocab_size, (1, 8)); method = PCALMReference(m); state = method.init_state(ids)
+    original = torch.Tensor.backward
+    def forbidden(*args, **kwargs): raise AssertionError("global backward called during PC relaxation")
+    torch.Tensor.backward = forbidden
+    try: method.relax_step(state, ids, ids)
+    finally: torch.Tensor.backward = original
+    assert state.step == 1
+
+def test_tied_embedding_receives_output_gradient():
+    torch.manual_seed(4); cfg = GPTConfig(vocab_size=53, n_layers=1, d_model=16, n_heads=2, d_ff=32, max_seq_len=8)
+    m = CausalTransformer(cfg); ids = torch.randint(cfg.vocab_size, (1, 8)); loss, _ = m(ids, ids); loss.backward()
+    assert m.token_embedding.weight.grad is not None and torch.isfinite(m.token_embedding.weight.grad).all()

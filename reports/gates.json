@@ -13,7 +13,7 @@
     "local_nccl_1_2_4": "pass",
     "cross_node_nccl_8_12": "measured_poor_scaling",
     "streaming_data_smoke": "pass_isolated_worker",
-    "exact_budget_resume_validation": "pass_2046_token_smoke",
+    "exact_budget_resume_validation": "pass_2046_resume_and_10240_live_smoke",
     "optimized_equivalence": "pending",
     "method_registry_smokes": "pending"
   },
