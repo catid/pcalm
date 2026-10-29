@@ -16,7 +16,7 @@ Local foureyes all-reduce is 21.3 GB/s at world size 4 for a 20 MB payload. Dire
 
 The reference tests pass parameter counting/tied weights, causal masking, next-token loss normalization, PC state initialization/diagnostics, a linear PC-ALM KKT check, finite-difference local gradients, and deterministic rank chunk disjointness. A live FineWeb tokenizer smoke produced three 128-token chunks and 381 post-shift targets. The synthetic BP control completed 2,046 exact targets and wrote resumable checkpoints.
 
-The live FineWeb BP pilot consumed exactly 2,046 targets and wrote metrics/checkpoints, but the process aborted with `PyGILState_Release` during Python finalization in the streaming datasets/pyarrow stack. The same failure occurred on a retry after explicit dataset deletion. These runs are recorded as failures and are excluded from quality claims. The loader must be isolated or replaced before a 10M smoke test.
+The initial in-process FineWeb BP pilot consumed exactly 2,046 targets and wrote metrics/checkpoints, then aborted with `PyGILState_Release` during Python finalization in the streaming datasets/pyarrow stack; a retry reproduced it. Those failures remain recorded and excluded from quality claims. The reader is now isolated in `scripts/fineweb_worker.py`, which exits outside the training interpreter. The isolated 2,046-token pilot and resume-from-1,023 checkpoint both completed with exit 0 and exact counts. A 10M smoke remains pending.
 
 ## Method status
 

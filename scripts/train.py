@@ -8,9 +8,8 @@ counts and writes a checkpoint at token boundaries.
 import argparse, json, os, sys, time
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+import subprocess, signal
 import torch
-from datasets import load_dataset
-from transformers import AutoTokenizer
 from src.model import GPTConfig, CausalTransformer
 from src.data_stream import StreamSpec, iter_token_chunks
 
@@ -25,8 +24,13 @@ def main():
     start_tokens, step = 0, 0
     if args.resume:
         ckpt = torch.load(args.resume, map_location=device); model.load_state_dict(ckpt["model"]); opt.load_state_dict(ckpt["optimizer"]); start_tokens, step = ckpt["tokens"], ckpt["step"]
+    worker = None
     if args.source == "fineweb":
-        tok = AutoTokenizer.from_pretrained("mistralai/Mistral-7B-v0.1"); ds = load_dataset("HuggingFaceFW/fineweb", name="sample-10BT", split="train", streaming=True); chunks = iter_token_chunks(ds, tok, StreamSpec(chunk_tokens=1024, validation_chunks=0))
+        worker = subprocess.Popen([sys.executable, str(Path(__file__).with_name("fineweb_worker.py"))], stdout=subprocess.PIPE, text=True, bufsize=1)
+        def worker_chunks():
+            for line in worker.stdout:
+                yield json.loads(line)
+        chunks = worker_chunks()
     else:
         g = torch.Generator().manual_seed(20261029); chunks = ([int(x) for x in torch.randint(32000, (1024,), generator=g)] for _ in range((args.tokens+1023)//1024))
     outdir = Path("runs") / args.run_id; outdir.mkdir(parents=True, exist_ok=True); metrics = outdir / "metrics.jsonl"; seen = start_tokens; started = time.perf_counter()
@@ -52,7 +56,9 @@ def main():
     # during interpreter finalization on this environment. Close references and
     # let the process exit through the normal path; the failure is tracked if it
     # recurs rather than being counted as a training result.
-    if args.source == "fineweb":
-        del ds
+    if worker is not None:
+        worker.terminate()
+        try: worker.wait(timeout=5)
+        except subprocess.TimeoutExpired: worker.kill(); worker.wait()
 
 if __name__ == "__main__": main()
