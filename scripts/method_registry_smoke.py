@@ -22,7 +22,13 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import torch
 
 from src.model import CausalTransformer, GPTConfig
-from src.methods import EPCReference, PCALMReference, StableParameterizationWrapper
+from src.methods import (
+    EPCReference,
+    MetaPCNReference,
+    PCALMReference,
+    PrecisionWeightedPCReference,
+    StableParameterizationWrapper,
+)
 
 
 REQUIRED_ENTRY_FIELDS = {
@@ -44,6 +50,14 @@ def _epc_factory(model):
     return EPCReference(model, inner_steps=1, parameter_step=0.0)
 
 
+def _meta_pcn_factory(model):
+    return MetaPCNReference(model, inner_steps=1, parameter_step=0.0)
+
+
+def _precision_weighted_factory(model):
+    return PrecisionWeightedPCReference(model, inner_steps=1, parameter_step=0.0)
+
+
 def _stable_factory(model):
     return StableParameterizationWrapper(_pc_alm_factory(model))
 
@@ -51,6 +65,8 @@ def _stable_factory(model):
 IMPLEMENTATIONS = {
     "pc_alm": _pc_alm_factory,
     "epc": _epc_factory,
+    "meta_pcn": _meta_pcn_factory,
+    "precision_weighted_pc": _precision_weighted_factory,
     "stable_parameterization": _stable_factory,
 }
 
@@ -86,7 +102,8 @@ def _method_smoke(factory, device: torch.device, seed: int) -> dict[str, Any]:
     update = method.local_update(state, ids, ids, apply=False)
     diag = method.diagnostics(state)
     cost = method.step_cost(int(ids.numel()), time.perf_counter() - t0)
-    finite = all(torch.isfinite(x).all().item() for x in state.hidden + state.dual + residuals)
+    state_tensors = list(state.hidden) + list(state.dual) + list(state.errors or []) + list(state.precisions or [])
+    finite = all(torch.isfinite(x).all().item() for x in state_tensors + residuals)
     if not finite:
         raise RuntimeError("non-finite state/residual in PC-ALM smoke")
     return {

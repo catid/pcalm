@@ -6,21 +6,21 @@
   },
   "device": "cpu",
   "gate": "method_registry_smokes",
-  "generated_at_utc": "2026-10-29T22:00:25Z",
+  "generated_at_utc": "2026-10-29T22:17:11Z",
   "methods": [
     {
       "class": "src.methods.PCALMReference",
       "diagnostics": {
-        "dual_norm": 0.0,
+        "dual_norm": 0.0009292462491430342,
         "dual_norm_by_layer": [
           0.0,
-          0.0
+          0.0018584924982860684
         ],
         "primal_residual_by_layer": [
           0.0,
-          0.0
+          0.18584924936294556
         ],
-        "primal_residual_norm": 0.0,
+        "primal_residual_norm": 0.09292462468147278,
         "step": 1
       },
       "id": "pc_alm",
@@ -28,9 +28,10 @@
       "local_update": {
         "layer_grad_norm": [
           0.0,
-          0.0
+          0.0007939738570712507
         ],
-        "local_loss": 0.0,
+        "local_loss": 2.7932157536270097e-05,
+        "output_grad_norm": 2.1137824058532715,
         "updated_layers": 0
       },
       "locality": "block_local",
@@ -50,13 +51,13 @@
       "status": "pending",
       "step_cost": {
         "batch_tokens": 8,
-        "elapsed_s": 0.003947473946027458,
+        "elapsed_s": 0.003800204023718834,
         "inner_steps": 1,
         "local_update_count": 2,
         "locality": "block_local",
         "method": "pc_alm",
         "strict_no_autograd": false,
-        "tokens_per_s": 2026.612489247916,
+        "tokens_per_s": 2105.150131431969,
         "version": "reference-0.2"
       },
       "strict_no_autograd": false,
@@ -67,29 +68,30 @@
       "diagnostics": {
         "error_mean_by_layer": [
           0.0,
-          0.0
+          0.00029784144135192037
         ],
-        "error_norm": 0.0,
+        "error_norm": 0.04646231234073639,
         "error_norm_by_layer": [
           0.0,
-          0.0
+          0.09292462468147278
         ],
         "error_var_by_layer": [
           0.0,
-          0.0
+          3.364170697750524e-05
         ],
-        "primal_residual_norm": 0.0,
+        "primal_residual_norm": 0.09292462468147278,
         "step": 1
       },
       "id": "epc",
       "implementation": "adapted Transformer reference",
       "local_update": {
-        "error_norm": 0.0,
+        "error_norm": 0.04646231234073639,
         "layer_grad_norm": [
           0.0,
-          0.0
+          0.0008288738317787647
         ],
-        "local_loss": 0.0,
+        "local_loss": 3.0441700801020488e-05,
+        "output_grad_norm": 2.1132068634033203,
         "updated_layers": 0
       },
       "locality": "block_local",
@@ -109,51 +111,157 @@
       "status": "pending",
       "step_cost": {
         "batch_tokens": 8,
-        "elapsed_s": 0.002561839995905757,
+        "elapsed_s": 0.0026224340545013547,
         "inner_steps": 1,
         "local_update_count": 2,
         "locality": "block_local",
         "method": "epc",
         "strict_no_autograd": false,
-        "tokens_per_s": 3122.7555244610594,
+        "tokens_per_s": 3050.601019411017,
         "version": "independent-transformer-adaptation-0.1"
       },
       "strict_no_autograd": false,
       "version": "independent-transformer-adaptation-0.1"
     },
     {
-      "id": "meta_pcn",
-      "implementation": "not started",
-      "locality": "block_local",
-      "reason": "no registered implementation",
-      "registry_status": "pending",
-      "schema_errors": [],
-      "status": "pending",
-      "version": "pending"
-    },
-    {
-      "id": "precision_weighted_pc",
-      "implementation": "not started",
-      "locality": "block_local",
-      "reason": "no registered implementation",
-      "registry_status": "pending",
-      "schema_errors": [],
-      "status": "pending",
-      "version": "pending"
-    },
-    {
-      "class": "src.methods.StableParameterizationWrapper",
+      "class": "src.methods.MetaPCNReference",
       "diagnostics": {
-        "dual_norm": 0.0,
-        "dual_norm_by_layer": [
+        "cross_layer_imbalance": 0.0,
+        "error_mean_by_layer": [
           0.0,
           0.0
         ],
-        "primal_residual_by_layer": [
+        "error_norm": 0.0,
+        "error_norm_by_layer": [
+          0.0,
+          0.0
+        ],
+        "error_var_by_layer": [
+          0.0,
+          0.0
+        ],
+        "meta_lr": 0.5,
+        "prediction_error_mean_by_layer": [
+          0.0,
+          0.0
+        ],
+        "prediction_error_var_by_layer": [
           0.0,
           0.0
         ],
         "primal_residual_norm": 0.0,
+        "step": 1
+      },
+      "id": "meta_pcn",
+      "implementation": "adapted Transformer reference",
+      "local_update": {
+        "error_norm": 0.0,
+        "layer_grad_norm": [
+          0.0,
+          0.0
+        ],
+        "local_loss": 0.0,
+        "output_grad_norm": 2.1294448375701904,
+        "updated_layers": 0
+      },
+      "locality": "block_local",
+      "protocol": [
+        "init_state",
+        "relax_step",
+        "local_update",
+        "diagnostics",
+        "step_cost"
+      ],
+      "protocol_smoke": "pass",
+      "reason": "10M-token smoke pending",
+      "registry_status": "adaptation_smoke_pass_10m_pending",
+      "residual_count": 2,
+      "schema_errors": [],
+      "state_step": 1,
+      "status": "pending",
+      "step_cost": {
+        "batch_tokens": 8,
+        "elapsed_s": 0.0023425210965797305,
+        "inner_steps": 1,
+        "local_update_count": 2,
+        "locality": "block_local",
+        "method": "meta_pcn",
+        "strict_no_autograd": false,
+        "tokens_per_s": 3415.1239925568416,
+        "version": "meta-error-controller-0.1"
+      },
+      "strict_no_autograd": false,
+      "version": "meta-error-controller-0.1"
+    },
+    {
+      "class": "src.methods.PrecisionWeightedPCReference",
+      "diagnostics": {
+        "cross_layer_imbalance": 0.0,
+        "error_norm_by_layer": [
+          0.0,
+          0.0
+        ],
+        "precision_by_layer": [
+          100.9000015258789,
+          100.9000015258789
+        ],
+        "precision_mean": 100.9000015258789,
+        "primal_residual_norm": 0.0,
+        "step": 1
+      },
+      "id": "precision_weighted_pc",
+      "implementation": "precision-weighted local reference",
+      "local_update": {
+        "layer_grad_norm": [
+          0.0,
+          0.0
+        ],
+        "local_loss": 0.0,
+        "precision_mean": 100.9000015258789,
+        "updated_layers": 0
+      },
+      "locality": "block_local",
+      "protocol": [
+        "init_state",
+        "relax_step",
+        "local_update",
+        "diagnostics",
+        "step_cost"
+      ],
+      "protocol_smoke": "pass",
+      "reason": "10M-token smoke pending",
+      "registry_status": "adaptation_smoke_pass_10m_pending",
+      "residual_count": 2,
+      "schema_errors": [],
+      "state_step": 1,
+      "status": "pending",
+      "step_cost": {
+        "batch_tokens": 8,
+        "elapsed_s": 0.002154406043700874,
+        "inner_steps": 1,
+        "local_update_count": 2,
+        "locality": "block_local",
+        "method": "precision_weighted_pc",
+        "strict_no_autograd": false,
+        "tokens_per_s": 3713.3204408661377,
+        "version": "precision-weighted-0.1"
+      },
+      "strict_no_autograd": false,
+      "version": "precision-weighted-0.1"
+    },
+    {
+      "class": "src.methods.StableParameterizationWrapper",
+      "diagnostics": {
+        "dual_norm": 0.001045042765326798,
+        "dual_norm_by_layer": [
+          0.0,
+          0.002090085530653596
+        ],
+        "primal_residual_by_layer": [
+          0.0,
+          0.20900854468345642
+        ],
+        "primal_residual_norm": 0.10450427234172821,
         "stable_init_scale": 0.7071067811865476,
         "stable_residual_scale": 0.7071067811865476,
         "step": 1
@@ -163,9 +271,10 @@
       "local_update": {
         "layer_grad_norm": [
           0.0,
-          0.0
+          0.0007419984904117882
         ],
-        "local_loss": 0.0,
+        "local_loss": 3.5327335353940725e-05,
+        "output_grad_norm": 2.1057069301605225,
         "updated_layers": 0
       },
       "locality": "block_local",
@@ -185,7 +294,7 @@
       "status": "pending",
       "step_cost": {
         "batch_tokens": 8,
-        "elapsed_s": 0.0027232440188527107,
+        "elapsed_s": 0.002522793016396463,
         "inner_steps": 1,
         "local_update_count": 2,
         "locality": "block_local",
@@ -193,7 +302,7 @@
         "stable_init_scale": 0.7071067811865476,
         "stable_residual_scale": 0.7071067811865476,
         "strict_no_autograd": false,
-        "tokens_per_s": 2937.6728433503954,
+        "tokens_per_s": 3171.0885308486922,
         "version": "residual-scale-init-0.1"
       },
       "strict_no_autograd": false,

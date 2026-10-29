@@ -406,7 +406,7 @@ class MetaPCNReference(EPCReference):
     """
 
     name = "meta_pcn"
-    version = "independent-transformer-adaptation-0.1"
+    version = "meta-error-controller-0.1"
     locality = "block_local"
     strict_no_autograd = False
     uses_local_autograd = True
@@ -479,7 +479,7 @@ class PrecisionWeightedPCReference:
     """
 
     name = "precision_weighted_pc"
-    version = "independent-transformer-adaptation-0.1"
+    version = "precision-weighted-0.1"
     locality = "block_local"
     strict_no_autograd = False
     uses_local_autograd = True
