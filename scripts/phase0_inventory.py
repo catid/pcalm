@@ -15,7 +15,7 @@ def main():
     cfg = GPTConfig(vocab_size=32000); model = CausalTransformer(cfg)
     parts, total = count_parameters(model)
     device = "cuda" if torch.cuda.is_available() else "cpu"; model = model.to(device)
-    b, t = (1, min(cfg.max_seq_len, 128)); ids = torch.randint(cfg.vocab_size, (b, t), device=device)
+    b, t = (1, min(cfg.max_seq_len, int(os.environ.get("PCALM_BENCH_SEQ", "128")))); ids = torch.randint(cfg.vocab_size, (b, t), device=device)
     labels = torch.roll(ids, -1, -1)
     for _ in range(2): model(ids, labels)
     if device == "cuda": torch.cuda.synchronize()

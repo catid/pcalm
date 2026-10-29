@@ -24,10 +24,10 @@
   "parameter_interval_pass": true,
   "benchmark": {
     "batch": 1,
-    "seq": 128,
-    "elapsed_s": 0.0032575330697000027,
-    "tokens_per_s": 39293.53816561191,
-    "loss": 10.44935417175293
+    "seq": 1024,
+    "elapsed_s": 0.006195782916620374,
+    "tokens_per_s": 165273.7053219036,
+    "loss": 10.43196964263916
   },
-  "memory_peak_bytes": 297546752
+  "memory_peak_bytes": 984974848
 }
