@@ -1,12 +1,12 @@
 {
   "counts": {
     "fail": 0,
-    "pass": 1,
-    "pending": 13
+    "pass": 0,
+    "pending": 14
   },
   "device": "cpu",
   "gate": "method_registry_smokes",
-  "generated_at_utc": "2026-10-29T21:57:50Z",
+  "generated_at_utc": "2026-10-29T22:00:17Z",
   "methods": [
     {
       "class": "src.methods.PCALMReference",
@@ -41,34 +41,85 @@
         "diagnostics",
         "step_cost"
       ],
-      "registry_status": "pending",
+      "protocol_smoke": "pass",
+      "reason": "10M-token smoke pending",
+      "registry_status": "reference_smoke_pass_10m_pending",
       "residual_count": 2,
       "schema_errors": [],
       "state_step": 1,
-      "status": "pass",
+      "status": "pending",
       "step_cost": {
         "batch_tokens": 8,
-        "elapsed_s": 0.0038166960002854466,
+        "elapsed_s": 0.0033760899677872658,
         "inner_steps": 1,
         "local_update_count": 2,
         "locality": "block_local",
         "method": "pc_alm",
         "strict_no_autograd": false,
-        "tokens_per_s": 2096.053759430064,
+        "tokens_per_s": 2369.605098303499,
         "version": "reference-0.2"
       },
       "strict_no_autograd": false,
       "version": "reference-0.2"
     },
     {
+      "class": "src.methods.EPCReference",
+      "diagnostics": {
+        "error_mean_by_layer": [
+          0.0,
+          0.0
+        ],
+        "error_norm": 0.0,
+        "error_norm_by_layer": [
+          0.0,
+          0.0
+        ],
+        "error_var_by_layer": [
+          0.0,
+          0.0
+        ],
+        "primal_residual_norm": 0.0,
+        "step": 1
+      },
       "id": "epc",
-      "implementation": "not started",
+      "implementation": "adapted Transformer reference",
+      "local_update": {
+        "error_norm": 0.0,
+        "layer_grad_norm": [
+          0.0,
+          0.0
+        ],
+        "local_loss": 0.0,
+        "updated_layers": 0
+      },
       "locality": "block_local",
-      "reason": "no registered implementation",
-      "registry_status": "pending",
+      "protocol": [
+        "init_state",
+        "relax_step",
+        "local_update",
+        "diagnostics",
+        "step_cost"
+      ],
+      "protocol_smoke": "pass",
+      "reason": "10M-token smoke pending",
+      "registry_status": "adaptation_smoke_pass_10m_pending",
+      "residual_count": 2,
       "schema_errors": [],
+      "state_step": 1,
       "status": "pending",
-      "version": "pending"
+      "step_cost": {
+        "batch_tokens": 8,
+        "elapsed_s": 0.002299192943610251,
+        "inner_steps": 1,
+        "local_update_count": 2,
+        "locality": "block_local",
+        "method": "epc",
+        "strict_no_autograd": false,
+        "tokens_per_s": 3479.4817991387004,
+        "version": "independent-transformer-adaptation-0.1"
+      },
+      "strict_no_autograd": false,
+      "version": "independent-transformer-adaptation-0.1"
     },
     {
       "id": "meta_pcn",
@@ -91,14 +142,62 @@
       "version": "pending"
     },
     {
+      "class": "src.methods.StableParameterizationWrapper",
+      "diagnostics": {
+        "dual_norm": 0.0,
+        "dual_norm_by_layer": [
+          0.0,
+          0.0
+        ],
+        "primal_residual_by_layer": [
+          0.0,
+          0.0
+        ],
+        "primal_residual_norm": 0.0,
+        "stable_init_scale": 0.7071067811865476,
+        "stable_residual_scale": 0.7071067811865476,
+        "step": 1
+      },
       "id": "stable_parameterization",
-      "implementation": "wrapper pending",
+      "implementation": "wrapper around local methods",
+      "local_update": {
+        "layer_grad_norm": [
+          0.0,
+          0.0
+        ],
+        "local_loss": 0.0,
+        "updated_layers": 0
+      },
       "locality": "block_local",
-      "reason": "no registered implementation",
-      "registry_status": "pending",
+      "protocol": [
+        "init_state",
+        "relax_step",
+        "local_update",
+        "diagnostics",
+        "step_cost"
+      ],
+      "protocol_smoke": "pass",
+      "reason": "10M-token smoke pending",
+      "registry_status": "wrapper_smoke_pass_10m_pending",
+      "residual_count": 2,
       "schema_errors": [],
+      "state_step": 1,
       "status": "pending",
-      "version": "pending"
+      "step_cost": {
+        "batch_tokens": 8,
+        "elapsed_s": 0.002144250087440014,
+        "inner_steps": 1,
+        "local_update_count": 2,
+        "locality": "block_local",
+        "method": "stable_parameterization",
+        "stable_init_scale": 0.7071067811865476,
+        "stable_residual_scale": 0.7071067811865476,
+        "strict_no_autograd": false,
+        "tokens_per_s": 3730.9080908333194,
+        "version": "residual-scale-init-0.1"
+      },
+      "strict_no_autograd": false,
+      "version": "residual-scale-init-0.1"
     },
     {
       "id": "wf_act_pc",

@@ -22,7 +22,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import torch
 
 from src.model import CausalTransformer, GPTConfig
-from src.methods import PCALMReference
+from src.methods import EPCReference, PCALMReference, StableParameterizationWrapper
 
 
 REQUIRED_ENTRY_FIELDS = {
@@ -33,8 +33,26 @@ ALLOWED_LOCALITY = {"block_local", "strict_local", "relaxed_feedback", "global_r
 PROTOCOL = ("init_state", "relax_step", "local_update", "diagnostics", "step_cost")
 
 # Keep this mapping deliberately explicit.  A registry entry with a plausible
-# description is not an implementation until its class is added here.
-IMPLEMENTATIONS = {"pc_alm": PCALMReference}
+# description is not an implementation until its factory is added here.  A
+# factory is used instead of a class map because wrappers (such as stable
+# parameterization) need a fully constructed base method.
+def _pc_alm_factory(model):
+    return PCALMReference(model, inner_steps=1, parameter_step=0.0)
+
+
+def _epc_factory(model):
+    return EPCReference(model, inner_steps=1, parameter_step=0.0)
+
+
+def _stable_factory(model):
+    return StableParameterizationWrapper(_pc_alm_factory(model))
+
+
+IMPLEMENTATIONS = {
+    "pc_alm": _pc_alm_factory,
+    "epc": _epc_factory,
+    "stable_parameterization": _stable_factory,
+}
 
 
 def _entry_check(entry: dict[str, Any]) -> list[str]:
@@ -53,12 +71,15 @@ def _entry_check(entry: dict[str, Any]) -> list[str]:
     return errors
 
 
-def _pc_alm_smoke(device: torch.device, seed: int) -> dict[str, Any]:
+def _method_smoke(factory, device: torch.device, seed: int) -> dict[str, Any]:
     torch.manual_seed(seed)
     cfg = GPTConfig(vocab_size=97, n_layers=2, d_model=32, n_heads=4, d_ff=64, max_seq_len=8)
     model = CausalTransformer(cfg).to(device)
     ids = torch.randint(cfg.vocab_size, (1, 8), device=device)
-    method = PCALMReference(model, inner_steps=1, parameter_step=0.0)
+    method = factory(model)
+    missing_protocol = [name for name in PROTOCOL if not callable(getattr(method, name, None))]
+    if missing_protocol:
+        raise RuntimeError("missing protocol methods: " + ", ".join(missing_protocol))
     state = method.init_state(ids)
     t0 = time.perf_counter()
     residuals = method.relax_step(state, ids, ids)
@@ -69,7 +90,7 @@ def _pc_alm_smoke(device: torch.device, seed: int) -> dict[str, Any]:
     if not finite:
         raise RuntimeError("non-finite state/residual in PC-ALM smoke")
     return {
-        "status": "pass",
+        "protocol_smoke": "pass",
         "class": f"{type(method).__module__}.{type(method).__name__}",
         "version": method.version,
         "locality": method.locality,
@@ -114,10 +135,10 @@ def main() -> None:
                                   "version": entry.get("version"),
                                   "locality": entry.get("locality"),
                                   "schema_errors": errors}
-        impl = IMPLEMENTATIONS.get(eid)
+        factory = IMPLEMENTATIONS.get(eid)
         if errors:
             record.update(status="fail", reason="registry schema error")
-        elif impl is None:
+        elif factory is None:
             # This is an honest pending result, even when the entry says
             # "planned", "wrapper pending", or another implementation hint.
             record.update(status="pending", reason="no registered implementation")
@@ -125,16 +146,25 @@ def main() -> None:
             record.update(status="pending", reason="smoke skipped")
         else:
             try:
-                method_version = getattr(impl, "version", "")
-                method_locality = getattr(impl, "locality", "")
-                missing_protocol = [name for name in PROTOCOL if not callable(getattr(impl, name, None))]
-                if missing_protocol:
-                    raise RuntimeError("missing protocol methods: " + ", ".join(missing_protocol))
+                # Construct the method before checking metadata: wrappers
+                # expose protocol methods through delegation and therefore do
+                # not advertise all of them on the class object itself.
+                torch.manual_seed(args.seed)
+                cfg = GPTConfig(vocab_size=97, n_layers=2, d_model=32, n_heads=4, d_ff=64, max_seq_len=8)
+                model = CausalTransformer(cfg).to(torch.device(args.device))
+                method = factory(model)
+                method_version = getattr(method, "version", "")
+                method_locality = getattr(method, "locality", "")
                 if method_version != entry["version"]:
                     raise RuntimeError(f"registry version {entry['version']!r} != class version {method_version!r}")
                 if method_locality != entry["locality"]:
                     raise RuntimeError(f"registry locality {entry['locality']!r} != class locality {method_locality!r}")
-                record.update(_pc_alm_smoke(torch.device(args.device), args.seed))
+                record.update(_method_smoke(factory, torch.device(args.device), args.seed))
+                registry_status = str(entry.get("status", "")).lower()
+                if "pending" in registry_status:
+                    record.update(status="pending", reason="10M-token smoke pending")
+                else:
+                    record.update(status="pass")
             except Exception as exc:  # preserve failure evidence in JSON
                 record.update(status="fail", reason=f"{type(exc).__name__}: {exc}")
         if record.get("status") == "fail":
