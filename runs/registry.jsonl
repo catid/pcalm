@@ -1,0 +1,2 @@
+{"run_id":"phase0-reference-20261029","phase":"0","status":"completed","commit":"pending-local-commit","host_set":["foureyes"],"world_size":1,"config":"configs/base.json","tokens":0,"note":"Reference model, tokenizer/dataset metadata, and local correctness smoke; no training claim."}
+{"run_id":"phase0-nccl-local-20261029","phase":"0","status":"completed","host_set":["foureyes"],"world_size":1,"config":"scripts/bench_scaling.py","tokens":0,"note":"1/2/4 GPU local all-reduce benchmark; cross-node 8/12 GPU benchmark blocked by missing pinned worker environments."}

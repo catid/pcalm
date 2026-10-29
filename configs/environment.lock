@@ -1,0 +1,11 @@
+# Captured 2026-10-29 UTC on foureyes. Commands use /home/catid/venvs/dnn/bin/python.
+python==3.12.3
+torch==2.12.0+cu130
+transformers==5.8.1
+datasets==4.8.5
+tokenizers==0.22.2
+cuda_runtime=13.0 (torch.version.cuda)
+nvidia_driver=615.71.10 (nvidia-smi)
+gpu=RTX PRO 6000 Blackwell Max-Q Workstation Edition, 97887 MiB
+tokenizer_vocab=32000 (mistralai/Mistral-7B-v0.1)
+# Workers do not currently have this environment; install/copy a pinned environment before DDP.

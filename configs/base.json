@@ -1,0 +1,6 @@
+{
+  "model": {"vocab_size": 32000, "n_layers": 16, "d_model": 384, "n_heads": 6, "d_ff": 1536, "max_seq_len": 1024, "norm": "rmsnorm", "position": "rope", "tie_embeddings": true, "dropout": 0.0},
+  "data": {"dataset": "HuggingFaceFW/fineweb", "config": "sample-10BT", "tokenizer": "mistralai/Mistral-7B-v0.1", "train_tokens": 1000000000, "validation_tokens": 10000000, "seed": 20261029},
+  "train": {"precision": "bfloat16", "microbatch_per_gpu": 1, "grad_accumulation": 1, "tokens_per_update": 1024, "optimizer": "adamw", "learning_rate": 0.0003, "weight_decay": 0.1, "checkpoint_tokens": [1000000, 10000000, 50000000, 100000000, 250000000, 1000000000]},
+  "method": {"name": "pc_alm", "version": "reference-0.1", "locality": "block_local", "strict_no_autograd": false, "inner_steps": 4, "eta_h": 0.1, "alpha": 0.01, "rho": 1.0, "parameter_step": 0.0003}
+}

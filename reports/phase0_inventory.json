@@ -1,0 +1,33 @@
+{
+  "host": "foureyes",
+  "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+  "torch": "2.12.0+cu130",
+  "torch_cuda": "13.0",
+  "cuda_available": true,
+  "gpu": "NVIDIA RTX PRO 6000 Blackwell Max-Q Workstation Edition",
+  "config": {
+    "vocab_size": 32000,
+    "n_layers": 16,
+    "d_model": 384,
+    "n_heads": 6,
+    "d_ff": 1536,
+    "max_seq_len": 1024,
+    "dropout": 0.0,
+    "tie_embeddings": true
+  },
+  "parameter_parts": {
+    "token_embedding": 12288000,
+    "blocks": 28379136,
+    "norm": 384
+  },
+  "parameter_count": 40667520,
+  "parameter_interval_pass": true,
+  "benchmark": {
+    "batch": 1,
+    "seq": 128,
+    "elapsed_s": 0.0032575330697000027,
+    "tokens_per_s": 39293.53816561191,
+    "loss": 10.44935417175293
+  },
+  "memory_peak_bytes": 297546752
+}
