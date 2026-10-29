@@ -1,9 +1,9 @@
 {
   "run_id": "phase0-final-20261029",
-  "created_utc": "2026-10-29T20:23:04.055267+00:00",
+  "created_utc": "2026-10-29T20:23:25.031556+00:00",
   "phase": "0",
   "tokens_budget": 0,
-  "commit": "d8278f1da18b56748e9f6a3d7fce90bbcffdbfcd",
+  "commit": "6b77981f2a962974a1e1aeba7bcce7ccaf349a53",
   "command": "scripts/run_manifest.py --run-id phase0-final-20261029 --phase 0 --tokens 0",
   "cwd": "/home/catid/pcalm",
   "host": "foureyes",
