@@ -391,6 +391,195 @@ class EPCReference:
         return self.step_cost(int(input_ids.numel()), time.perf_counter() - t0)
 
 
+class MetaPCNReference(EPCReference):
+    """Adapted Meta-PCN controller with normalized prediction errors.
+
+    This implementation isolates the meta controller from the ePC error rule.
+    For each block, ``r_i=h[i+1]-f_i(h[i])`` is normalized with its current
+    batch mean and variance, then the explicit error state is updated as
+    ``e_i <- (1-meta_lr)e_i + meta_lr*(r_i-mu_i)/sqrt(var_i+eps)``.
+    Hidden states receive ``-eta_h*e_i``.  Layer statistics are retained for
+    diagnostics and the local weight objective remains the detached squared
+    prediction error.  It is an independent Transformer adaptation; the
+    published Meta-PCN controller and normalization details require a separate
+    source-cell reproduction.
+    """
+
+    name = "meta_pcn"
+    version = "independent-transformer-adaptation-0.1"
+    locality = "block_local"
+    strict_no_autograd = False
+    uses_local_autograd = True
+
+    def __init__(self, model, inner_steps: int = 4, eta_h: float = 0.1,
+                 meta_lr: float = 0.5, parameter_step: float = 3e-4,
+                 eps: float = 1e-5):
+        super().__init__(model, inner_steps=inner_steps, eta_h=eta_h,
+                         beta=meta_lr, parameter_step=parameter_step)
+        if eps <= 0:
+            raise ValueError("eps must be positive")
+        self.meta_lr = float(meta_lr)
+        self.eps = float(eps)
+
+    @torch.no_grad()
+    def relax_step(self, state: MethodState, input_ids: torch.Tensor, labels: torch.Tensor | None = None):
+        del input_ids, labels
+        if state.errors is None or len(state.errors) != len(self.model.blocks):
+            raise ValueError("Meta-PCN state is missing one error tensor per block")
+        residuals: List[torch.Tensor] = []
+        means: List[float] = []
+        variances: List[float] = []
+        for i, block in enumerate(self.model.blocks):
+            pred = block(state.hidden[i])
+            residual = state.hidden[i + 1] - pred
+            mu = residual.float().mean()
+            var = residual.float().var(unbiased=False)
+            normalized = (residual.float() - mu) * torch.rsqrt(var + self.eps)
+            state.errors[i].lerp_(normalized.to(dtype=state.errors[i].dtype), self.meta_lr)
+            state.hidden[i + 1].add_(-self.eta_h * state.errors[i])
+            residuals.append(residual.detach())
+            means.append(float(mu.cpu())); variances.append(float(var.cpu()))
+        state.step += 1
+        state.residual_norms = [float(r.float().norm().cpu()) for r in residuals]
+        state.error_norms = [float(e.float().norm().cpu()) for e in state.errors]
+        state.error_mean = [float(e.float().mean().cpu()) for e in state.errors]
+        state.error_var = [float(e.float().var(unbiased=False).cpu()) for e in state.errors]
+        # Keep raw residual moments in the same fields used by diagnostics;
+        # layerwise error moments remain available above.
+        state._meta_raw_mean = means
+        state._meta_raw_var = variances
+        return residuals
+
+    @torch.no_grad()
+    def diagnostics(self, state: MethodState) -> Dict[str, Any]:
+        out = super().diagnostics(state)
+        means = list(getattr(state, "_meta_raw_mean", state.error_mean))
+        variances = list(getattr(state, "_meta_raw_var", state.error_var))
+        norms = out["error_norm_by_layer"]
+        avg = sum(norms) / max(1, len(norms))
+        imbalance = max(norms) / max(avg, self.eps) if norms else 0.0
+        out.update({"prediction_error_mean_by_layer": means,
+                    "prediction_error_var_by_layer": variances,
+                    "cross_layer_imbalance": imbalance,
+                    "meta_lr": self.meta_lr})
+        return out
+
+
+class PrecisionWeightedPCReference:
+    """Adapted precision-weighted deep-PC reference method.
+
+    Each block keeps a positive scalar precision ``p_i``.  For residual
+    ``r_i=h[i+1]-f_i(h[i])`` the reference update uses
+    ``p_i <- (1-gamma)p_i + gamma/(mean(r_i^2)+eps)`` and
+    ``h[i+1] <- h[i+1]-eta_h*p_i*r_i``.  Local weights minimize
+    ``0.5*p_i*||r_i||^2`` on a detached block graph.  No dual variables are
+    used, and precision remains bounded to expose instability rather than
+    silently allowing overflow.  This is an adaptation, not a claim of exact
+    reproduction of the cited deep-PC equations.
+    """
+
+    name = "precision_weighted_pc"
+    version = "independent-transformer-adaptation-0.1"
+    locality = "block_local"
+    strict_no_autograd = False
+    uses_local_autograd = True
+
+    def __init__(self, model, inner_steps: int = 4, eta_h: float = 0.1,
+                 precision_ema: float = 0.1, parameter_step: float = 3e-4,
+                 eps: float = 1e-5, precision_min: float = 1e-3,
+                 precision_max: float = 1e3):
+        if inner_steps < 1 or eta_h <= 0 or not (0 < precision_ema <= 1):
+            raise ValueError("invalid precision-PC step sizes")
+        if eps <= 0 or precision_min <= 0 or precision_max < precision_min:
+            raise ValueError("invalid precision bounds")
+        self.model = model; self.inner_steps = int(inner_steps)
+        self.eta_h = float(eta_h); self.precision_ema = float(precision_ema)
+        self.parameter_step = float(parameter_step); self.eps = float(eps)
+        self.precision_min = float(precision_min); self.precision_max = float(precision_max)
+
+    def init_state(self, input_ids: torch.Tensor) -> MethodState:
+        with torch.no_grad():
+            _, _, hidden = self.model(input_ids, labels=input_ids, return_hidden=True)
+        hs = [h.detach().clone() for h in hidden]
+        precisions = [torch.ones((), device=h.device, dtype=torch.float32) for h in hs[1:]]
+        return MethodState(hs, [], errors=[torch.zeros_like(h) for h in hs[1:]], precisions=precisions)
+
+    @torch.no_grad()
+    def relax_step(self, state: MethodState, input_ids: torch.Tensor, labels: torch.Tensor | None = None):
+        del input_ids, labels
+        if state.precisions is None or len(state.precisions) != len(self.model.blocks):
+            raise ValueError("precision-PC state is missing one precision per block")
+        residuals: List[torch.Tensor] = []
+        for i, block in enumerate(self.model.blocks):
+            pred = block(state.hidden[i])
+            residual = state.hidden[i + 1] - pred
+            variance = residual.float().pow(2).mean()
+            target_precision = torch.clamp(variance.add(self.eps).reciprocal(), self.precision_min, self.precision_max)
+            state.precisions[i].lerp_(target_precision, self.precision_ema)
+            state.errors[i].copy_(residual)
+            state.hidden[i + 1].add_(-self.eta_h * state.precisions[i].to(residual.dtype) * residual)
+            residuals.append(residual.detach())
+        state.step += 1
+        state.residual_norms = [float(r.float().norm().cpu()) for r in residuals]
+        state.error_norms = [float(e.float().norm().cpu()) for e in state.errors]
+        state.error_mean = [float(e.float().mean().cpu()) for e in state.errors]
+        state.error_var = [float(e.float().var(unbiased=False).cpu()) for e in state.errors]
+        state.precision_mean = [float(p.cpu()) for p in state.precisions]
+        return residuals
+
+    def local_update(self, state: MethodState, input_ids: torch.Tensor,
+                     labels: torch.Tensor | None = None, *, apply: bool = True) -> Dict[str, Any]:
+        del input_ids, labels
+        if state.precisions is None:
+            raise ValueError("precision-PC state has no precisions")
+        losses: List[float] = []; grad_norms: List[float] = []
+        for i, block in enumerate(self.model.blocks):
+            pred = block(state.hidden[i].detach())
+            residual = state.hidden[i + 1].detach() - pred
+            local_loss = 0.5 * state.precisions[i].detach() * residual.float().pow(2).mean()
+            params = tuple(p for p in block.parameters() if p.requires_grad)
+            grads = torch.autograd.grad(local_loss, params, allow_unused=True)
+            sq = torch.zeros((), device=local_loss.device, dtype=torch.float32)
+            for p, g in zip(params, grads):
+                if g is None: continue
+                sq = sq + g.float().pow(2).sum()
+                if apply and self.parameter_step:
+                    with torch.no_grad(): p.add_(g.to(dtype=p.dtype), alpha=-self.parameter_step)
+            losses.append(float(local_loss.detach().cpu())); grad_norms.append(float(sq.sqrt().cpu()))
+            del pred, residual, local_loss, grads
+        return {"local_loss": sum(losses) / max(1, len(losses)),
+                "layer_grad_norm": grad_norms,
+                "precision_mean": sum(state.precision_mean) / max(1, len(state.precision_mean)),
+                "updated_layers": len(losses) if apply and self.parameter_step else 0}
+
+    @torch.no_grad()
+    def diagnostics(self, state: MethodState) -> Dict[str, Any]:
+        precisions = state.precisions or []
+        if precisions and not state.precision_mean:
+            state.precision_mean = [float(p.cpu()) for p in precisions]
+        norms = state.error_norms
+        avg = sum(norms) / max(1, len(norms))
+        return {"step": state.step,
+                "primal_residual_norm": sum(state.residual_norms) / max(1, len(state.residual_norms)),
+                "error_norm_by_layer": list(norms),
+                "precision_by_layer": list(state.precision_mean),
+                "precision_mean": sum(state.precision_mean) / max(1, len(state.precision_mean)),
+                "cross_layer_imbalance": max(norms) / max(avg, self.eps) if norms else 0.0}
+
+    def step_cost(self, batch_tokens: int, elapsed_s: float, *, inference_steps: int | None = None) -> Dict[str, Any]:
+        return {"batch_tokens": int(batch_tokens), "elapsed_s": float(elapsed_s),
+                "tokens_per_s": int(batch_tokens) / max(float(elapsed_s), 1e-9),
+                "inner_steps": self.inner_steps if inference_steps is None else int(inference_steps),
+                "local_update_count": len(self.model.blocks), "method": self.name,
+                "version": self.version, "locality": self.locality,
+                "strict_no_autograd": self.strict_no_autograd}
+
+    def run_inference(self, state: MethodState, input_ids: torch.Tensor, labels: torch.Tensor | None = None) -> Dict[str, Any]:
+        t0 = time.perf_counter()
+        for _ in range(self.inner_steps): self.relax_step(state, input_ids, labels)
+        return self.step_cost(int(input_ids.numel()), time.perf_counter() - t0)
+
+
 class StableParameterizationWrapper:
     """Apply the stable-depth initialization wrapper to a local-credit method.
 
