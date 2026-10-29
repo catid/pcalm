@@ -1,0 +1,8 @@
+scope,world_size,hosts,median_seconds,payload_bytes,payload_GBps
+local,1,foureyes,0.000008844,20000000,2261.4018
+local,2,foureyes,0.000581539,20000000,34.3915
+local,4,foureyes,0.000937166,20000000,21.3409
+cross,2,foureyes+ripper,1.802674,20000000,0.0110946
+cross,4,foureyes+ripper,2.814312,20000000,0.0071065
+cross,8,foureyes+ripper,3.185243,20000000,0.0062790
+cross,12,foureyes+ripper+work+loki,3.527355,20000000,0.0056700

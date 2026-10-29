@@ -1,0 +1,7 @@
+{
+  "payload_bytes": 20000000,
+  "local_foureyes": {"1": {"median_s": 0.000008844, "payload_GBps": 2261.4}, "2": {"median_s": 0.000581539, "payload_GBps": 34.3915}, "4": {"median_s": 0.000937166, "payload_GBps": 21.3409}},
+  "cross_node_direct_ranks": {"2": {"hosts":"foureyes+ripper", "median_s":1.802674, "payload_GBps":0.0110946}, "4": {"hosts":"foureyes+ripper", "median_s":2.814312, "payload_GBps":0.0071065}, "8": {"hosts":"foureyes+ripper", "median_s":3.185243, "payload_GBps":0.0062790}, "12": {"hosts":"foureyes+ripper+work+loki", "median_s":3.527355, "payload_GBps":0.0056700}},
+  "environment": "torch 2.12.0+cu130, CUDA 13.0, NCCL 2.29.7, NCCL_IB_DISABLE=1, Ethernet socket interface per host",
+  "interpretation": "Cross-node payload rates are measured, not estimates; 8/12-GPU DDP is not justified for the 40M model under this Ethernet topology. Independent 4-GPU jobs are the default screening allocation."
+}

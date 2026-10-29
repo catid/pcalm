@@ -28,3 +28,21 @@ for n in 1 2 4; do CUDA_VISIBLE_DEVICES=$(seq -s, 0 $((n-1))) \
 ```
 
 The 1–4 GPU benchmark is local to foureyes. Cross-node 8/12 GPU commands are intentionally omitted until every worker has the same pinned runtime and the source tree copied or checked out. Do not launch a 1B-token run while the engineering gate says `BLOCKED`.
+
+## Pilot and final-run commands
+
+Create a manifest before either command. A bounded 1M-token BP pilot (diagnostic only) is:
+
+```bash
+PY=/home/catid/venvs/dnn/bin/python
+$PY scripts/run_manifest.py --run-id pilot-bp-1m --phase 1 --tokens 1000000
+$PY scripts/train.py --run-id pilot-bp-1m --method bp_adamw --source fineweb --tokens 1000000
+```
+
+The final command is intentionally guarded and will refuse the current blocked gate. After every required gate and method smoke has passed, the recorded command is:
+
+```bash
+$PY scripts/run_manifest.py --run-id final-bp-1b-seed0 --phase 4 --tokens 1000000000
+$PY scripts/train.py --run-id final-bp-1b-seed0 --method bp_adamw --source fineweb \
+  --tokens 1000000000 --allow-1b --checkpoint-every 10000000
+```
