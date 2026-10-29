@@ -76,3 +76,7 @@ phase1-pcalm-1m-work-g0-seed20262600,pc_alm,1,completed,1000000,,,17046.014,0.01
 phase1-pcalm-1m-work-g1-seed20262601,pc_alm,1,completed,1000000,,,17322.613,0.016036,,20262601,1M faithful PC-ALM reference pilot with output-local clamp; nonzero primal/dual diagnostics; below 10M gate.
 phase1-pcalm-1m-loki-g0-seed20262602,pc_alm,1,completed,1000000,,,15119.694,0.018372,,20262602,1M faithful PC-ALM reference pilot with output-local clamp; nonzero primal/dual diagnostics; below 10M gate.
 phase1-pcalm-1m-loki-g1-seed20262603,pc_alm,1,completed,1000000,,,15145.984,0.018340,,20262603,1M faithful PC-ALM reference pilot with output-local clamp; nonzero primal/dual diagnostics; below 10M gate.
+phase1-epc-1m-k4-work-g0-seed20262700,epc,1,completed,1000000,,,13822.867,0.020096,,20262700,1M epc inner_steps=4 ablation; nonzero diagnostics; below 10M gate.
+phase1-epc-1m-k4-work-g1-seed20262701,epc,1,completed,1000000,,,13664.566,0.020328,,20262701,1M epc inner_steps=4 ablation; nonzero diagnostics; below 10M gate.
+phase1-epc-stable-1m-k4-loki-g0-seed20262702,epc_stable,1,completed,1000000,,,11956.892,0.023232,,20262702,1M epc_stable inner_steps=4 ablation; nonzero diagnostics; below 10M gate.
+phase1-epc-stable-1m-k4-loki-g1-seed20262703,epc_stable,1,completed,1000000,,,11867.478,0.023407,,20262703,1M epc_stable inner_steps=4 ablation; nonzero diagnostics; below 10M gate.

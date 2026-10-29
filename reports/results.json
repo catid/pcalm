@@ -1078,6 +1078,62 @@
       "peak_memory_bytes": "",
       "seed": "20262603",
       "notes": "1M faithful PC-ALM reference pilot with output-local clamp; nonzero primal/dual diagnostics; below 10M gate."
+    },
+    {
+      "run_id": "phase1-epc-1m-k4-work-g0-seed20262700",
+      "method": "epc",
+      "phase": "1",
+      "status": "completed",
+      "tokens": "1000000",
+      "val_loss": "",
+      "val_ppl": "",
+      "tokens_per_s": "13822.867",
+      "gpu_hours": "0.020096",
+      "peak_memory_bytes": "",
+      "seed": "20262700",
+      "notes": "1M epc inner_steps=4 ablation; nonzero diagnostics; below 10M gate."
+    },
+    {
+      "run_id": "phase1-epc-1m-k4-work-g1-seed20262701",
+      "method": "epc",
+      "phase": "1",
+      "status": "completed",
+      "tokens": "1000000",
+      "val_loss": "",
+      "val_ppl": "",
+      "tokens_per_s": "13664.566",
+      "gpu_hours": "0.020328",
+      "peak_memory_bytes": "",
+      "seed": "20262701",
+      "notes": "1M epc inner_steps=4 ablation; nonzero diagnostics; below 10M gate."
+    },
+    {
+      "run_id": "phase1-epc-stable-1m-k4-loki-g0-seed20262702",
+      "method": "epc_stable",
+      "phase": "1",
+      "status": "completed",
+      "tokens": "1000000",
+      "val_loss": "",
+      "val_ppl": "",
+      "tokens_per_s": "11956.892",
+      "gpu_hours": "0.023232",
+      "peak_memory_bytes": "",
+      "seed": "20262702",
+      "notes": "1M epc_stable inner_steps=4 ablation; nonzero diagnostics; below 10M gate."
+    },
+    {
+      "run_id": "phase1-epc-stable-1m-k4-loki-g1-seed20262703",
+      "method": "epc_stable",
+      "phase": "1",
+      "status": "completed",
+      "tokens": "1000000",
+      "val_loss": "",
+      "val_ppl": "",
+      "tokens_per_s": "11867.478",
+      "gpu_hours": "0.023407",
+      "peak_memory_bytes": "",
+      "seed": "20262703",
+      "notes": "1M epc_stable inner_steps=4 ablation; nonzero diagnostics; below 10M gate."
     }
   ]
 }
