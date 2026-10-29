@@ -26,21 +26,21 @@
       "id": "meta_pcn",
       "rank": 3,
       "literature": "ICLR 2026",
-      "implementation": "not started",
-      "version": "pending",
+      "implementation": "adapted Transformer reference",
+      "version": "meta-error-controller-0.1",
       "locality": "block_local",
       "strict_no_autograd": false,
-      "status": "pending"
+      "status": "adaptation_smoke_pass_10m_pending"
     },
     {
       "id": "precision_weighted_pc",
       "rank": 4,
       "literature": "deep-PC precision weighting",
-      "implementation": "not started",
-      "version": "pending",
+      "implementation": "precision-weighted local reference",
+      "version": "precision-weighted-0.1",
       "locality": "block_local",
       "strict_no_autograd": false,
-      "status": "pending"
+      "status": "adaptation_smoke_pass_10m_pending"
     },
     {
       "id": "stable_parameterization",
