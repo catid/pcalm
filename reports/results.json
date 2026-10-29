@@ -1246,6 +1246,62 @@
       "peak_memory_bytes": "",
       "seed": "20262903",
       "notes": "1M precision_weighted_pc inner_steps=4 ablation; nonzero diagnostics; large error/precision values retained; below 10M gate."
+    },
+    {
+      "run_id": "phase1-pc_alm-1m-k8-work-g0-seed20263000",
+      "method": "pc_alm",
+      "phase": "1",
+      "status": "completed",
+      "tokens": "1000000",
+      "val_loss": "",
+      "val_ppl": "",
+      "tokens_per_s": "10314.126",
+      "gpu_hours": "0.026932",
+      "peak_memory_bytes": "",
+      "seed": "20263000",
+      "notes": "1M pc_alm inner_steps=8 ablation; finite nonzero diagnostics; below 10M gate."
+    },
+    {
+      "run_id": "phase1-pc_alm-1m-k8-work-g1-seed20263001",
+      "method": "pc_alm",
+      "phase": "1",
+      "status": "completed",
+      "tokens": "1000000",
+      "val_loss": "",
+      "val_ppl": "",
+      "tokens_per_s": "10470.110",
+      "gpu_hours": "0.026531",
+      "peak_memory_bytes": "",
+      "seed": "20263001",
+      "notes": "1M pc_alm inner_steps=8 ablation; finite nonzero diagnostics; below 10M gate."
+    },
+    {
+      "run_id": "phase1-epc-1m-k8-loki-g0-seed20263002",
+      "method": "epc",
+      "phase": "1",
+      "status": "completed",
+      "tokens": "1000000",
+      "val_loss": "",
+      "val_ppl": "",
+      "tokens_per_s": "8572.203",
+      "gpu_hours": "0.032404",
+      "peak_memory_bytes": "",
+      "seed": "20263002",
+      "notes": "1M epc inner_steps=8 ablation; finite nonzero diagnostics; below 10M gate."
+    },
+    {
+      "run_id": "phase1-epc-stable-1m-k8-loki-g1-seed20263003",
+      "method": "epc_stable",
+      "phase": "1",
+      "status": "completed",
+      "tokens": "1000000",
+      "val_loss": "",
+      "val_ppl": "",
+      "tokens_per_s": "8464.224",
+      "gpu_hours": "0.032818",
+      "peak_memory_bytes": "",
+      "seed": "20263003",
+      "notes": "1M epc_stable inner_steps=8 ablation; finite nonzero diagnostics; below 10M gate."
     }
   ]
 }

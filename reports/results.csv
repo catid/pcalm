@@ -88,3 +88,7 @@ phase1-meta_pcn-1m-k4-work-g0-seed20262900,meta_pcn,1,completed,1000000,,,12761.
 phase1-meta_pcn-1m-k4-work-g1-seed20262901,meta_pcn,1,completed,1000000,,,12691.567,0.021887,,20262901,1M meta_pcn inner_steps=4 ablation; nonzero diagnostics; large error/precision values retained; below 10M gate.
 phase1-precision_weighted_pc-1m-k4-loki-g0-seed20262902,precision_weighted_pc,1,completed,1000000,,,12023.160,0.023104,,20262902,1M precision_weighted_pc inner_steps=4 ablation; nonzero diagnostics; large error/precision values retained; below 10M gate.
 phase1-precision_weighted_pc-1m-k4-loki-g1-seed20262903,precision_weighted_pc,1,completed,1000000,,,12078.374,0.022998,,20262903,1M precision_weighted_pc inner_steps=4 ablation; nonzero diagnostics; large error/precision values retained; below 10M gate.
+phase1-pc_alm-1m-k8-work-g0-seed20263000,pc_alm,1,completed,1000000,,,10314.126,0.026932,,20263000,1M pc_alm inner_steps=8 ablation; finite nonzero diagnostics; below 10M gate.
+phase1-pc_alm-1m-k8-work-g1-seed20263001,pc_alm,1,completed,1000000,,,10470.110,0.026531,,20263001,1M pc_alm inner_steps=8 ablation; finite nonzero diagnostics; below 10M gate.
+phase1-epc-1m-k8-loki-g0-seed20263002,epc,1,completed,1000000,,,8572.203,0.032404,,20263002,1M epc inner_steps=8 ablation; finite nonzero diagnostics; below 10M gate.
+phase1-epc-stable-1m-k8-loki-g1-seed20263003,epc_stable,1,completed,1000000,,,8464.224,0.032818,,20263003,1M epc_stable inner_steps=8 ablation; finite nonzero diagnostics; below 10M gate.
