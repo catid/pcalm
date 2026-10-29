@@ -72,3 +72,7 @@ phase1-meta_pcn-1m-corrected-loki-g0-seed20262402,meta_pcn,1,completed,1000000,,
 phase1-precision_weighted_pc-1m-corrected-loki-g1-seed20262403,precision_weighted_pc,1,completed,1000000,,,15256.969,0.018207,,20262403,1M local-method pilot with output-local teaching clamp; nonzero diagnostics; below 10M gate.
 phase1-epc-stable-1m-work-g0-seed20262500,epc_stable,1,completed,1000000,,,16867.482,0.016468,,20262500,1M stable-parameterization ePC pilot; nonzero diagnostics; below 10M gate.
 phase1-epc-stable-1m-work-g1-seed20262501,epc_stable,1,completed,1000000,,,16649.206,0.016684,,20262501,1M stable-parameterization ePC pilot; nonzero diagnostics; below 10M gate.
+phase1-pcalm-1m-work-g0-seed20262600,pc_alm,1,completed,1000000,,,17046.014,0.016296,,20262600,1M faithful PC-ALM reference pilot with output-local clamp; nonzero primal/dual diagnostics; below 10M gate.
+phase1-pcalm-1m-work-g1-seed20262601,pc_alm,1,completed,1000000,,,17322.613,0.016036,,20262601,1M faithful PC-ALM reference pilot with output-local clamp; nonzero primal/dual diagnostics; below 10M gate.
+phase1-pcalm-1m-loki-g0-seed20262602,pc_alm,1,completed,1000000,,,15119.694,0.018372,,20262602,1M faithful PC-ALM reference pilot with output-local clamp; nonzero primal/dual diagnostics; below 10M gate.
+phase1-pcalm-1m-loki-g1-seed20262603,pc_alm,1,completed,1000000,,,15145.984,0.018340,,20262603,1M faithful PC-ALM reference pilot with output-local clamp; nonzero primal/dual diagnostics; below 10M gate.

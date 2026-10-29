@@ -1022,6 +1022,62 @@
       "peak_memory_bytes": "",
       "seed": "20262501",
       "notes": "1M stable-parameterization ePC pilot; nonzero diagnostics; below 10M gate."
+    },
+    {
+      "run_id": "phase1-pcalm-1m-work-g0-seed20262600",
+      "method": "pc_alm",
+      "phase": "1",
+      "status": "completed",
+      "tokens": "1000000",
+      "val_loss": "",
+      "val_ppl": "",
+      "tokens_per_s": "17046.014",
+      "gpu_hours": "0.016296",
+      "peak_memory_bytes": "",
+      "seed": "20262600",
+      "notes": "1M faithful PC-ALM reference pilot with output-local clamp; nonzero primal/dual diagnostics; below 10M gate."
+    },
+    {
+      "run_id": "phase1-pcalm-1m-work-g1-seed20262601",
+      "method": "pc_alm",
+      "phase": "1",
+      "status": "completed",
+      "tokens": "1000000",
+      "val_loss": "",
+      "val_ppl": "",
+      "tokens_per_s": "17322.613",
+      "gpu_hours": "0.016036",
+      "peak_memory_bytes": "",
+      "seed": "20262601",
+      "notes": "1M faithful PC-ALM reference pilot with output-local clamp; nonzero primal/dual diagnostics; below 10M gate."
+    },
+    {
+      "run_id": "phase1-pcalm-1m-loki-g0-seed20262602",
+      "method": "pc_alm",
+      "phase": "1",
+      "status": "completed",
+      "tokens": "1000000",
+      "val_loss": "",
+      "val_ppl": "",
+      "tokens_per_s": "15119.694",
+      "gpu_hours": "0.018372",
+      "peak_memory_bytes": "",
+      "seed": "20262602",
+      "notes": "1M faithful PC-ALM reference pilot with output-local clamp; nonzero primal/dual diagnostics; below 10M gate."
+    },
+    {
+      "run_id": "phase1-pcalm-1m-loki-g1-seed20262603",
+      "method": "pc_alm",
+      "phase": "1",
+      "status": "completed",
+      "tokens": "1000000",
+      "val_loss": "",
+      "val_ppl": "",
+      "tokens_per_s": "15145.984",
+      "gpu_hours": "0.018340",
+      "peak_memory_bytes": "",
+      "seed": "20262603",
+      "notes": "1M faithful PC-ALM reference pilot with output-local clamp; nonzero primal/dual diagnostics; below 10M gate."
     }
   ]
 }
