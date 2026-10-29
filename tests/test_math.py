@@ -1,6 +1,7 @@
 import math
 import torch
 from src.data import fixed_chunks, rank_chunks, next_token_batch
+from src.data_stream import count_loss_tokens
 
 def test_linear_alm_equilibrium():
     # min_h 1/2(h-y)^2 subject to h-wx=0, w fixed. KKT gives h=wx and
@@ -24,3 +25,4 @@ def test_rank_chunks_are_disjoint_and_counted():
     assert a == [[10,11,12,13,14,15,16,17,18,19], [30,31,32,33,34,35,36,37,38,39]]
     assert b == [[20,21,22,23,24,25,26,27,28,29]]
     i, lab, n = next_token_batch(a[0]); assert i == list(range(10,19)) and lab == list(range(11,20)) and n == 9
+    assert count_loss_tokens(a) == 18

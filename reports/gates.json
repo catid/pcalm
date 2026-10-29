@@ -1,0 +1,21 @@
+{
+  "date": "2026-10-29",
+  "campaign_1b": "blocked",
+  "gates": {
+    "repository_plan": "pass",
+    "cluster_reachability_inventory": "pass",
+    "persistent_rendezvous": "pass",
+    "runtime_parity": "partial",
+    "tokenizer_fineweb_metadata": "pass",
+    "architecture_parameter_count": "pass",
+    "reference_math_transformer_smoke": "pass",
+    "local_forward_benchmark": "pass",
+    "local_nccl_1_2_4": "pass",
+    "cross_node_nccl_8_12": "blocked_hung_init",
+    "streaming_data_smoke": "partial",
+    "exact_budget_resume_validation": "pending",
+    "optimized_equivalence": "pending",
+    "method_registry_smokes": "pending"
+  },
+  "evidence": ["reports/engineering_gate.md", "reports/phase0_cluster.md", "reports/cross_node_attempt.md", "reports/data_manifest.json", "reports/data_smoke.json"]
+}

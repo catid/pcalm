@@ -7,14 +7,14 @@ Date: 2026-10-29 UTC. This gate is a living record; a missing or failed item blo
 | Repository and plan | PASS | `reports/repo_audit.md`, `reports/plan.md`, local Git history beginning at `b3e963b` |
 | Host/GPU/SSH/clock inventory | PASS for reachability | `reports/phase0_cluster.md`; all four hosts reachable, clocks synchronized, 12 GPUs identified |
 | Persistent rendezvous TCP | PASS | `foureyes:29517` accepted clients from ripper/work/loki |
-| Python/runtime lock | PARTIAL | `configs/environment.lock`; foureyes has `/home/catid/venvs/dnn` (`torch 2.12.0+cu130`), workers lack a matching environment; ripper has an unpinned source build and work has a development torch |
+| Python/runtime lock | PARTIAL | `configs/environment.lock`; exact 5.8 GiB `/home/catid/venvs/dnn` was copied to ripper/work/loki and all now import `torch 2.12.0+cu130` (source-tree copies are under `/var/tmp/pcalm`), but package hashes and long-term image provisioning still need locking |
 | Tokenizer/FineWeb pin | PASS metadata | `reports/data_manifest.json`; Mistral tokenizer vocab 32,000 and SHA256 recorded; FineWeb `sample-10BT` builder metadata recorded |
 | Architecture/count | PASS | `configs/base.json`; 40,667,520 parameters with tied embeddings, 16 blocks, 384 width, six heads, 1,024 context |
 | Reference mathematical/Transformer smoke | PASS | `scripts/run_reference_tests.py`: parameter interval/tie, causal masking, next-token loss, PC state diagnostics |
 | Local eager benchmark | PASS | `reports/phase0_inventory.json`: BF16/CUDA-capable model forward, 165,274 tokens/s at B=1,T=1024, peak allocated 985 MB (warm eager reference) |
 | NCCL all-reduce 1/2/4 GPU | PASS, local only | `scripts/bench_scaling.py`: 20 MB median all-reduce 2,261 GB/s (world 1), 34.4 GB/s (world 2), 21.3 GB/s (world 4) on foureyes |
-| NCCL cross-node 8/12 GPU | BLOCKED | `reports/cross_node_attempt.md`; a one-GPU-per-node launch hung during initialization with mismatched foureyes/ripper PyTorch builds; do not infer scaling from a failed launch |
-| Dataloader/token counting | NOT YET PASSED | Streaming metadata is pinned, but deterministic sharding/token-count implementation and 10M validation isolation remain to be tested |
+| NCCL cross-node 8/12 GPU | BLOCKED | `reports/cross_node_attempt.md`; two one-GPU-per-node launches hung during initialization, including after matching torch/CUDA/NCCL versions; do not infer scaling from a failed launch |
+| Dataloader/token counting | PARTIAL | `src/data_stream.py`, `scripts/smoke_data.py`: live FineWeb streaming and Mistral tokenization produced three deterministic 128-token chunks (381 post-shift targets); exact 1B budget accounting, validation reservation, and resume checks remain |
 | Optimized/compiled/CUDA graph equivalence | NOT YET PASSED | Eager reference exists; no optimization is admitted before equivalence tests |
 | Ten-arm method registry | REGISTERED, not passed | `configs/method_registry.json`; only PC-ALM reference scaffold exists; all arms require cards, tests, and 10M smoke |
 

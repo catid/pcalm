@@ -8,4 +8,7 @@ cuda_runtime=13.0 (torch.version.cuda)
 nvidia_driver=615.71.10 (nvidia-smi)
 gpu=RTX PRO 6000 Blackwell Max-Q Workstation Edition, 97887 MiB
 tokenizer_vocab=32000 (mistralai/Mistral-7B-v0.1)
-# Workers do not currently have this environment; install/copy a pinned environment before DDP.
+# The exact environment was copied to all workers for Phase 0 parity testing.
+# After Phase 0 provisioning, all four hosts report torch 2.12.0+cu130, CUDA 13.0,
+# NCCL 2.29.7, and libtorch_global_deps.so SHA256
+# 22e580920a618c7c45e2aae16752f0bdfb23ae9a31150ae8f4066bbe8020e104.
