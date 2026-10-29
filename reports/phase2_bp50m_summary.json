@@ -1,0 +1,135 @@
+{
+  "count": 12,
+  "runs": [
+    {
+      "run_id": "phase2-bp50m-ripper-g2-seed20261206",
+      "tokens": 50000000,
+      "train_loss": 4.84496545791626,
+      "tokens_per_s": 61555.05296644982,
+      "elapsed_s": 812.2810001459438,
+      "seed": 20261206,
+      "host": "ripper"
+    },
+    {
+      "run_id": "phase2-bp50m-loki-g0-seed20261210",
+      "tokens": 50000000,
+      "train_loss": 4.919531345367432,
+      "tokens_per_s": 67632.93997285621,
+      "elapsed_s": 739.2847332149977,
+      "seed": 20261210,
+      "host": "loki"
+    },
+    {
+      "run_id": "phase2-bp50m-foureyes-g3-seed20261203",
+      "tokens": 50000000,
+      "train_loss": 4.889820098876953,
+      "tokens_per_s": 61718.98146132731,
+      "elapsed_s": 810.1235438639997,
+      "seed": 20261203,
+      "host": "foureyes"
+    },
+    {
+      "run_id": "phase2-bp50m-ripper-g1-seed20261205",
+      "tokens": 50000000,
+      "train_loss": 4.879317760467529,
+      "tokens_per_s": 61764.74145412227,
+      "elapsed_s": 809.5233430289663,
+      "seed": 20261205,
+      "host": "ripper"
+    },
+    {
+      "run_id": "phase2-bp50m-work-g0-seed20261208",
+      "tokens": 50000000,
+      "train_loss": 4.932685375213623,
+      "tokens_per_s": 67667.57532327397,
+      "elapsed_s": 738.9063336099498,
+      "seed": 20261208,
+      "host": "work"
+    },
+    {
+      "run_id": "phase2-bp50m-ripper-g0-seed20261204",
+      "tokens": 50000000,
+      "train_loss": 4.8884382247924805,
+      "tokens_per_s": 61167.91926657209,
+      "elapsed_s": 817.4219523950014,
+      "seed": 20261204,
+      "host": "ripper"
+    },
+    {
+      "run_id": "phase2-bp50m-loki-g1-seed20261211",
+      "tokens": 50000000,
+      "train_loss": 4.932651996612549,
+      "tokens_per_s": 67031.43535853433,
+      "elapsed_s": 745.9186830850085,
+      "seed": 20261211,
+      "host": "loki"
+    },
+    {
+      "run_id": "phase2-bp50m-foureyes-g0-seed20261200",
+      "tokens": 50000000,
+      "train_loss": 4.893001079559326,
+      "tokens_per_s": 61746.51119805931,
+      "elapsed_s": 809.7623496339656,
+      "seed": 20261200,
+      "host": "foureyes"
+    },
+    {
+      "run_id": "phase2-bp50m-foureyes-g1-seed20261201",
+      "tokens": 50000000,
+      "train_loss": 4.832405090332031,
+      "tokens_per_s": 61721.9296052432,
+      "elapsed_s": 810.0848483260488,
+      "seed": 20261201,
+      "host": "foureyes"
+    },
+    {
+      "run_id": "phase2-bp50m-foureyes-g2-seed20261202",
+      "tokens": 50000000,
+      "train_loss": 4.7933125495910645,
+      "tokens_per_s": 62023.49568628655,
+      "elapsed_s": 806.146113429917,
+      "seed": 20261202,
+      "host": "foureyes"
+    },
+    {
+      "run_id": "phase2-bp50m-ripper-g3-seed20261207",
+      "tokens": 50000000,
+      "train_loss": 4.877581596374512,
+      "tokens_per_s": 61484.71246542509,
+      "elapsed_s": 813.2102758300025,
+      "seed": 20261207,
+      "host": "ripper"
+    },
+    {
+      "run_id": "phase2-bp50m-work-g1-seed20261209",
+      "tokens": 50000000,
+      "train_loss": 4.972893238067627,
+      "tokens_per_s": 67104.7468388484,
+      "elapsed_s": 745.1037719579181,
+      "seed": 20261209,
+      "host": "work"
+    }
+  ],
+  "by_host": {
+    "ripper": {
+      "count": 4,
+      "mean_tokens_per_s": 61493.10653814232,
+      "mean_final_train_loss": 4.872575759887695
+    },
+    "loki": {
+      "count": 2,
+      "mean_tokens_per_s": 67332.18766569527,
+      "mean_final_train_loss": 4.92609167098999
+    },
+    "foureyes": {
+      "count": 4,
+      "mean_tokens_per_s": 61802.72948772909,
+      "mean_final_train_loss": 4.852134704589844
+    },
+    "work": {
+      "count": 2,
+      "mean_tokens_per_s": 67386.16108106117,
+      "mean_final_train_loss": 4.952789306640625
+    }
+  }
+}

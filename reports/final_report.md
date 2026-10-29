@@ -34,3 +34,7 @@ No validation loss, perplexity, time-to-1B, GPU-hour, or method ranking is claim
 ## Phase 1 control pilots
 
 Twelve independent single-GPU BP AdamW controls completed exactly 10M FineWeb training targets (four on each 4-GPU host and two on each 2-GPU host). Final training losses were 5.87–6.23. Mean throughput was 60.9k tokens/s on foureyes, 54.1k on ripper, 61.7k on work, and 63.4k on loki. These are control/pipeline measurements, not validation results or method rankings; raw metrics, manifests, and registry entries are retained per run.
+
+## Phase 2 control pilots
+
+The first 50M-token wave completed 12 independent BP AdamW FineWeb controls, four per 4-GPU host and two per 2-GPU host. Every run reached exactly 50,000,000 tokens with clean exit; final training losses were 4.79–4.97 and throughput was approximately 61–62k tokens/s on foureyes/ripper and 67k on work/loki. A second 50M seed wave is active across all 12 GPUs; its metrics will be collected only after exact completion.
