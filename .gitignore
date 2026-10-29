@@ -4,3 +4,6 @@ runs/*/checkpoint-*.pt
 runs/*/checkpoints/
 artifacts/**
 *.log
+
+# Active second-wave metrics are collected only at completion.
+runs/phase2-bp50m-*/metrics.jsonl
