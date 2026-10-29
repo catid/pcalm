@@ -45,3 +45,11 @@ phase2-bp50m-ripper-g0-seed20261408,bp_adamw,2,completed,50000000,,,61067.007,0.
 phase2-bp50m-ripper-g1-seed20261409,bp_adamw,2,completed,50000000,,,61385.115,0.226258,,20261409,Independent single-GPU BP AdamW FineWeb control; second 50M replication wave
 phase2-bp50m-ripper-g2-seed20261410,bp_adamw,2,completed,50000000,,,60809.374,0.228400,,20261410,Independent single-GPU BP AdamW FineWeb control; second 50M replication wave
 phase2-bp50m-ripper-g3-seed20261411,bp_adamw,2,completed,50000000,,,62440.465,0.222434,,20261411,Independent single-GPU BP AdamW FineWeb control; second 50M replication wave
+phase1-epc100k-foureyes-g0-seed20262000,epc_adapted,1,completed,100000,,,2408.753,0.011532,,20262000,100k full-model ePC adaptation pilot; inner_steps=2; no ranking claim
+phase1-epc100k-foureyes-g1-seed20262001,epc_adapted,1,completed,100000,,,2402.697,0.011561,,20262001,100k full-model ePC adaptation pilot; inner_steps=2; no ranking claim
+phase1-epc100k-foureyes-g2-seed20262002,epc_adapted,1,completed,100000,,,2410.347,0.011524,,20262002,100k full-model ePC adaptation pilot; inner_steps=2; no ranking claim
+phase1-epc100k-foureyes-g3-seed20262003,epc_adapted,1,completed,100000,,,2394.136,0.011602,,20262003,100k full-model ePC adaptation pilot; inner_steps=2; no ranking claim
+phase1-epc100k-ripper-g0-seed20262004,epc_adapted,1,completed,100000,,,2056.097,0.013510,,20262004,100k full-model ePC adaptation pilot; inner_steps=2; no ranking claim
+phase1-epc100k-ripper-g1-seed20262005,epc_adapted,1,completed,100000,,,2553.226,0.010879,,20262005,100k full-model ePC adaptation pilot; inner_steps=2; no ranking claim
+phase1-epc100k-ripper-g2-seed20262006,epc_adapted,1,completed,100000,,,3191.277,0.008704,,20262006,100k full-model ePC adaptation pilot; inner_steps=2; no ranking claim
+phase1-epc100k-ripper-g3-seed20262007,epc_adapted,1,completed,100000,,,2127.779,0.013055,,20262007,100k full-model ePC adaptation pilot; inner_steps=2; no ranking claim
