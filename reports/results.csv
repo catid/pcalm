@@ -84,3 +84,7 @@ phase1-pcalm-1m-k4-work-g0-seed20262800,pc_alm,1,completed,1000000,,,14008.554,0
 phase1-pcalm-1m-k4-work-g1-seed20262801,pc_alm,1,completed,1000000,,,14049.399,0.019772,,20262801,1M PC-ALM inner_steps=4 ablation; nonzero primal/dual diagnostics; below 10M gate.
 phase1-pcalm-1m-k4-loki-g0-seed20262802,pc_alm,1,completed,1000000,,,12259.376,0.022658,,20262802,1M PC-ALM inner_steps=4 ablation; nonzero primal/dual diagnostics; below 10M gate.
 phase1-pcalm-1m-k4-loki-g1-seed20262803,pc_alm,1,completed,1000000,,,12350.148,0.022492,,20262803,1M PC-ALM inner_steps=4 ablation; nonzero primal/dual diagnostics; below 10M gate.
+phase1-meta_pcn-1m-k4-work-g0-seed20262900,meta_pcn,1,completed,1000000,,,12761.209,0.021767,,20262900,1M meta_pcn inner_steps=4 ablation; nonzero diagnostics; large error/precision values retained; below 10M gate.
+phase1-meta_pcn-1m-k4-work-g1-seed20262901,meta_pcn,1,completed,1000000,,,12691.567,0.021887,,20262901,1M meta_pcn inner_steps=4 ablation; nonzero diagnostics; large error/precision values retained; below 10M gate.
+phase1-precision_weighted_pc-1m-k4-loki-g0-seed20262902,precision_weighted_pc,1,completed,1000000,,,12023.160,0.023104,,20262902,1M precision_weighted_pc inner_steps=4 ablation; nonzero diagnostics; large error/precision values retained; below 10M gate.
+phase1-precision_weighted_pc-1m-k4-loki-g1-seed20262903,precision_weighted_pc,1,completed,1000000,,,12078.374,0.022998,,20262903,1M precision_weighted_pc inner_steps=4 ablation; nonzero diagnostics; large error/precision values retained; below 10M gate.

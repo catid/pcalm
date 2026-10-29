@@ -1190,6 +1190,62 @@
       "peak_memory_bytes": "",
       "seed": "20262803",
       "notes": "1M PC-ALM inner_steps=4 ablation; nonzero primal/dual diagnostics; below 10M gate."
+    },
+    {
+      "run_id": "phase1-meta_pcn-1m-k4-work-g0-seed20262900",
+      "method": "meta_pcn",
+      "phase": "1",
+      "status": "completed",
+      "tokens": "1000000",
+      "val_loss": "",
+      "val_ppl": "",
+      "tokens_per_s": "12761.209",
+      "gpu_hours": "0.021767",
+      "peak_memory_bytes": "",
+      "seed": "20262900",
+      "notes": "1M meta_pcn inner_steps=4 ablation; nonzero diagnostics; large error/precision values retained; below 10M gate."
+    },
+    {
+      "run_id": "phase1-meta_pcn-1m-k4-work-g1-seed20262901",
+      "method": "meta_pcn",
+      "phase": "1",
+      "status": "completed",
+      "tokens": "1000000",
+      "val_loss": "",
+      "val_ppl": "",
+      "tokens_per_s": "12691.567",
+      "gpu_hours": "0.021887",
+      "peak_memory_bytes": "",
+      "seed": "20262901",
+      "notes": "1M meta_pcn inner_steps=4 ablation; nonzero diagnostics; large error/precision values retained; below 10M gate."
+    },
+    {
+      "run_id": "phase1-precision_weighted_pc-1m-k4-loki-g0-seed20262902",
+      "method": "precision_weighted_pc",
+      "phase": "1",
+      "status": "completed",
+      "tokens": "1000000",
+      "val_loss": "",
+      "val_ppl": "",
+      "tokens_per_s": "12023.160",
+      "gpu_hours": "0.023104",
+      "peak_memory_bytes": "",
+      "seed": "20262902",
+      "notes": "1M precision_weighted_pc inner_steps=4 ablation; nonzero diagnostics; large error/precision values retained; below 10M gate."
+    },
+    {
+      "run_id": "phase1-precision_weighted_pc-1m-k4-loki-g1-seed20262903",
+      "method": "precision_weighted_pc",
+      "phase": "1",
+      "status": "completed",
+      "tokens": "1000000",
+      "val_loss": "",
+      "val_ppl": "",
+      "tokens_per_s": "12078.374",
+      "gpu_hours": "0.022998",
+      "peak_memory_bytes": "",
+      "seed": "20262903",
+      "notes": "1M precision_weighted_pc inner_steps=4 ablation; nonzero diagnostics; large error/precision values retained; below 10M gate."
     }
   ]
 }
