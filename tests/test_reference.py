@@ -106,3 +106,18 @@ def test_remaining_method_arm_protocol_smokes():
     carry = StreamAmortizedPCReference(CausalTransformer(cfg), inner_steps=1, parameter_step=0.0)
     s1 = carry.init_state(ids); carry.local_update(s1, ids, labels)
     s2 = carry.init_state(ids); assert getattr(s2, "carry_used", False)
+
+def test_strict_arms_do_not_call_autograd_grad():
+    torch.manual_seed(9); cfg = GPTConfig(vocab_size=31, n_layers=1, d_model=16, n_heads=2, d_ff=32, max_seq_len=6)
+    ids = torch.randint(cfg.vocab_size, (1, 6)); labels = ids.clone()
+    classes = (ClosedFormPrecisionPCReference, PCALMControlVariateReference)
+    original = torch.autograd.grad
+    def forbidden(*args, **kwargs): raise AssertionError("strict arm called autograd.grad")
+    torch.autograd.grad = forbidden
+    try:
+        for cls in classes:
+            model = CausalTransformer(cfg); method = cls(model, inner_steps=1, parameter_step=0.0)
+            state = method.init_state(ids); state.hidden[-1].add_(0.001 * torch.randn_like(state.hidden[-1]))
+            method.relax_step(state, ids, labels); method.local_update(state, ids, labels)
+    finally:
+        torch.autograd.grad = original
