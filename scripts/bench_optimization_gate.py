@@ -229,19 +229,26 @@ def _graph(args: argparse.Namespace) -> dict[str, Any]:
     eager_loss = _step(eager, eager_opt, ids, device)
     torch.cuda.synchronize()
     graph = torch.cuda.CUDAGraph()
+    # PyTorch requires graph capture on a non-default stream for this
+    # execution path.  Keep all capture operations on one dedicated stream;
+    # the explicit wait makes the stream observe the eager warmup/allocation
+    # work without introducing an implicit default-stream capture.
+    capture_stream = torch.cuda.Stream(device=device)
+    capture_stream.wait_stream(torch.cuda.current_stream(device))
     static_loss: torch.Tensor
     try:
-        torch.cuda.synchronize()
-        graph.capture_begin()
-        # Keep gradient storage allocated and stable across replay.  Setting
-        # grads to None inside a captured graph can introduce pointer changes
-        # or allocator work on replay.
-        graph_opt.zero_grad(set_to_none=False)
-        with _autocast(device):
-            static_loss, _ = graph_model(ids, ids)
-        static_loss.backward()
-        graph_opt.step()
-        graph.capture_end()
+        with torch.cuda.stream(capture_stream):
+            graph.capture_begin()
+            # Keep gradient storage allocated and stable across replay.
+            # Setting grads to None inside a captured graph can introduce
+            # pointer changes or allocator work on replay.
+            graph_opt.zero_grad(set_to_none=False)
+            with _autocast(device):
+                static_loss, _ = graph_model(ids, ids)
+            static_loss.backward()
+            graph_opt.step()
+            graph.capture_end()
+        capture_stream.synchronize()
         torch.cuda.synchronize()
         graph_loss = static_loss.detach().clone()
         param_err = max(float((p.detach().float() - q.detach().float()).abs().max().cpu())

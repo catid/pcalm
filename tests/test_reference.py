@@ -1,3 +1,7 @@
+import tempfile
+from argparse import Namespace
+from pathlib import Path
+
 import torch
 from src.model import GPTConfig, CausalTransformer, count_parameters
 from src.methods import (PCALMReference, PCALMOptimized, EPCReference,
@@ -121,3 +125,16 @@ def test_strict_arms_do_not_call_autograd_grad():
             method.relax_step(state, ids, labels); method.local_update(state, ids, labels)
     finally:
         torch.autograd.grad = original
+
+
+def test_cuda_graph_gate_is_explicitly_skipped_on_cpu():
+    """The optimization harness must not claim CUDA graph support on CPU."""
+    from scripts.bench_optimization_gate import _graph
+    with tempfile.TemporaryDirectory() as td:
+        args = Namespace(device="cpu", tiny=True, seq_len=8, seed=7, lr=3e-4,
+                         batch_sizes=[1], warmup=0, steps=1,
+                         output=str(Path(td) / "graph.json"),
+                         loss_tolerance=5e-4, parameter_tolerance=5e-4)
+        result = _graph(args)
+        assert result["status"] == "skipped_no_cuda"
+        assert Path(args.output).exists()
