@@ -38,6 +38,9 @@ class MethodState:
     # tensor in future variants) for each local block.
     precisions: List[torch.Tensor] | None = None
     precision_mean: List[float] = field(default_factory=list)
+    # Optional method-owned work buffers.  Optimized implementations reuse
+    # these tensors across relaxation sweeps; reference paths leave it None.
+    work: List[torch.Tensor] | None = None
 
 
 class PCALMReference:
@@ -225,6 +228,70 @@ class PCALMReference:
         for _ in range(self.inner_steps):
             self.relax_step(state, input_ids, labels)
         return self.step_cost(int(input_ids.numel()), time.perf_counter() - t0)
+
+
+class PCALMOptimized(PCALMReference):
+    """Preallocated PC-ALM relaxation path with the reference interface.
+
+    The reference path allocates a new residual and hidden tensor for every
+    block on every sweep.  This implementation allocates one residual buffer
+    per block in ``init_state`` and updates latent tensors in place.  The
+    arithmetic order is kept explicit (residual first, then primal and dual
+    updates), and ``collect_diagnostics=False`` avoids synchronizing every
+    layer's norm to the host during a steady-state benchmark.  Set it to true
+    for equivalent per-sweep diagnostics.
+
+    This optimization changes storage/launch behavior only; it does not add a
+    global reverse-mode graph or change the block-local update equations.
+    """
+
+    name = "pc_alm_optimized"
+    version = "optimized-preallocated-0.1"
+
+    def __init__(self, *args, collect_diagnostics: bool = True, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.collect_diagnostics = bool(collect_diagnostics)
+
+    def init_state(self, input_ids: torch.Tensor) -> MethodState:
+        state = super().init_state(input_ids)
+        state.work = [torch.empty_like(h) for h in state.hidden[1:]]
+        return state
+
+    @torch.no_grad()
+    def relax_step(self, state: MethodState, input_ids: torch.Tensor, labels: torch.Tensor | None = None):
+        del input_ids
+        if state.work is None or len(state.work) != len(self.model.blocks):
+            raise ValueError("optimized PC-ALM state is missing preallocated work buffers")
+        # Match the reference output-local objective exactly.  This short
+        # graph is discarded before entering the block-local sweep.
+        if labels is not None:
+            h_last = state.hidden[-1].detach().requires_grad_(True)
+            with torch.enable_grad():
+                logits = self.model.lm_head(self.model.norm(h_last))
+                loss = F.cross_entropy(logits[:, :-1].float().reshape(-1, logits.size(-1)), labels[:, 1:].reshape(-1))
+                output_grad = torch.autograd.grad(loss, h_last, only_inputs=True)[0]
+            state.hidden[-1].copy_(h_last.detach() - self.eta_h * output_grad.detach())
+        residuals = state.work
+        for i, block in enumerate(self.model.blocks):
+            h_prev = state.hidden[i]
+            h_next = state.hidden[i + 1]
+            pred = block(h_prev)
+            residual = residuals[i]
+            # out= avoids a fresh residual allocation.  Do not overwrite
+            # h_next until the residual has been copied.
+            torch.sub(h_next, pred, out=residual)
+            h_next.add_(residual, alpha=-self.eta_h * self.rho)
+            h_next.add_(state.dual[i], alpha=-self.eta_h)
+            state.dual[i].add_(residual, alpha=self.alpha)
+            if self.clip_dual is not None:
+                state.dual[i].clamp_(-self.clip_dual, self.clip_dual)
+            del pred
+        state.step += 1
+        if self.collect_diagnostics:
+            state.residual_norms = [float(r.float().norm().cpu()) for r in residuals]
+        else:
+            state.residual_norms = []
+        return residuals
 
 
 class EPCReference:

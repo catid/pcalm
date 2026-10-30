@@ -1,0 +1,1 @@
+{"device": "cuda", "iters": 20, "max_dual_abs_diff": 1.862645149230957e-09, "max_hidden_abs_diff": 1.4901161193847656e-08, "optimized_s": 0.01371019205544144, "optimized_steps_per_s": 1458.768769913927, "reference_s": 0.03321561496704817, "reference_steps_per_s": 602.1264402252124, "speedup": 2.4226950893707735, "status": "pass"}

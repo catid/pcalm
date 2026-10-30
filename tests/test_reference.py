@@ -1,6 +1,6 @@
 import torch
 from src.model import GPTConfig, CausalTransformer, count_parameters
-from src.methods import PCALMReference, EPCReference, StableParameterizationWrapper
+from src.methods import PCALMReference, PCALMOptimized, EPCReference, StableParameterizationWrapper
 
 def test_parameter_interval_and_tying():
     torch.manual_seed(0); m = CausalTransformer(GPTConfig())
@@ -63,3 +63,17 @@ def test_epc_and_stable_wrapper_smoke():
     assert state.errors is not None and len(state.errors) == len(m.blocks)
     assert update["updated_layers"] == len(m.blocks)
     assert diag["step"] == 2 and all(torch.isfinite(x).all() for x in state.errors)
+
+def test_pcalm_optimized_matches_reference():
+    torch.manual_seed(7); cfg = GPTConfig(vocab_size=31, n_layers=2, d_model=16, n_heads=2, d_ff=32, max_seq_len=6)
+    base = CausalTransformer(cfg); ref_model = CausalTransformer(cfg); opt_model = CausalTransformer(cfg)
+    ref_model.load_state_dict(base.state_dict()); opt_model.load_state_dict(base.state_dict())
+    ids = torch.randint(cfg.vocab_size, (1, 6)); labels = ids.clone()
+    ref = PCALMReference(ref_model, inner_steps=1, eta_h=0.07, alpha=0.01, parameter_step=0.0)
+    opt = PCALMOptimized(opt_model, inner_steps=1, eta_h=0.07, alpha=0.01, parameter_step=0.0, collect_diagnostics=False)
+    sr, so = ref.init_state(ids), opt.init_state(ids)
+    noise = 0.01 * torch.randn_like(sr.hidden[-1]); sr.hidden[-1].add_(noise); so.hidden[-1].add_(noise)
+    for _ in range(3):
+        ref.relax_step(sr, ids, labels); opt.relax_step(so, ids, labels)
+    assert max((a-b).abs().max().item() for a,b in zip(sr.hidden, so.hidden)) < 2e-5
+    assert max((a-b).abs().max().item() for a,b in zip(sr.dual, so.dual)) < 2e-5
