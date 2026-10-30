@@ -1,0 +1,21 @@
+{
+  "command": "scripts/bench_optimization_gate.py --mode graph --device cpu --tiny --seq-len 16 --batch-sizes 1 --steps 2 --warmup 1 --output reports/optimization_graph_cpu_smoke.json",
+  "cuda": "13.0",
+  "date_utc": "2026-10-30T00:05:45Z",
+  "device": "cpu",
+  "gate": "cuda_graph_capture_replay",
+  "host": "foureyes",
+  "model_parameter_components": {
+    "blocks": 99712,
+    "norm": 64,
+    "token_embedding": 16448
+  },
+  "model_parameters": 116224,
+  "python": "3.12.3",
+  "reason": "CUDA graphs require a CUDA device",
+  "seed": 20261030,
+  "seq_len": 16,
+  "status": "skipped_no_cuda",
+  "tiny": true,
+  "torch": "2.12.0+cu130"
+}

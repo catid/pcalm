@@ -1,0 +1,59 @@
+{
+  "backend": "gloo",
+  "command": "scripts/bench_optimization_gate.py --mode ddp --device cpu --tiny --seq-len 16 --batch-sizes 1,2 --steps 2 --warmup 1 --output reports/optimization_ddp_cpu_smoke.json",
+  "cuda": "13.0",
+  "date_utc": "2026-10-30T00:05:44Z",
+  "device": "cpu",
+  "gate": "ddp_fixed_shape_batch_scaling",
+  "host": "foureyes",
+  "local_rank": 0,
+  "model_parameter_components": {
+    "blocks": 99712,
+    "norm": 64,
+    "token_embedding": 16448
+  },
+  "model_parameters": 116224,
+  "python": "3.12.3",
+  "rank": 0,
+  "records": [
+    {
+      "backend": "gloo",
+      "batch_per_rank": 1,
+      "hosts": [
+        "foureyes"
+      ],
+      "local_rank": 0,
+      "measure_steps": 2,
+      "median_step_s_max_rank": 0.003118043066933751,
+      "peak_memory_allocated_bytes_rank0": 0,
+      "rank": 0,
+      "same_fixed_input_each_step": true,
+      "status": "pass",
+      "tokens_per_s_global": 5131.423670723773,
+      "warmup_steps": 1,
+      "world_size": 1
+    },
+    {
+      "backend": "gloo",
+      "batch_per_rank": 2,
+      "hosts": [
+        "foureyes"
+      ],
+      "local_rank": 0,
+      "measure_steps": 2,
+      "median_step_s_max_rank": 0.0032187049509957433,
+      "peak_memory_allocated_bytes_rank0": 0,
+      "rank": 0,
+      "same_fixed_input_each_step": true,
+      "status": "pass",
+      "tokens_per_s_global": 9941.886717544718,
+      "warmup_steps": 1,
+      "world_size": 1
+    }
+  ],
+  "seed": 20261030,
+  "seq_len": 16,
+  "tiny": true,
+  "torch": "2.12.0+cu130",
+  "world_size": 1
+}
