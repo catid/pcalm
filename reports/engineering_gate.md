@@ -54,3 +54,9 @@ was 1.85x for batch 1 (8,809 -> 16,323 tokens/s) and 1.78x for batch 2
 (17,430 -> 31,084 tokens/s), with zero eager-reference loss error and 3.00e-4
 maximum parameter error. Artifacts are `reports/optimization_graph_cuda_loki_b1.json`
 and `_b2.json`.
+
+A local two-rank DDP run on Loki at the production context length (sequence 1024)
+passed fixed-shape checks: 104,120 tokens/s at per-rank batch 1 and 225,090
+at batch 2, with peak rank-0 allocations 1.69 and 2.41 GB. Both ranks stayed
+finite and received disjoint DDP work; artifact:
+`reports/optimization_ddp_cuda_loki_w2_t1024.json`.

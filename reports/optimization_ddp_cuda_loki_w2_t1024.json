@@ -1,0 +1,61 @@
+{
+  "backend": "nccl",
+  "command": "scripts/bench_optimization_gate.py --mode ddp --device cuda --seq-len 1024 --batch-sizes 1,2 --steps 10 --warmup 3 --output reports/optimization_ddp_cuda_loki_w2_t1024.json",
+  "cuda": "13.0",
+  "date_utc": "2026-10-30T00:32:40Z",
+  "device": "cuda",
+  "gate": "ddp_fixed_shape_batch_scaling",
+  "host": "loki",
+  "local_rank": 0,
+  "model_parameter_components": {
+    "blocks": 28379136,
+    "norm": 384,
+    "token_embedding": 12288000
+  },
+  "model_parameters": 40667520,
+  "python": "3.12.3",
+  "rank": 0,
+  "records": [
+    {
+      "backend": "nccl",
+      "batch_per_rank": 1,
+      "hosts": [
+        "loki",
+        "loki"
+      ],
+      "local_rank": 0,
+      "measure_steps": 10,
+      "median_step_s_max_rank": 0.019669636036269367,
+      "peak_memory_allocated_bytes_rank0": 1687753216,
+      "rank": 0,
+      "same_fixed_input_each_step": true,
+      "status": "pass",
+      "tokens_per_s_global": 104119.87269228765,
+      "warmup_steps": 3,
+      "world_size": 2
+    },
+    {
+      "backend": "nccl",
+      "batch_per_rank": 2,
+      "hosts": [
+        "loki",
+        "loki"
+      ],
+      "local_rank": 0,
+      "measure_steps": 10,
+      "median_step_s_max_rank": 0.018197134020738304,
+      "peak_memory_allocated_bytes_rank0": 2412925440,
+      "rank": 0,
+      "same_fixed_input_each_step": true,
+      "status": "pass",
+      "tokens_per_s_global": 225090.3903511403,
+      "warmup_steps": 3,
+      "world_size": 2
+    }
+  ],
+  "seed": 20261030,
+  "seq_len": 1024,
+  "tiny": false,
+  "torch": "2.12.0+cu130",
+  "world_size": 2
+}
