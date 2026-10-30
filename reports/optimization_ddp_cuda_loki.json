@@ -1,0 +1,76 @@
+{
+  "backend": "nccl",
+  "command": "scripts/bench_optimization_gate.py --mode ddp --device cuda --seq-len 128 --batch-sizes 1,2,4 --steps 10 --warmup 3 --output reports/optimization_ddp_cuda_full.json",
+  "cuda": "13.0",
+  "date_utc": "2026-10-30T00:12:52Z",
+  "device": "cuda",
+  "gate": "ddp_fixed_shape_batch_scaling",
+  "host": "loki",
+  "local_rank": 0,
+  "model_parameter_components": {
+    "blocks": 28379136,
+    "norm": 384,
+    "token_embedding": 12288000
+  },
+  "model_parameters": 40667520,
+  "python": "3.12.3",
+  "rank": 0,
+  "records": [
+    {
+      "backend": "nccl",
+      "batch_per_rank": 1,
+      "hosts": [
+        "loki"
+      ],
+      "local_rank": 0,
+      "measure_steps": 10,
+      "median_step_s_max_rank": 0.014593838015571237,
+      "peak_memory_allocated_bytes_rank0": 891995136,
+      "rank": 0,
+      "same_fixed_input_each_step": true,
+      "status": "pass",
+      "tokens_per_s_global": 8770.825047079967,
+      "warmup_steps": 3,
+      "world_size": 1
+    },
+    {
+      "backend": "nccl",
+      "batch_per_rank": 2,
+      "hosts": [
+        "loki"
+      ],
+      "local_rank": 0,
+      "measure_steps": 10,
+      "median_step_s_max_rank": 0.01454707805532962,
+      "peak_memory_allocated_bytes_rank0": 906217472,
+      "rank": 0,
+      "same_fixed_input_each_step": true,
+      "status": "pass",
+      "tokens_per_s_global": 17598.035772290994,
+      "warmup_steps": 3,
+      "world_size": 1
+    },
+    {
+      "backend": "nccl",
+      "batch_per_rank": 4,
+      "hosts": [
+        "loki"
+      ],
+      "local_rank": 0,
+      "measure_steps": 10,
+      "median_step_s_max_rank": 0.014751694980077446,
+      "peak_memory_allocated_bytes_rank0": 999970816,
+      "rank": 0,
+      "same_fixed_input_each_step": true,
+      "status": "pass",
+      "tokens_per_s_global": 34707.87598926561,
+      "warmup_steps": 3,
+      "world_size": 1
+    }
+  ],
+  "seed": 20261030,
+  "seq_len": 128,
+  "tiny": false,
+  "torch": "2.12.0+cu130",
+  "world_size": 1
+}

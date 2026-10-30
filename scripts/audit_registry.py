@@ -75,7 +75,7 @@ def parse_live_processes(host: str, local: bool):
         )
     out = []
     for line in text.splitlines():
-        if "scripts/train.py" not in line or "--run-id" not in line:
+        if not re.search(r"scripts/train(?:_local)?\.py", line) or "--run-id" not in line:
             continue
         # The controller's process table also contains detached SSH launch
         # wrappers for remote jobs.  Those are audited on the destination
