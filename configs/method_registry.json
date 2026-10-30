@@ -76,10 +76,10 @@
       "id": "direct_feedback_alignment",
       "rank": 8,
       "literature": "arXiv:2602.15571",
-      "implementation": "transpose-tied output feedback scaffold",
+      "implementation": "transpose-tied output feedback scaffold; local autodiff allowed, no global reverse pass",
       "version": "transpose-tied-feedback-0.1",
       "locality": "relaxed_feedback",
-      "strict_no_autograd": true,
+      "strict_no_autograd": false,
       "status": "pending_10m_cosine_gate"
     },
     {
