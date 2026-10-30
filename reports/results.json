@@ -1540,6 +1540,48 @@
       "peak_memory_bytes": "",
       "seed": "20264012",
       "notes": "10M-token protocol gate on foureyes; final training-batch loss 8.941607; no held-out validation claim; method status remains adaptation/pending matched screen."
+    },
+    {
+      "run_id": "phase2-tune-pc_alm-ripper-g0-seed20264100",
+      "method": "pc_alm",
+      "phase": "2",
+      "status": "completed",
+      "tokens": "10000000",
+      "val_loss": "",
+      "val_ppl": "",
+      "tokens_per_s": "14311.614",
+      "gpu_hours": "0.194093",
+      "peak_memory_bytes": "",
+      "seed": "20264100",
+      "notes": "10M tuning run on ripper; final training-batch loss 9.077345; no held-out validation claim; method version reference-0.2; shell tuning command retained on source host."
+    },
+    {
+      "run_id": "phase2-tune-epc-ripper-g2-seed20264102",
+      "method": "epc",
+      "phase": "2",
+      "status": "completed",
+      "tokens": "10000000",
+      "val_loss": "",
+      "val_ppl": "",
+      "tokens_per_s": "13422.084",
+      "gpu_hours": "0.206956",
+      "peak_memory_bytes": "",
+      "seed": "20264102",
+      "notes": "10M tuning run on ripper; final training-batch loss 8.776889; no held-out validation claim; method version independent-transformer-adaptation-0.1; shell tuning command retained on source host."
+    },
+    {
+      "run_id": "phase2-tune-epc-ripper-g3-seed20264103",
+      "method": "epc",
+      "phase": "2",
+      "status": "completed",
+      "tokens": "10000000",
+      "val_loss": "",
+      "val_ppl": "",
+      "tokens_per_s": "13645.280",
+      "gpu_hours": "0.203571",
+      "peak_memory_bytes": "",
+      "seed": "20264103",
+      "notes": "10M tuning run on ripper; final training-batch loss 8.879507; no held-out validation claim; method version independent-transformer-adaptation-0.1; shell tuning command retained on source host."
     }
   ]
 }
