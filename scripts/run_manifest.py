@@ -23,6 +23,9 @@ def main():
     ap.add_argument("--strict-no-autograd", action=argparse.BooleanOptionalAction, default=None,
                     help="override config.method.strict_no_autograd")
     ap.add_argument("--metadata-json", help="JSON object merged into config.method")
+    ap.add_argument("--training-metadata-json", help="JSON object merged into config.train")
+    ap.add_argument("--train-command", help="complete training command recorded in the manifest")
+    ap.add_argument("--seed", type=int, help="per-run training seed recorded in the manifest")
     args = ap.parse_args()
     root = Path(__file__).resolve().parents[1]; outdir = root / "runs" / args.run_id; outdir.mkdir(parents=True, exist_ok=True)
     try:
@@ -44,11 +47,21 @@ def main():
         if not isinstance(extra, dict):
             ap.error("--metadata-json must decode to a JSON object")
         method_cfg.update(extra)
+    train_cfg = config.setdefault("train", {})
+    if args.training_metadata_json:
+        extra = json.loads(args.training_metadata_json)
+        if not isinstance(extra, dict):
+            ap.error("--training-metadata-json must decode to a JSON object")
+        train_cfg.update(extra)
     manifest = {"run_id": args.run_id, "created_utc": datetime.now(timezone.utc).isoformat(), "phase": args.phase, "tokens_budget": args.tokens,
                 "commit": cmd("git rev-parse HEAD"), "command": " ".join(sys.argv), "cwd": str(root), "host": platform.node(), "kernel": platform.release(),
                 "config": config, "torch": torch_info,
                 "gpu_inventory": cmd("nvidia-smi --query-gpu=index,name,driver_version,memory.total --format=csv,noheader"),
                 "environment_lock": (root / "configs/environment.lock").read_text(), "nccl_env": {k:v for k,v in os.environ.items() if k.startswith("NCCL_") or k.startswith("MASTER_")}}
+    if args.train_command:
+        manifest["train_command"] = args.train_command
+    if args.seed is not None:
+        manifest["run_seed"] = args.seed
     (outdir / "manifest.json").write_text(json.dumps(manifest, indent=2)); print(json.dumps(manifest, indent=2))
 
 if __name__ == "__main__": main()

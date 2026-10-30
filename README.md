@@ -64,6 +64,18 @@ $PY scripts/run_manifest.py --run-id pilot-bp-1m --method bp_adamw --phase 1 --t
 $PY scripts/train.py --run-id pilot-bp-1m --method bp_adamw --source fineweb --validation-tokens 0 --tokens 1000000
 ```
 
+For tuning runs, pass the resolved training settings and complete training
+command when creating the manifest. For example:
+
+```bash
+$PY scripts/run_manifest.py --run-id tune-pc-10m --method pc_alm \
+  --seed 20264100 --metadata-json '{"inner_steps":4,"eta_h":0.05,"alpha":0.01,"rho":1.0,"parameter_step":0.0003}' \
+  --train-command 'scripts/train_local.py --run-id tune-pc-10m --method pc_alm --tokens 10000000 --inner-steps 4 --eta-h 0.05 --alpha 0.01 --rho 1.0 --parameter-step 0.0003'
+```
+
+`--train-command`, `--seed`, and `--training-metadata-json` are provenance
+fields; they do not launch the training process.
+
 The final command is intentionally guarded and will refuse the current blocked gate. After every required gate and method smoke has passed, the recorded command is:
 
 ```bash

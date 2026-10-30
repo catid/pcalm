@@ -1470,6 +1470,62 @@
       "peak_memory_bytes": "",
       "seed": "20263111",
       "notes": "Independent single-GPU BP AdamW FineWeb control; fourth 50M replication wave; final loss 4.927396, 67343.5 tokens/s."
+    },
+    {
+      "run_id": "phase2-wf-act-10m-work-g0-seed20264000",
+      "method": "wf_act_pc",
+      "phase": "2",
+      "status": "completed",
+      "tokens": "10000000",
+      "val_loss": "",
+      "val_ppl": "",
+      "tokens_per_s": "23040.708",
+      "gpu_hours": "0.120560",
+      "peak_memory_bytes": "",
+      "seed": "20264000",
+      "notes": "10M-token protocol gate on work; final training-batch loss 8.893597; no held-out validation claim; source-tree commit ERROR: Command 'git rev-parse HEAD' returned non-zero exit status 128.; method status remains adaptation/pending matched screen."
+    },
+    {
+      "run_id": "phase2-dfa-10m-work-g1-seed20264002",
+      "method": "direct_feedback_alignment",
+      "phase": "2",
+      "status": "completed",
+      "tokens": "10000000",
+      "val_loss": "",
+      "val_ppl": "",
+      "tokens_per_s": "24298.993",
+      "gpu_hours": "0.114317",
+      "peak_memory_bytes": "",
+      "seed": "20264002",
+      "notes": "10M-token protocol gate on work; final training-batch loss 8.964219; no held-out validation claim; source-tree commit ERROR: Command 'git rev-parse HEAD' returned non-zero exit status 128.; method status remains adaptation/pending matched screen."
+    },
+    {
+      "run_id": "phase2-closed-form-10m-loki-g1-seed20264001",
+      "method": "closed_form_precision_pc",
+      "phase": "2",
+      "status": "completed",
+      "tokens": "10000000",
+      "val_loss": "",
+      "val_ppl": "",
+      "tokens_per_s": "33234.723",
+      "gpu_hours": "0.083581",
+      "peak_memory_bytes": "",
+      "seed": "20264001",
+      "notes": "10M-token protocol gate on loki; final training-batch loss 10.441189; no held-out validation claim; source-tree commit ERROR: Command 'git rev-parse HEAD' returned non-zero exit status 128.; method status remains adaptation/pending matched screen."
+    },
+    {
+      "run_id": "phase2-stream-amortized-10m-loki-g0-seed20264003",
+      "method": "stream_amortized_pc",
+      "phase": "2",
+      "status": "completed",
+      "tokens": "10000000",
+      "val_loss": "",
+      "val_ppl": "",
+      "tokens_per_s": "19530.482",
+      "gpu_hours": "0.142228",
+      "peak_memory_bytes": "",
+      "seed": "20264003",
+      "notes": "10M-token protocol gate on loki; final training-batch loss 8.978150; no held-out validation claim; source-tree commit ERROR: Command 'git rev-parse HEAD' returned non-zero exit status 128.; method status remains adaptation/pending matched screen."
     }
   ]
 }
