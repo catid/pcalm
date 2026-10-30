@@ -27,3 +27,24 @@ Date: 2026-10-29 UTC. This gate is a living record; a missing or failed item blo
 The immediate bottleneck is cross-node Ethernet communication, followed by local-method throughput and exact-budget FineWeb resume/validation checks. The runtime is now parity-tested and the source tree is copied to worker NVMe. Foureyes local all-reduce falls from 34.4 to 21.3 GB/s at two versus four ranks for the measured 20 MB bucket, while cross-node payload rates fall below 6 MB/s by world 8–12. Independent 4-GPU jobs therefore maximize useful progress without filler communication.
 
 **1B-token status: BLOCKED.** No expensive 1B-token run has been launched.
+
+## Production CUDA optimization evidence (2026-10-30)
+
+The frozen 40,667,520-parameter model passed the fixed-shape CUDA DDP harness on
+both 4-GPU hosts. At sequence length 128, world size 4, measured global throughput
+was 23,406 / 47,209 / 103,510 tokens/s on `foureyes` and 22,692 / 47,868 /
+93,872 tokens/s on `ripper` for per-rank batches 1 / 2 / 4. Peak rank-0
+allocation was 0.91–1.17 GiB on foureyes and 1.07–1.33 GiB on ripper. All
+records passed finite-parameter checks; outputs are
+`reports/optimization_ddp_cuda_foureyes_w4.json` and
+`reports/optimization_ddp_cuda_ripper_w4.json`.
+
+A fixed-shape CUDA graph on foureyes GPU0 also passed after two harness bugs were
+found and corrected: capture now uses a dedicated non-default stream, and loss
+comparison uses an eager reference because the captured scalar storage is reused
+by the backward kernel. The graph replay was 1.87x faster than eager (16,217 vs
+8,678 tokens/s at batch 1, sequence 128), with zero reference-loss discrepancy,
+maximum parameter discrepancy 3.00e-4 within the 5.00e-4 tolerance, and finite
+replays. The scalar-storage diagnostic remains recorded as zero in
+`reports/optimization_graph_cuda_foureyes.json`; the gate is based on the eager
+reference loss and parameter equivalence.
