@@ -735,7 +735,15 @@ class WFActPCReference(EPCReference):
         self.feedback_gain = float(feedback_gain)
 
     def local_update(self, state, input_ids, labels=None, *, apply=True):
-        out = super().local_update(state, input_ids, labels, apply=apply)
+        # The forward-weight action is represented by a local gain in this
+        # scaffold.  Scale the local update only for this call and restore the
+        # configured base step afterwards so repeated calls remain stable.
+        base_step = self.parameter_step
+        self.parameter_step = base_step * self.feedback_gain
+        try:
+            out = super().local_update(state, input_ids, labels, apply=apply)
+        finally:
+            self.parameter_step = base_step
         out.update({"feedback_rule": "local_jacobian_transpose", "feedback_gain": self.feedback_gain,
                     "frozen_normalization_assumption": True})
         return out
