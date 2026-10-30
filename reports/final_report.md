@@ -20,7 +20,18 @@ The initial in-process FineWeb BP pilot consumed exactly 2,046 targets and wrote
 
 ## Method status
 
-The ten-arm registry and method cards are committed. PC-ALM has an auditable block-local reference path; ePC has an explicitly labeled independent Transformer adaptation with EMA error states; and stable parameterization is implemented as a residual-scaling wrapper. Their deterministic CPU/GPU protocol smokes pass, while the required 10M-token method gates remain pending. Meta-PCN, precision weighting, WF-Act-PC, closed-form precision, direct feedback alignment, stream amortization, and the new control-variate hybrid have no implementation or screening results yet. The checked bibliography distinguishes published papers, contemporary preprints, official code commits, adaptations, and strict-locality limitations.
+The ten-arm registry and method cards are committed. All ten arms now have runnable
+protocol implementations and deterministic reference smokes. Exact 10M-token
+screening runs completed for PC-ALM (training loss 8.920), ePC (8.957),
+precision-weighted PC (10.493), WF-Act-PC (8.894), direct feedback alignment
+(8.964), closed-form precision PC (10.441), stream-amortized PC (8.978), and
+the new control-variate hybrid (10.398). A Meta-PCN run reached 10M with loss
+8.942; stable ePC reached 10M with loss 10.164. These are training-batch losses,
+not held-out validation results. The registry keeps all arms pending their
+method-specific source, gradient-cosine, equivalence, leakage, or variance
+sub-gates. The checked bibliography distinguishes published papers,
+contemporary preprints, official code commits, adaptations, and strict-locality
+limitations.
 
 ## Required next gates
 
@@ -29,7 +40,14 @@ The ten-arm registry and method cards are committed. PC-ALM has an auditable blo
 3. Implement each method card behind the common interface and run a 10M-token smoke per arm.
 4. Complete the 10M ePC/PC-ALM method smokes and implement the remaining registry arms before any method ranking.
 
-No validation loss, perplexity, time-to-1B, GPU-hour, or method ranking is claimed in this snapshot.
+No 1B-token result, final validation ranking, or finalist selection is claimed in
+this snapshot. The production 40M optimization gates are now measured: local
+4-GPU DDP reaches 93.9--103.5k tokens/s at sequence 128 and the two-rank Loki
+DDP path reaches 104.1k/225.1k tokens/s at sequence 1024 for per-rank batch
+1/2. CUDA graphs pass fixed-shape eager equivalence. Replay speedup is
+1.78--2.08x at sequence 128 and 1.06--1.31x at sequence 1024, with parameter
+error 3.00e-4 below the 5.00e-4 gate tolerance. These measurements are recorded
+in `reports/engineering_gate.md` and the optimization JSON artifacts.
 
 An ePC adaptation pilot ran on the full 40M model for 100,000 FineWeb targets on eight independent seeds across foureyes and ripper. It reached exact budgets with nonzero error/residual diagnostics at roughly 2.4k tokens/s, versus roughly 60–68k tokens/s for BP controls. This is an implementation-cost and stability observation only; it is below the 10M gate and used no held-out validation claim. One separate BP control was interrupted at 21.1M tokens after a duplicate GPU assignment was detected; it is retained and labeled as a failed run in the registry.
 
