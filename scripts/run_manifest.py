@@ -8,6 +8,18 @@ def cmd(x):
     try: return subprocess.check_output(x, shell=True, text=True, stderr=subprocess.STDOUT).strip()
     except Exception as e: return f"ERROR: {e}"
 
+
+def registry_method_defaults(root, method):
+    """Return the canonical method metadata, or an empty mapping if unknown."""
+    try:
+        entries = json.loads((root / "configs/method_registry.json").read_text()).get("methods", [])
+    except (OSError, json.JSONDecodeError):
+        return {}
+    for entry in entries:
+        if entry.get("id") == method:
+            return {k: entry[k] for k in ("version", "locality", "strict_no_autograd") if k in entry}
+    return {}
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--run-id", required=True)
@@ -36,6 +48,15 @@ def main():
     method_cfg = config.setdefault("method", {})
     if args.method:
         method_cfg["name"] = args.method
+        # Resolve canonical defaults from the registry before applying any
+        # explicit command-line or JSON overrides.  Unknown/ad-hoc methods
+        # retain the base config and remain visibly unversioned.
+        defaults = registry_method_defaults(root, args.method)
+        for key, value in defaults.items():
+            if key not in method_cfg or method_cfg[key] in (None, "", "reference-0.1"):
+                method_cfg[key] = value
+        if not defaults and method_cfg.get("version") == "reference-0.1":
+            method_cfg["version"] = "unregistered"
     if args.method_version:
         method_cfg["version"] = args.method_version
     if args.locality:

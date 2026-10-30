@@ -22,6 +22,7 @@ Use the pinned local environment on foureyes:
 PY=/home/catid/venvs/dnn/bin/python
 $PY scripts/data_manifest.py
 $PY scripts/run_reference_tests.py
+$PY scripts/test_manifest.py
 $PY scripts/phase0_inventory.py
 CUDA_VISIBLE_DEVICES=0 /home/catid/venvs/dnn/bin/torchrun --standalone --nproc-per-node=1 scripts/ddp_equivalence.py --output /tmp/ddp1.json
 CUDA_VISIBLE_DEVICES=0,1 /home/catid/venvs/dnn/bin/torchrun --standalone --nproc-per-node=2 scripts/ddp_equivalence.py --output /tmp/ddp2.json
