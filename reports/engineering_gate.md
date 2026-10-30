@@ -48,3 +48,9 @@ maximum parameter discrepancy 3.00e-4 within the 5.00e-4 tolerance, and finite
 replays. The scalar-storage diagnostic remains recorded as zero in
 `reports/optimization_graph_cuda_foureyes.json`; the gate is based on the eager
 reference loss and parameter equivalence.
+
+A replication on Loki also passed at sequence length 128: CUDA graph replay speedup
+was 1.85x for batch 1 (8,809 -> 16,323 tokens/s) and 1.78x for batch 2
+(17,430 -> 31,084 tokens/s), with zero eager-reference loss error and 3.00e-4
+maximum parameter error. Artifacts are `reports/optimization_graph_cuda_loki_b1.json`
+and `_b2.json`.
