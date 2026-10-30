@@ -72,3 +72,19 @@ Twelve independent single-GPU BP AdamW controls completed exactly 10M FineWeb tr
 ## Phase 2 control pilots
 
 The first 50M-token wave completed 12 independent BP AdamW FineWeb controls, four per 4-GPU host and two per 2-GPU host. Every run reached exactly 50,000,000 tokens with clean exit; final training losses were 4.79–4.97 and throughput was approximately 61–62k tokens/s on foureyes/ripper and 67k on work/loki. A second 50M seed wave completed on ripper, work, and loki and is registered with exact manifests and metrics; a fifth independent 50M replication wave (run IDs `phase2-bp50m-*-seed20263200` through `seed20263211`) is currently active across all 12 GPUs. The intervening third and fourth waves are retained in the registry. These are additional BP controls for throughput and variance coverage, not method results.
+
+## Early tuning evidence
+
+The 10M tuning runs provide bounded settings evidence without changing the main
+contract. On Ripper, ePC with `beta=0.25` reached training loss 8.777 and with
+`beta=0.75` 8.880; PC-ALM with four steps and `eta_h=0.05` reached 9.077. A
+BP learning-rate pair on Loki reached 5.530 at `1e-4` and 6.045 at `6e-4`,
+both at about 60.5k tokens/s. These are tuning-stream results and are not used
+as validation claims.
+
+The first gain ablations also completed at 1M tokens. WF-Act with gain 0.25
+remained top-layer-only (loss 10.396), while direct feedback alignment with
+gain 2.0 produced nonzero all-layer errors (loss 10.246, primal residual 3.64)
+but remained a relaxed-feedback method. Additional 1M settings for 16-step
+PC-ALM, 8-step ePC, precision weighting, Meta-PCN, carry-over, and the
+control-variate probes remain in the registry as ablations or active jobs.
