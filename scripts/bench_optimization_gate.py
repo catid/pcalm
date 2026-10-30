@@ -236,6 +236,7 @@ def _graph(args: argparse.Namespace) -> dict[str, Any]:
     capture_stream = torch.cuda.Stream(device=device)
     capture_stream.wait_stream(torch.cuda.current_stream(device))
     static_loss: torch.Tensor
+    captured_loss: torch.Tensor
     try:
         with torch.cuda.stream(capture_stream):
             graph.capture_begin()
@@ -245,12 +246,17 @@ def _graph(args: argparse.Namespace) -> dict[str, Any]:
             graph_opt.zero_grad(set_to_none=False)
             with _autocast(device):
                 static_loss, _ = graph_model(ids, ids)
+            # Keep a dedicated scalar copy of the forward result before
+            # backward.  Some CUDA/SDPA backward kernels reuse the original
+            # loss storage; reading ``static_loss`` after capture can then
+            # report zero despite a correct parameter update.
+            captured_loss = static_loss.detach().clone()
             static_loss.backward()
             graph_opt.step()
             graph.capture_end()
         capture_stream.synchronize()
         torch.cuda.synchronize()
-        graph_loss = static_loss.detach().clone()
+        graph_loss = captured_loss.detach().clone()
         param_err = max(float((p.detach().float() - q.detach().float()).abs().max().cpu())
                         for p, q in zip(eager.parameters(), graph_model.parameters()))
         loss_err = float((eager_loss.float() - graph_loss.float()).abs().cpu())
