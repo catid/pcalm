@@ -226,6 +226,14 @@ def _graph(args: argparse.Namespace) -> dict[str, Any]:
     graph_model.load_state_dict(initial)
     _state_reset(graph_opt)
     torch.cuda.synchronize()
+    # Keep an eager scalar reference for the graph model while its parameters
+    # are still at the initial state.  On this torch/CUDA stack, scalar output
+    # storage from a captured graph can be recycled by backward/replay, so a
+    # post-capture read is not a reliable first-forward loss comparison.
+    with torch.no_grad():
+        with _autocast(device):
+            graph_reference_loss, _ = graph_model(ids, ids)
+    graph_reference_loss_value = float(graph_reference_loss.detach().float().cpu())
     eager_loss = _step(eager, eager_opt, ids, device)
     torch.cuda.synchronize()
     graph = torch.cuda.CUDAGraph()
@@ -259,7 +267,7 @@ def _graph(args: argparse.Namespace) -> dict[str, Any]:
         graph_loss = captured_loss.detach().clone()
         param_err = max(float((p.detach().float() - q.detach().float()).abs().max().cpu())
                         for p, q in zip(eager.parameters(), graph_model.parameters()))
-        loss_err = float((eager_loss.float() - graph_loss.float()).abs().cpu())
+        loss_err = abs(float(eager_loss.float().cpu()) - graph_reference_loss_value)
         replay_times: list[float] = []
         for _ in range(args.steps):
             torch.cuda.synchronize()
@@ -282,7 +290,8 @@ def _graph(args: argparse.Namespace) -> dict[str, Any]:
             "warmup_steps": int(args.warmup),
             "measure_steps": int(args.steps),
             "eager_loss": float(eager_loss.cpu()),
-            "graph_loss": float(graph_loss.cpu()),
+            "graph_reference_loss": graph_reference_loss_value,
+            "captured_graph_loss_diagnostic": float(graph_loss.cpu()),
             "max_loss_abs_error": loss_err,
             "max_parameter_abs_error": param_err,
             "loss_tolerance": args.loss_tolerance,
