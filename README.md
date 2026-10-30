@@ -31,6 +31,29 @@ for n in 1 2 4; do CUDA_VISIBLE_DEVICES=$(seq -s, 0 $((n-1))) \
 
 The local and direct-rank cross-node all-reduce measurements are in `reports/scaling.csv`; the measured Ethernet rates make independent 4-GPU jobs the default. Do not launch a 1B-token run while the engineering gate says `BLOCKED`.
 
+The fixed-shape optimization gate can be run without a long training job:
+
+```bash
+# CPU harness smoke (does not claim CUDA-graph support)
+PYTHONPATH=. /home/catid/venvs/dnn/bin/python scripts/bench_optimization_gate.py \
+  --mode ddp --device cpu --tiny --seq-len 16 --batch-sizes 1,2 \
+  --steps 2 --warmup 1 --output /tmp/ddp_gate.json
+
+# Production-shape single-node batch benchmark
+PYTHONPATH=. /home/catid/venvs/dnn/bin/python scripts/bench_optimization_gate.py \
+  --mode ddp --device cuda --seq-len 128 --batch-sizes 1,2,4 \
+  --steps 10 --warmup 3 --output reports/ddp_batch_gate.json
+
+# CUDA graph capture/replay (fixed shape; run only when a GPU is available)
+PYTHONPATH=. /home/catid/venvs/dnn/bin/python scripts/bench_optimization_gate.py \
+  --mode graph --device cuda --seq-len 128 --batch-sizes 1 \
+  --steps 10 --warmup 3 --output reports/cuda_graph_gate.json
+```
+
+For local multi-GPU DDP, launch the same `ddp` command with
+`torchrun --standalone --nproc-per-node=N`; the output records world size,
+rank hosts, peak memory, and the maximum median step time across ranks.
+
 ## Pilot and final-run commands
 
 Create a manifest before either command. A bounded 1M-token BP pilot (diagnostic only) is:
