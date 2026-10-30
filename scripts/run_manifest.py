@@ -52,9 +52,9 @@ def main():
         # explicit command-line or JSON overrides.  Unknown/ad-hoc methods
         # retain the base config and remain visibly unversioned.
         defaults = registry_method_defaults(root, args.method)
-        for key, value in defaults.items():
-            if key not in method_cfg or method_cfg[key] in (None, "", "reference-0.1"):
-                method_cfg[key] = value
+        # Apply registry values first; the explicit CLI flags and metadata JSON
+        # below are applied afterwards and therefore remain authoritative.
+        method_cfg.update(defaults)
         if not defaults and method_cfg.get("version") == "reference-0.1":
             method_cfg["version"] = "unregistered"
     if args.method_version:
