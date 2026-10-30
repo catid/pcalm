@@ -28,6 +28,11 @@ from src.methods import (
     PCALMReference,
     PrecisionWeightedPCReference,
     StableParameterizationWrapper,
+    WFActPCReference,
+    ClosedFormPrecisionPCReference,
+    DirectFeedbackAlignmentReference,
+    StreamAmortizedPCReference,
+    PCALMControlVariateReference,
 )
 
 
@@ -62,12 +67,38 @@ def _stable_factory(model):
     return StableParameterizationWrapper(_pc_alm_factory(model))
 
 
+def _wf_act_factory(model):
+    return WFActPCReference(model, inner_steps=1, parameter_step=0.0)
+
+
+def _closed_form_factory(model):
+    return ClosedFormPrecisionPCReference(model, inner_steps=1, parameter_step=0.0)
+
+
+def _dfa_factory(model):
+    return DirectFeedbackAlignmentReference(model, inner_steps=1, parameter_step=0.0)
+
+
+def _stream_factory(model):
+    return StreamAmortizedPCReference(model, inner_steps=1, parameter_step=0.0)
+
+
+def _control_variate_factory(model):
+    return PCALMControlVariateReference(model, inner_steps=1, parameter_step=0.0,
+                                        probe_count=1, probe_eps=1e-3)
+
+
 IMPLEMENTATIONS = {
     "pc_alm": _pc_alm_factory,
     "epc": _epc_factory,
     "meta_pcn": _meta_pcn_factory,
     "precision_weighted_pc": _precision_weighted_factory,
     "stable_parameterization": _stable_factory,
+    "wf_act_pc": _wf_act_factory,
+    "closed_form_precision_pc": _closed_form_factory,
+    "direct_feedback_alignment": _dfa_factory,
+    "stream_amortized_pc": _stream_factory,
+    "pc_alm_control_variate": _control_variate_factory,
 }
 
 

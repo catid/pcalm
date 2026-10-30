@@ -60,3 +60,11 @@ passed fixed-shape checks: 104,120 tokens/s at per-rank batch 1 and 225,090
 at batch 2, with peak rank-0 allocations 1.69 and 2.41 GB. Both ranks stayed
 finite and received disjoint DDP work; artifact:
 `reports/optimization_ddp_cuda_loki_w2_t1024.json`.
+
+The production-context CUDA graph gate also passed on Loki at sequence length
+1024: batch 1 replay was 95,196 tokens/s versus 72,776 eager (1.31x), and
+batch 2 replay was 146,258 versus 137,586 eager (1.06x). Loss reference error
+was zero and parameter error 3.00e-4 in both cases; peak allocations were
+2.62 and 3.36 GB. These measurements show that graph gains are shape-dependent
+and smaller at the larger sequence/batch shapes. Artifacts:
+`reports/optimization_graph_cuda_loki_t1024_b1.json` and `_b2.json`.

@@ -10,7 +10,7 @@
       "version": "reference-0.2",
       "locality": "block_local",
       "strict_no_autograd": false,
-      "status": "reference_smoke_pass_10m_pending"
+      "status": "10m_protocol_pass_source_gate_pending"
     },
     {
       "id": "epc",
@@ -20,7 +20,7 @@
       "version": "independent-transformer-adaptation-0.1",
       "locality": "block_local",
       "strict_no_autograd": false,
-      "status": "adaptation_smoke_pass_10m_pending"
+      "status": "10m_protocol_pass_source_gate_pending"
     },
     {
       "id": "meta_pcn",
@@ -40,7 +40,7 @@
       "version": "precision-weighted-0.1",
       "locality": "block_local",
       "strict_no_autograd": false,
-      "status": "adaptation_smoke_pass_10m_pending"
+      "status": "10m_protocol_pass_source_gate_pending"
     },
     {
       "id": "stable_parameterization",
@@ -60,7 +60,7 @@
       "version": "adapted-local-jacobian-0.1",
       "locality": "block_local",
       "strict_no_autograd": false,
-      "status": "pending_10m_source_gate"
+      "status": "10m_protocol_pass_source_gate_pending"
     },
     {
       "id": "closed_form_precision_pc",
@@ -70,7 +70,7 @@
       "version": "adapted-gaussian-posterior-0.1",
       "locality": "block_local",
       "strict_no_autograd": true,
-      "status": "pending_10m_equivalence_gate"
+      "status": "10m_protocol_pass_equivalence_gate_pending"
     },
     {
       "id": "direct_feedback_alignment",
@@ -80,7 +80,7 @@
       "version": "transpose-tied-feedback-0.1",
       "locality": "relaxed_feedback",
       "strict_no_autograd": false,
-      "status": "pending_10m_cosine_gate"
+      "status": "10m_protocol_pass_cosine_gate_pending"
     },
     {
       "id": "stream_amortized_pc",
@@ -90,7 +90,7 @@
       "version": "carry-over-0.1",
       "locality": "block_local",
       "strict_no_autograd": false,
-      "status": "pending_10m_leakage_gate"
+      "status": "10m_protocol_pass_leakage_gate_pending"
     },
     {
       "id": "pc_alm_control_variate",
@@ -100,7 +100,7 @@
       "version": "activation-probe-control-variate-0.1",
       "locality": "block_local",
       "strict_no_autograd": true,
-      "status": "pending_10m_variance_gate"
+      "status": "10m_protocol_pass_variance_gate_pending"
     },
     {
       "id": "bp_adamw",
