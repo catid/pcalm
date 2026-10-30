@@ -74,14 +74,16 @@ def _build_method(name, model, args):
         return PrecisionWeightedPCReference(model, inner_steps=args.inner_steps, parameter_step=args.parameter_step)
     if name == "wf_act_pc":
         return WFActPCReference(model, inner_steps=args.inner_steps, eta_h=args.eta_h,
-                                beta=args.beta, parameter_step=args.parameter_step)
+                                beta=args.beta, parameter_step=args.parameter_step,
+                                feedback_gain=args.feedback_gain)
     if name == "closed_form_precision_pc":
         return ClosedFormPrecisionPCReference(model, inner_steps=args.inner_steps, eta_h=args.eta_h,
                                               precision_ema=args.precision_ema,
                                               parameter_step=args.parameter_step)
     if name == "direct_feedback_alignment":
         return DirectFeedbackAlignmentReference(model, inner_steps=args.inner_steps, eta_h=args.eta_h,
-                                                beta=args.beta, parameter_step=args.parameter_step)
+                                                beta=args.beta, parameter_step=args.parameter_step,
+                                                feedback_gain=args.feedback_gain)
     if name == "stream_amortized_pc":
         return StreamAmortizedPCReference(model, inner_steps=args.inner_steps, eta_h=args.eta_h,
                                           beta=args.beta, parameter_step=args.parameter_step,
@@ -114,6 +116,7 @@ def main():
     ap.add_argument("--carry-decay", type=float, default=1.0)
     ap.add_argument("--probe-count", type=int, default=1)
     ap.add_argument("--probe-eps", type=float, default=1e-3)
+    ap.add_argument("--feedback-gain", type=float, default=1.0)
     ap.add_argument("--parameter-step", type=float, default=3e-4)
     ap.add_argument("--checkpoint-every", type=int, default=1_000_000)
     ap.add_argument("--resume")

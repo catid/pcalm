@@ -1526,6 +1526,20 @@
       "peak_memory_bytes": "",
       "seed": "20264003",
       "notes": "10M-token protocol gate on loki; final training-batch loss 8.978150; no held-out validation claim; source-tree commit ERROR: Command 'git rev-parse HEAD' returned non-zero exit status 128.; method status remains adaptation/pending matched screen."
+    },
+    {
+      "run_id": "phase2-meta_pcn-10m-foureyes-g2-seed20264012",
+      "method": "meta_pcn",
+      "phase": "2",
+      "status": "completed",
+      "tokens": "10000000",
+      "val_loss": "",
+      "val_ppl": "",
+      "tokens_per_s": "18610.569",
+      "gpu_hours": "0.149258",
+      "peak_memory_bytes": "",
+      "seed": "20264012",
+      "notes": "10M-token protocol gate on foureyes; final training-batch loss 8.941607; no held-out validation claim; method status remains adaptation/pending matched screen."
     }
   ]
 }
