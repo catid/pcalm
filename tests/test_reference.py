@@ -1,6 +1,11 @@
 import torch
 from src.model import GPTConfig, CausalTransformer, count_parameters
-from src.methods import PCALMReference, PCALMOptimized, EPCReference, StableParameterizationWrapper
+from src.methods import (PCALMReference, PCALMOptimized, EPCReference,
+                         StableParameterizationWrapper, WFActPCReference,
+                         ClosedFormPrecisionPCReference,
+                         DirectFeedbackAlignmentReference,
+                         StreamAmortizedPCReference,
+                         PCALMControlVariateReference)
 
 def test_parameter_interval_and_tying():
     torch.manual_seed(0); m = CausalTransformer(GPTConfig())
@@ -77,3 +82,27 @@ def test_pcalm_optimized_matches_reference():
         ref.relax_step(sr, ids, labels); opt.relax_step(so, ids, labels)
     assert max((a-b).abs().max().item() for a,b in zip(sr.hidden, so.hidden)) < 2e-5
     assert max((a-b).abs().max().item() for a,b in zip(sr.dual, so.dual)) < 2e-5
+
+def test_remaining_method_arm_protocol_smokes():
+    torch.manual_seed(8); cfg = GPTConfig(vocab_size=31, n_layers=2, d_model=16, n_heads=2, d_ff=32, max_seq_len=6)
+    ids = torch.randint(cfg.vocab_size, (1, 6)); labels = ids.clone()
+    classes = (WFActPCReference, ClosedFormPrecisionPCReference,
+               DirectFeedbackAlignmentReference, StreamAmortizedPCReference,
+               PCALMControlVariateReference)
+    for cls in classes:
+        model = CausalTransformer(cfg)
+        kwargs = {"inner_steps": 1, "parameter_step": 0.0}
+        if cls is PCALMControlVariateReference:
+            kwargs.update(probe_count=1, probe_eps=1e-3)
+        method = cls(model, **kwargs)
+        state = method.init_state(ids)
+        state.hidden[-1].add_(0.005 * torch.randn_like(state.hidden[-1]))
+        method.relax_step(state, ids, labels)
+        update = method.local_update(state, ids, labels)
+        diag = method.diagnostics(state)
+        assert diag["step"] == 1 and method.name in diag.get("method", method.name)
+        assert all(torch.isfinite(x).all() for x in state.hidden)
+        assert "updated_layers" in update
+    carry = StreamAmortizedPCReference(CausalTransformer(cfg), inner_steps=1, parameter_step=0.0)
+    s1 = carry.init_state(ids); carry.local_update(s1, ids, labels)
+    s2 = carry.init_state(ids); assert getattr(s2, "carry_used", False)

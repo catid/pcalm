@@ -20,7 +20,12 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import torch
 
 from src.data_stream import StreamSpec, iter_token_chunks
-from src.methods import EPCReference, PCALMReference, StableParameterizationWrapper, MetaPCNReference, PrecisionWeightedPCReference
+from src.methods import (
+    EPCReference, PCALMReference, StableParameterizationWrapper,
+    MetaPCNReference, PrecisionWeightedPCReference, WFActPCReference,
+    ClosedFormPrecisionPCReference, DirectFeedbackAlignmentReference,
+    StreamAmortizedPCReference, PCALMControlVariateReference,
+)
 from src.model import CausalTransformer, GPTConfig
 
 
@@ -67,13 +72,35 @@ def _build_method(name, model, args):
         return MetaPCNReference(model, inner_steps=args.inner_steps, parameter_step=args.parameter_step)
     if name == "precision_weighted_pc":
         return PrecisionWeightedPCReference(model, inner_steps=args.inner_steps, parameter_step=args.parameter_step)
+    if name == "wf_act_pc":
+        return WFActPCReference(model, inner_steps=args.inner_steps, eta_h=args.eta_h,
+                                beta=args.beta, parameter_step=args.parameter_step)
+    if name == "closed_form_precision_pc":
+        return ClosedFormPrecisionPCReference(model, inner_steps=args.inner_steps, eta_h=args.eta_h,
+                                              precision_ema=args.precision_ema,
+                                              parameter_step=args.parameter_step)
+    if name == "direct_feedback_alignment":
+        return DirectFeedbackAlignmentReference(model, inner_steps=args.inner_steps, eta_h=args.eta_h,
+                                                beta=args.beta, parameter_step=args.parameter_step)
+    if name == "stream_amortized_pc":
+        return StreamAmortizedPCReference(model, inner_steps=args.inner_steps, eta_h=args.eta_h,
+                                          beta=args.beta, parameter_step=args.parameter_step,
+                                          carry_decay=args.carry_decay)
+    if name == "pc_alm_control_variate":
+        return PCALMControlVariateReference(model, inner_steps=args.inner_steps, eta_h=args.eta_h,
+                                            alpha=args.alpha, rho=args.rho,
+                                            parameter_step=args.parameter_step,
+                                            probe_count=args.probe_count, probe_eps=args.probe_eps)
     raise ValueError(f"unsupported local method: {name}")
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--run-id", required=True)
-    ap.add_argument("--method", choices=("pc_alm", "epc", "meta_pcn", "precision_weighted_pc"), required=True)
+    ap.add_argument("--method", choices=("pc_alm", "epc", "meta_pcn", "precision_weighted_pc",
+                                          "wf_act_pc", "closed_form_precision_pc",
+                                          "direct_feedback_alignment", "stream_amortized_pc",
+                                          "pc_alm_control_variate"), required=True)
     ap.add_argument("--tokens", type=int, required=True)
     ap.add_argument("--source", choices=("fineweb", "synthetic"), default="fineweb")
     ap.add_argument("--validation-tokens", type=int, default=10_000_000)
@@ -83,6 +110,10 @@ def main():
     ap.add_argument("--alpha", type=float, default=0.01)
     ap.add_argument("--rho", type=float, default=1.0)
     ap.add_argument("--beta", type=float, default=0.5)
+    ap.add_argument("--precision-ema", type=float, default=0.1)
+    ap.add_argument("--carry-decay", type=float, default=1.0)
+    ap.add_argument("--probe-count", type=int, default=1)
+    ap.add_argument("--probe-eps", type=float, default=1e-3)
     ap.add_argument("--parameter-step", type=float, default=3e-4)
     ap.add_argument("--checkpoint-every", type=int, default=1_000_000)
     ap.add_argument("--resume")

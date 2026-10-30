@@ -56,51 +56,51 @@
       "id": "wf_act_pc",
       "rank": 6,
       "literature": "arXiv:2607.13380",
-      "implementation": "not started",
-      "version": "pending",
+      "implementation": "adapted protocol scaffold",
+      "version": "adapted-local-jacobian-0.1",
       "locality": "block_local",
       "strict_no_autograd": false,
-      "status": "pending"
+      "status": "pending_10m_source_gate"
     },
     {
       "id": "closed_form_precision_pc",
       "rank": 7,
       "literature": "arXiv:2605.20293",
-      "implementation": "not started",
-      "version": "pending",
+      "implementation": "adapted Gaussian posterior scaffold",
+      "version": "adapted-gaussian-posterior-0.1",
       "locality": "block_local",
       "strict_no_autograd": true,
-      "status": "pending"
+      "status": "pending_10m_equivalence_gate"
     },
     {
       "id": "direct_feedback_alignment",
       "rank": 8,
       "literature": "arXiv:2602.15571",
-      "implementation": "not started",
-      "version": "pending",
+      "implementation": "transpose-tied output feedback scaffold",
+      "version": "transpose-tied-feedback-0.1",
       "locality": "relaxed_feedback",
       "strict_no_autograd": true,
-      "status": "pending"
+      "status": "pending_10m_cosine_gate"
     },
     {
       "id": "stream_amortized_pc",
       "rank": 9,
       "literature": "arXiv:2601.20895",
-      "implementation": "not started",
-      "version": "pending",
+      "implementation": "rank-local carry scaffold",
+      "version": "carry-over-0.1",
       "locality": "block_local",
       "strict_no_autograd": false,
-      "status": "pending"
+      "status": "pending_10m_leakage_gate"
     },
     {
       "id": "pc_alm_control_variate",
       "rank": 10,
       "literature": "new hybrid",
-      "implementation": "not started",
-      "version": "pending",
+      "implementation": "antithetic probe scaffold",
+      "version": "activation-probe-control-variate-0.1",
       "locality": "block_local",
       "strict_no_autograd": true,
-      "status": "pending"
+      "status": "pending_10m_variance_gate"
     },
     {
       "id": "bp_adamw",

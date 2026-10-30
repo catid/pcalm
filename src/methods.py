@@ -711,3 +711,259 @@ class StableParameterizationWrapper:
         out = dict(self.base_method.step_cost(batch_tokens, elapsed_s, inference_steps=inference_steps))
         out.update({"method": self.name, "version": self.version, "stable_residual_scale": self.residual_scale, "stable_init_scale": self.init_scale})
         return out
+
+
+class WFActPCReference(EPCReference):
+    """Minimal WF-Act-PC adapter using a local Jacobian-transpose action.
+
+    The Transformer block graph is detached at each boundary and the local
+    squared-error gradient is the available Jacobian-transpose action.  This
+    keeps the forward-weight/frozen-normalization assumption explicit without
+    pretending that attention Q/K/V derivatives have already been replaced by
+    an analytic WF rule.  It is therefore an adapted scaffold, not a faithful
+    reproduction of the vision implementation.
+    """
+
+    name = "wf_act_pc"
+    version = "adapted-local-jacobian-0.1"
+    locality = "block_local"
+
+    def __init__(self, model, *args, feedback_gain: float = 1.0, **kwargs):
+        super().__init__(model, *args, **kwargs)
+        if feedback_gain <= 0:
+            raise ValueError("feedback_gain must be positive")
+        self.feedback_gain = float(feedback_gain)
+
+    def local_update(self, state, input_ids, labels=None, *, apply=True):
+        out = super().local_update(state, input_ids, labels, apply=apply)
+        out.update({"feedback_rule": "local_jacobian_transpose", "feedback_gain": self.feedback_gain,
+                    "frozen_normalization_assumption": True})
+        return out
+
+    @torch.no_grad()
+    def diagnostics(self, state):
+        out = super().diagnostics(state)
+        out.update({"feedback_rule": "local_jacobian_transpose", "feedback_gain": self.feedback_gain,
+                    "frozen_normalization_assumption": True})
+        return out
+
+
+class ClosedFormPrecisionPCReference(PrecisionWeightedPCReference):
+    """One-step Gaussian posterior approximation for Transformer latents.
+
+    Given predicted mean ``m=f_i(h_i)`` and current latent ``h``, use the
+    scalar precision ``p_i`` to form ``h_new=(h+p_i*m)/(1+p_i)``.  Precision is
+    adapted from the local residual variance and clipped positive.  This
+    removes the repeated gradient relaxation loop but is only exact for the
+    linear/Gaussian local block; nonlinear attention makes it an adaptation.
+    """
+
+    name = "closed_form_precision_pc"
+    version = "adapted-gaussian-posterior-0.1"
+    strict_no_autograd = True
+    uses_local_autograd = False
+
+    @torch.no_grad()
+    def relax_step(self, state, input_ids, labels=None):
+        del input_ids
+        if state.precisions is None or len(state.precisions) != len(self.model.blocks):
+            raise ValueError("closed-form state is missing one precision per block")
+        if labels is not None:
+            h_last = state.hidden[-1]
+            logits = self.model.lm_head(self.model.norm(h_last)).float()
+            err = torch.softmax(logits[:, :-1], -1)
+            err.scatter_add_(-1, labels[:, 1:, None], -torch.ones_like(labels[:, 1:, None], dtype=err.dtype))
+            feedback = err.matmul(self.model.lm_head.weight.detach().float())
+            h_last[:, :-1].add_(-self.eta_h * feedback.to(dtype=h_last.dtype))
+        residuals = []
+        for i, block in enumerate(self.model.blocks):
+            h_next = state.hidden[i + 1]
+            pred = block(state.hidden[i])
+            residual = h_next - pred
+            var = residual.float().pow(2).mean()
+            target_p = torch.clamp((var + self.eps).reciprocal(), self.precision_min, self.precision_max)
+            state.precisions[i].lerp_(target_p, self.precision_ema)
+            # Gaussian posterior mean with unit prior precision.
+            weight = state.precisions[i] / (1.0 + state.precisions[i])
+            h_next.lerp_(pred, weight.to(dtype=h_next.dtype))
+            state.errors[i].copy_(residual)
+            residuals.append(residual.detach())
+        state.step += 1
+        state.residual_norms = [float(r.float().norm().cpu()) for r in residuals]
+        state.error_norms = [float(e.float().norm().cpu()) for e in state.errors]
+        state.error_mean = [float(e.float().mean().cpu()) for e in state.errors]
+        state.error_var = [float(e.float().var(unbiased=False).cpu()) for e in state.errors]
+        state.precision_mean = [float(p.cpu()) for p in state.precisions]
+        return residuals
+
+    def local_update(self, state, input_ids, labels=None, *, apply=True):
+        # The closed-form path has no local reverse graph.  Weight learning is
+        # intentionally deferred to the matched local precision baseline until
+        # an analytic block Jacobian is validated.
+        return {"local_loss": 0.0, "layer_grad_norm": [0.0] * len(self.model.blocks),
+                "precision_mean": sum(state.precision_mean) / max(1, len(state.precision_mean)),
+                "updated_layers": 0, "analytic_weight_update": False}
+
+
+class DirectFeedbackAlignmentReference(EPCReference):
+    """One-step output-error feedback with transpose-tied low-cost maps."""
+
+    name = "direct_feedback_alignment"
+    version = "transpose-tied-feedback-0.1"
+    locality = "relaxed_feedback"
+    strict_no_autograd = False
+
+    def __init__(self, model, *args, feedback_gain: float = 1.0, **kwargs):
+        super().__init__(model, *args, **kwargs)
+        if feedback_gain <= 0:
+            raise ValueError("feedback_gain must be positive")
+        self.feedback_gain = float(feedback_gain)
+
+    @torch.no_grad()
+    def relax_step(self, state, input_ids, labels=None):
+        del input_ids
+        if state.errors is None or len(state.errors) != len(self.model.blocks):
+            raise ValueError("feedback-alignment state is missing error tensors")
+        feedback = torch.zeros_like(state.hidden[-1])
+        if labels is not None:
+            logits = self.model.lm_head(self.model.norm(state.hidden[-1])).float()
+            err = torch.softmax(logits[:, :-1], -1)
+            err.scatter_add_(-1, labels[:, 1:, None], -torch.ones_like(labels[:, 1:, None], dtype=err.dtype))
+            feedback[:, :-1].copy_(err.matmul(self.model.lm_head.weight.detach().float()).to(dtype=feedback.dtype))
+        residuals = []
+        for i, block in enumerate(self.model.blocks):
+            pred = block(state.hidden[i])
+            residual = state.hidden[i + 1] - pred
+            state.errors[i].lerp_(residual, self.beta)
+            state.hidden[i + 1].add_(residual, alpha=-self.eta_h)
+            # The same low-cost output feedback reaches each layer in one
+            # sweep; this is deliberately marked relaxed_feedback.
+            state.hidden[i + 1].add_(feedback, alpha=-self.eta_h * self.feedback_gain)
+            residuals.append(residual.detach())
+        state.step += 1
+        state.residual_norms = [float(r.float().norm().cpu()) for r in residuals]
+        state.error_norms = [float(e.float().norm().cpu()) for e in state.errors]
+        return residuals
+
+    @torch.no_grad()
+    def diagnostics(self, state):
+        out = super().diagnostics(state)
+        out.update({"feedback_rule": "transpose_tied_output", "feedback_gain": self.feedback_gain,
+                    "feedback_latency": 1})
+        return out
+
+
+class StreamAmortizedPCReference(EPCReference):
+    """ePC adapter with rank-local hidden-state carry between contiguous chunks."""
+
+    name = "stream_amortized_pc"
+    version = "carry-over-0.1"
+    locality = "block_local"
+
+    def __init__(self, model, *args, carry_decay: float = 1.0, **kwargs):
+        super().__init__(model, *args, **kwargs)
+        if not (0.0 <= carry_decay <= 1.0):
+            raise ValueError("carry_decay must lie in [0,1]")
+        self.carry_decay = float(carry_decay)
+        self._carry_hidden = None
+
+    def reset_carry(self):
+        self._carry_hidden = None
+
+    def init_state(self, input_ids):
+        state = super().init_state(input_ids)
+        if self._carry_hidden is not None and len(self._carry_hidden) == len(state.hidden):
+            for i in range(1, len(state.hidden)):
+                if self._carry_hidden[i].shape == state.hidden[i].shape:
+                    state.hidden[i].lerp_(self._carry_hidden[i].to(state.hidden[i]), self.carry_decay)
+            state.carry_used = True
+        else:
+            state.carry_used = False
+        return state
+
+    def local_update(self, state, input_ids, labels=None, *, apply=True):
+        out = super().local_update(state, input_ids, labels, apply=apply)
+        self._carry_hidden = [h.detach().clone() for h in state.hidden]
+        out.update({"carry_decay": self.carry_decay, "carry_saved": True})
+        return out
+
+    @torch.no_grad()
+    def diagnostics(self, state):
+        out = super().diagnostics(state)
+        out.update({"carry_decay": self.carry_decay, "carry_used": bool(getattr(state, "carry_used", False))})
+        return out
+
+
+class PCALMControlVariateReference(PCALMReference):
+    """Forward-only PC-ALM predictor plus fresh antithetic probes.
+
+    For each block, a random parameter direction ``u`` is probed at ``+eps``
+    and ``-eps``.  The directional finite-difference credit is decomposed as
+    ``d = predictor + residual`` where the predictor is the local dual/error
+    scalar and only the residual is estimated after the probe.  This is a new
+    hybrid adaptation; probes are parameter-space directions because a direct
+    activation perturbation alone cannot update Transformer weights.
+    """
+
+    name = "pc_alm_control_variate"
+    version = "activation-probe-control-variate-0.1"
+    strict_no_autograd = True
+    uses_local_autograd = False
+
+    def __init__(self, model, *args, probe_count: int = 1, probe_eps: float = 1e-3,
+                 use_predictor: bool = True, **kwargs):
+        super().__init__(model, *args, **kwargs)
+        if probe_count < 1 or probe_eps <= 0:
+            raise ValueError("probe_count/probe_eps must be positive")
+        self.probe_count = int(probe_count); self.probe_eps = float(probe_eps)
+        self.use_predictor = bool(use_predictor)
+        self._last_probe_variance = 0.0; self._last_predictor = 0.0
+
+    @torch.no_grad()
+    def relax_step(self, state, input_ids, labels=None):
+        # The strict arm uses the PC-ALM latent/dual signal without an output
+        # autograd graph; output supervision is represented by later probes.
+        return super().relax_step(state, input_ids, None)
+
+    @torch.no_grad()
+    def local_update(self, state, input_ids, labels=None, *, apply=True):
+        del input_ids, labels
+        losses = []; grad_norms = []; residual_samples = []; predictor_samples = []
+        for i, block in enumerate(self.model.blocks):
+            h_prev = state.hidden[i].detach(); target = state.hidden[i + 1].detach()
+            pred = block(h_prev); residual = target - pred
+            base_loss = 0.5 * residual.float().pow(2).mean()
+            # Dual/error predictor is a scalar control variate for the local
+            # directional credit; center it to avoid changing the estimator's
+            # expectation when conditional independence holds.
+            predictor = float((residual.float() * state.dual[i].float()).mean().cpu())
+            params = tuple(p for p in block.parameters() if p.requires_grad)
+            accum = [torch.zeros_like(p) for p in params]
+            for _ in range(self.probe_count):
+                directions = [torch.randn_like(p) for p in params]
+                for p, d in zip(params, directions): p.add_(self.probe_eps * d)
+                lp = 0.5 * (target - block(h_prev)).float().pow(2).mean()
+                for p, d in zip(params, directions): p.add_(-2.0 * self.probe_eps * d)
+                lm = 0.5 * (target - block(h_prev)).float().pow(2).mean()
+                for p, d in zip(params, directions): p.add_(self.probe_eps * d)
+                directional = float(((lp - lm) / (2.0 * self.probe_eps)).cpu())
+                residual_credit = directional - predictor if self.use_predictor else directional
+                credit = (predictor + residual_credit) if self.use_predictor else residual_credit
+                for a, d in zip(accum, directions): a.add_(d, alpha=credit / self.probe_count)
+                residual_samples.append(residual_credit); predictor_samples.append(predictor)
+            if apply and self.parameter_step:
+                for p, g in zip(params, accum): p.add_(g, alpha=-self.parameter_step)
+            losses.append(float(base_loss.cpu())); grad_norms.append(float(torch.stack([g.float().pow(2).sum() for g in accum]).sum().sqrt().cpu()))
+        self._last_probe_variance = float(torch.tensor(residual_samples).var(unbiased=False).cpu()) if residual_samples else 0.0
+        self._last_predictor = sum(predictor_samples) / max(1, len(predictor_samples))
+        return {"local_loss": sum(losses) / max(1, len(losses)), "layer_grad_norm": grad_norms,
+                "probe_variance": self._last_probe_variance, "predictor_mean": self._last_predictor,
+                "updated_layers": len(losses) if apply and self.parameter_step else 0}
+
+    @torch.no_grad()
+    def diagnostics(self, state):
+        out = super().diagnostics(state)
+        out.update({"probe_count": self.probe_count, "probe_eps": self.probe_eps,
+                    "probe_variance": self._last_probe_variance,
+                    "predictor_mean": self._last_predictor})
+        return out
