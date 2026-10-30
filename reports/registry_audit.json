@@ -1,0 +1,353 @@
+{
+  "active": [
+    {
+      "gpu_binding": "0",
+      "host": "foureyes",
+      "last_metric": {
+        "elapsed_s": 508.73844632995315,
+        "loss": 4.6120076179504395,
+        "seed": 20263200,
+        "step": 30372,
+        "tokens": 31070556,
+        "tokens_per_s": 61073.732890511135
+      },
+      "manifest_method": "pc_alm",
+      "manifest_method_mismatch": true,
+      "method": "bp_adamw",
+      "process_count": 2,
+      "raw_commands": [
+        "3997935       08:31 bash -c /home/catid/venvs/dnn/bin/python scripts/run_manifest.py --run-id phase2-bp50m-foureyes-g0-seed20263200 --phase 2 --tokens 50000000 > /tmp/phase2-bp50m-foureyes-g0-seed20263200.log 2>&1 && CUDA_VISIBLE_DEVICES=0 /home/catid/venvs/dnn/bin/python scripts/train.py --run-id phase2-bp50m-foureyes-g0-seed20263200 --method bp_adamw --source fineweb --validation-tokens 0 --seed 20263200 --tokens 50000000 --checkpoint-every 10000000 >> /tmp/phase2-bp50m-foureyes-g0-seed20263200.log 2>&1",
+        "3998243       08:29 /home/catid/venvs/dnn/bin/python scripts/train.py --run-id phase2-bp50m-foureyes-g0-seed20263200 --method bp_adamw --source fineweb --validation-tokens 0 --seed 20263200 --tokens 50000000 --checkpoint-every 10000000"
+      ],
+      "run_id": "phase2-bp50m-foureyes-g0-seed20263200",
+      "tokens_budget": 50000000
+    },
+    {
+      "gpu_binding": "1",
+      "host": "foureyes",
+      "last_metric": {
+        "elapsed_s": 508.47106792393606,
+        "loss": 4.984714031219482,
+        "seed": 20263201,
+        "step": 30060,
+        "tokens": 30751380,
+        "tokens_per_s": 60478.131263621064
+      },
+      "manifest_method": "pc_alm",
+      "manifest_method_mismatch": true,
+      "method": "bp_adamw",
+      "process_count": 2,
+      "raw_commands": [
+        "3997939       08:31 bash -c /home/catid/venvs/dnn/bin/python scripts/run_manifest.py --run-id phase2-bp50m-foureyes-g1-seed20263201 --phase 2 --tokens 50000000 > /tmp/phase2-bp50m-foureyes-g1-seed20263201.log 2>&1 && CUDA_VISIBLE_DEVICES=1 /home/catid/venvs/dnn/bin/python scripts/train.py --run-id phase2-bp50m-foureyes-g1-seed20263201 --method bp_adamw --source fineweb --validation-tokens 0 --seed 20263201 --tokens 50000000 --checkpoint-every 10000000 >> /tmp/phase2-bp50m-foureyes-g1-seed20263201.log 2>&1",
+        "3998310       08:29 /home/catid/venvs/dnn/bin/python scripts/train.py --run-id phase2-bp50m-foureyes-g1-seed20263201 --method bp_adamw --source fineweb --validation-tokens 0 --seed 20263201 --tokens 50000000 --checkpoint-every 10000000"
+      ],
+      "run_id": "phase2-bp50m-foureyes-g1-seed20263201",
+      "tokens_budget": 50000000
+    },
+    {
+      "gpu_binding": "2",
+      "host": "foureyes",
+      "last_metric": {
+        "elapsed_s": 508.7242472359212,
+        "loss": 4.897205829620361,
+        "seed": 20263202,
+        "step": 30225,
+        "tokens": 30920175,
+        "tokens_per_s": 60779.83336478347
+      },
+      "manifest_method": "pc_alm",
+      "manifest_method_mismatch": true,
+      "method": "bp_adamw",
+      "process_count": 2,
+      "raw_commands": [
+        "3997943       08:31 bash -c /home/catid/venvs/dnn/bin/python scripts/run_manifest.py --run-id phase2-bp50m-foureyes-g2-seed20263202 --phase 2 --tokens 50000000 > /tmp/phase2-bp50m-foureyes-g2-seed20263202.log 2>&1 && CUDA_VISIBLE_DEVICES=2 /home/catid/venvs/dnn/bin/python scripts/train.py --run-id phase2-bp50m-foureyes-g2-seed20263202 --method bp_adamw --source fineweb --validation-tokens 0 --seed 20263202 --tokens 50000000 --checkpoint-every 10000000 >> /tmp/phase2-bp50m-foureyes-g2-seed20263202.log 2>&1",
+        "3998308       08:29 /home/catid/venvs/dnn/bin/python scripts/train.py --run-id phase2-bp50m-foureyes-g2-seed20263202 --method bp_adamw --source fineweb --validation-tokens 0 --seed 20263202 --tokens 50000000 --checkpoint-every 10000000"
+      ],
+      "run_id": "phase2-bp50m-foureyes-g2-seed20263202",
+      "tokens_budget": 50000000
+    },
+    {
+      "gpu_binding": "3",
+      "host": "foureyes",
+      "last_metric": {
+        "elapsed_s": 508.5779740640428,
+        "loss": 4.517141819000244,
+        "seed": 20263203,
+        "step": 30765,
+        "tokens": 31472595,
+        "tokens_per_s": 61883.51951689559
+      },
+      "manifest_method": "pc_alm",
+      "manifest_method_mismatch": true,
+      "method": "bp_adamw",
+      "process_count": 2,
+      "raw_commands": [
+        "3998010       08:31 bash -c /home/catid/venvs/dnn/bin/python scripts/run_manifest.py --run-id phase2-bp50m-foureyes-g3-seed20263203 --phase 2 --tokens 50000000 > /tmp/phase2-bp50m-foureyes-g3-seed20263203.log 2>&1 && CUDA_VISIBLE_DEVICES=3 /home/catid/venvs/dnn/bin/python scripts/train.py --run-id phase2-bp50m-foureyes-g3-seed20263203 --method bp_adamw --source fineweb --validation-tokens 0 --seed 20263203 --tokens 50000000 --checkpoint-every 10000000 >> /tmp/phase2-bp50m-foureyes-g3-seed20263203.log 2>&1",
+        "3998309       08:29 /home/catid/venvs/dnn/bin/python scripts/train.py --run-id phase2-bp50m-foureyes-g3-seed20263203 --method bp_adamw --source fineweb --validation-tokens 0 --seed 20263203 --tokens 50000000 --checkpoint-every 10000000"
+      ],
+      "run_id": "phase2-bp50m-foureyes-g3-seed20263203",
+      "tokens_budget": 50000000
+    },
+    {
+      "gpu_binding": "0",
+      "host": "ripper",
+      "last_metric": {
+        "elapsed_s": 509.0902662000153,
+        "loss": 5.225372314453125,
+        "seed": 20263204,
+        "step": 30294,
+        "tokens": 30990762,
+        "tokens_per_s": 60874.78791062625
+      },
+      "manifest_method": "pc_alm",
+      "manifest_method_mismatch": true,
+      "method": "bp_adamw",
+      "process_count": 3,
+      "raw_commands": [
+        "127958       08:30 bash -c cd /var/tmp/pcalm && CUDA_VISIBLE_DEVICES=0 setsid bash -c '/home/catid/venvs/dnn/bin/python scripts/run_manifest.py --run-id phase2-bp50m-ripper-g0-seed20263204 --phase 2 --tokens 50000000 > /tmp/phase2-bp50m-ripper-g0-seed20263204.log 2>&1 && CUDA_VISIBLE_DEVICES=0 /home/catid/venvs/dnn/bin/python scripts/train.py --run-id phase2-bp50m-ripper-g0-seed20263204 --method bp_adamw --source fineweb --validation-tokens 0 --seed 20263204 --tokens 50000000 --checkpoint-every 10000000 >> /tmp/phase2-bp50m-ripper-g0-seed20263204.log 2>&1' </dev/null >/dev/null 2>&1 &",
+        "127959       08:30 bash -c /home/catid/venvs/dnn/bin/python scripts/run_manifest.py --run-id phase2-bp50m-ripper-g0-seed20263204 --phase 2 --tokens 50000000 > /tmp/phase2-bp50m-ripper-g0-seed20263204.log 2>&1 && CUDA_VISIBLE_DEVICES=0 /home/catid/venvs/dnn/bin/python scripts/train.py --run-id phase2-bp50m-ripper-g0-seed20263204 --method bp_adamw --source fineweb --validation-tokens 0 --seed 20263204 --tokens 50000000 --checkpoint-every 10000000 >> /tmp/phase2-bp50m-ripper-g0-seed20263204.log 2>&1",
+        "128136       08:29 /home/catid/venvs/dnn/bin/python scripts/train.py --run-id phase2-bp50m-ripper-g0-seed20263204 --method bp_adamw --source fineweb --validation-tokens 0 --seed 20263204 --tokens 50000000 --checkpoint-every 10000000"
+      ],
+      "run_id": "phase2-bp50m-ripper-g0-seed20263204",
+      "tokens_budget": 50000000
+    },
+    {
+      "gpu_binding": "1",
+      "host": "ripper",
+      "last_metric": {
+        "elapsed_s": 510.6544202960795,
+        "loss": 4.6932783126831055,
+        "seed": 20263205,
+        "step": 29189,
+        "tokens": 29860347,
+        "tokens_per_s": 58474.66662450072
+      },
+      "manifest_method": "pc_alm",
+      "manifest_method_mismatch": true,
+      "method": "bp_adamw",
+      "process_count": 3,
+      "raw_commands": [
+        "128138       08:29 bash -c cd /var/tmp/pcalm && CUDA_VISIBLE_DEVICES=1 setsid bash -c '/home/catid/venvs/dnn/bin/python scripts/run_manifest.py --run-id phase2-bp50m-ripper-g1-seed20263205 --phase 2 --tokens 50000000 > /tmp/phase2-bp50m-ripper-g1-seed20263205.log 2>&1 && CUDA_VISIBLE_DEVICES=1 /home/catid/venvs/dnn/bin/python scripts/train.py --run-id phase2-bp50m-ripper-g1-seed20263205 --method bp_adamw --source fineweb --validation-tokens 0 --seed 20263205 --tokens 50000000 --checkpoint-every 10000000 >> /tmp/phase2-bp50m-ripper-g1-seed20263205.log 2>&1' </dev/null >/dev/null 2>&1 &",
+        "128139       08:29 bash -c /home/catid/venvs/dnn/bin/python scripts/run_manifest.py --run-id phase2-bp50m-ripper-g1-seed20263205 --phase 2 --tokens 50000000 > /tmp/phase2-bp50m-ripper-g1-seed20263205.log 2>&1 && CUDA_VISIBLE_DEVICES=1 /home/catid/venvs/dnn/bin/python scripts/train.py --run-id phase2-bp50m-ripper-g1-seed20263205 --method bp_adamw --source fineweb --validation-tokens 0 --seed 20263205 --tokens 50000000 --checkpoint-every 10000000 >> /tmp/phase2-bp50m-ripper-g1-seed20263205.log 2>&1",
+        "128548       08:28 /home/catid/venvs/dnn/bin/python scripts/train.py --run-id phase2-bp50m-ripper-g1-seed20263205 --method bp_adamw --source fineweb --validation-tokens 0 --seed 20263205 --tokens 50000000 --checkpoint-every 10000000"
+      ],
+      "run_id": "phase2-bp50m-ripper-g1-seed20263205",
+      "tokens_budget": 50000000
+    },
+    {
+      "gpu_binding": "2",
+      "host": "ripper",
+      "last_metric": {
+        "elapsed_s": 511.6880918809911,
+        "loss": 4.8129563331604,
+        "seed": 20263206,
+        "step": 29242,
+        "tokens": 29914566,
+        "tokens_per_s": 58462.501765161265
+      },
+      "manifest_method": "pc_alm",
+      "manifest_method_mismatch": true,
+      "method": "bp_adamw",
+      "process_count": 3,
+      "raw_commands": [
+        "128416       08:28 bash -c cd /var/tmp/pcalm && CUDA_VISIBLE_DEVICES=2 setsid bash -c '/home/catid/venvs/dnn/bin/python scripts/run_manifest.py --run-id phase2-bp50m-ripper-g2-seed20263206 --phase 2 --tokens 50000000 > /tmp/phase2-bp50m-ripper-g2-seed20263206.log 2>&1 && CUDA_VISIBLE_DEVICES=2 /home/catid/venvs/dnn/bin/python scripts/train.py --run-id phase2-bp50m-ripper-g2-seed20263206 --method bp_adamw --source fineweb --validation-tokens 0 --seed 20263206 --tokens 50000000 --checkpoint-every 10000000 >> /tmp/phase2-bp50m-ripper-g2-seed20263206.log 2>&1' </dev/null >/dev/null 2>&1 &",
+        "128417       08:28 bash -c /home/catid/venvs/dnn/bin/python scripts/run_manifest.py --run-id phase2-bp50m-ripper-g2-seed20263206 --phase 2 --tokens 50000000 > /tmp/phase2-bp50m-ripper-g2-seed20263206.log 2>&1 && CUDA_VISIBLE_DEVICES=2 /home/catid/venvs/dnn/bin/python scripts/train.py --run-id phase2-bp50m-ripper-g2-seed20263206 --method bp_adamw --source fineweb --validation-tokens 0 --seed 20263206 --tokens 50000000 --checkpoint-every 10000000 >> /tmp/phase2-bp50m-ripper-g2-seed20263206.log 2>&1",
+        "128844       08:27 /home/catid/venvs/dnn/bin/python scripts/train.py --run-id phase2-bp50m-ripper-g2-seed20263206 --method bp_adamw --source fineweb --validation-tokens 0 --seed 20263206 --tokens 50000000 --checkpoint-every 10000000"
+      ],
+      "run_id": "phase2-bp50m-ripper-g2-seed20263206",
+      "tokens_budget": 50000000
+    },
+    {
+      "gpu_binding": "3",
+      "host": "ripper",
+      "last_metric": {
+        "elapsed_s": 513.1766366329975,
+        "loss": 5.055480003356934,
+        "seed": 20263207,
+        "step": 30617,
+        "tokens": 31321191,
+        "tokens_per_s": 61033.937917712006
+      },
+      "manifest_method": "pc_alm",
+      "manifest_method_mismatch": true,
+      "method": "bp_adamw",
+      "process_count": 3,
+      "raw_commands": [
+        "128776       08:27 bash -c cd /var/tmp/pcalm && CUDA_VISIBLE_DEVICES=3 setsid bash -c '/home/catid/venvs/dnn/bin/python scripts/run_manifest.py --run-id phase2-bp50m-ripper-g3-seed20263207 --phase 2 --tokens 50000000 > /tmp/phase2-bp50m-ripper-g3-seed20263207.log 2>&1 && CUDA_VISIBLE_DEVICES=3 /home/catid/venvs/dnn/bin/python scripts/train.py --run-id phase2-bp50m-ripper-g3-seed20263207 --method bp_adamw --source fineweb --validation-tokens 0 --seed 20263207 --tokens 50000000 --checkpoint-every 10000000 >> /tmp/phase2-bp50m-ripper-g3-seed20263207.log 2>&1' </dev/null >/dev/null 2>&1 &",
+        "128777       08:27 bash -c /home/catid/venvs/dnn/bin/python scripts/run_manifest.py --run-id phase2-bp50m-ripper-g3-seed20263207 --phase 2 --tokens 50000000 > /tmp/phase2-bp50m-ripper-g3-seed20263207.log 2>&1 && CUDA_VISIBLE_DEVICES=3 /home/catid/venvs/dnn/bin/python scripts/train.py --run-id phase2-bp50m-ripper-g3-seed20263207 --method bp_adamw --source fineweb --validation-tokens 0 --seed 20263207 --tokens 50000000 --checkpoint-every 10000000 >> /tmp/phase2-bp50m-ripper-g3-seed20263207.log 2>&1",
+        "129136       08:26 /home/catid/venvs/dnn/bin/python scripts/train.py --run-id phase2-bp50m-ripper-g3-seed20263207 --method bp_adamw --source fineweb --validation-tokens 0 --seed 20263207 --tokens 50000000 --checkpoint-every 10000000"
+      ],
+      "run_id": "phase2-bp50m-ripper-g3-seed20263207",
+      "tokens_budget": 50000000
+    },
+    {
+      "gpu_binding": "0",
+      "host": "work",
+      "last_metric": {
+        "elapsed_s": 516.1117867340799,
+        "loss": 4.610723972320557,
+        "seed": 20263208,
+        "step": 33909,
+        "tokens": 34688907,
+        "tokens_per_s": 67212.00306125745
+      },
+      "manifest_method": "pc_alm",
+      "manifest_method_mismatch": true,
+      "method": "bp_adamw",
+      "process_count": 3,
+      "raw_commands": [
+        "3404539       08:26 bash -c cd /var/tmp/pcalm && CUDA_VISIBLE_DEVICES=0 setsid bash -c '/home/catid/venvs/dnn/bin/python scripts/run_manifest.py --run-id phase2-bp50m-work-g0-seed20263208 --phase 2 --tokens 50000000 > /tmp/phase2-bp50m-work-g0-seed20263208.log 2>&1 && CUDA_VISIBLE_DEVICES=0 /home/catid/venvs/dnn/bin/python scripts/train.py --run-id phase2-bp50m-work-g0-seed20263208 --method bp_adamw --source fineweb --validation-tokens 0 --seed 20263208 --tokens 50000000 --checkpoint-every 10000000 >> /tmp/phase2-bp50m-work-g0-seed20263208.log 2>&1' </dev/null >/dev/null 2>&1 &",
+        "3404540       08:26 bash -c /home/catid/venvs/dnn/bin/python scripts/run_manifest.py --run-id phase2-bp50m-work-g0-seed20263208 --phase 2 --tokens 50000000 > /tmp/phase2-bp50m-work-g0-seed20263208.log 2>&1 && CUDA_VISIBLE_DEVICES=0 /home/catid/venvs/dnn/bin/python scripts/train.py --run-id phase2-bp50m-work-g0-seed20263208 --method bp_adamw --source fineweb --validation-tokens 0 --seed 20263208 --tokens 50000000 --checkpoint-every 10000000 >> /tmp/phase2-bp50m-work-g0-seed20263208.log 2>&1",
+        "3404687       08:25 /home/catid/venvs/dnn/bin/python scripts/train.py --run-id phase2-bp50m-work-g0-seed20263208 --method bp_adamw --source fineweb --validation-tokens 0 --seed 20263208 --tokens 50000000 --checkpoint-every 10000000"
+      ],
+      "run_id": "phase2-bp50m-work-g0-seed20263208",
+      "tokens_budget": 50000000
+    },
+    {
+      "gpu_binding": "1",
+      "host": "work",
+      "last_metric": {
+        "elapsed_s": 517.8671309330966,
+        "loss": 4.905080795288086,
+        "seed": 20263209,
+        "step": 33064,
+        "tokens": 33824472,
+        "tokens_per_s": 65314.9620148541
+      },
+      "manifest_method": "pc_alm",
+      "manifest_method_mismatch": true,
+      "method": "bp_adamw",
+      "process_count": 3,
+      "raw_commands": [
+        "3404700       08:25 bash -c cd /var/tmp/pcalm && CUDA_VISIBLE_DEVICES=1 setsid bash -c '/home/catid/venvs/dnn/bin/python scripts/run_manifest.py --run-id phase2-bp50m-work-g1-seed20263209 --phase 2 --tokens 50000000 > /tmp/phase2-bp50m-work-g1-seed20263209.log 2>&1 && CUDA_VISIBLE_DEVICES=1 /home/catid/venvs/dnn/bin/python scripts/train.py --run-id phase2-bp50m-work-g1-seed20263209 --method bp_adamw --source fineweb --validation-tokens 0 --seed 20263209 --tokens 50000000 --checkpoint-every 10000000 >> /tmp/phase2-bp50m-work-g1-seed20263209.log 2>&1' </dev/null >/dev/null 2>&1 &",
+        "3404701       08:25 bash -c /home/catid/venvs/dnn/bin/python scripts/run_manifest.py --run-id phase2-bp50m-work-g1-seed20263209 --phase 2 --tokens 50000000 > /tmp/phase2-bp50m-work-g1-seed20263209.log 2>&1 && CUDA_VISIBLE_DEVICES=1 /home/catid/venvs/dnn/bin/python scripts/train.py --run-id phase2-bp50m-work-g1-seed20263209 --method bp_adamw --source fineweb --validation-tokens 0 --seed 20263209 --tokens 50000000 --checkpoint-every 10000000 >> /tmp/phase2-bp50m-work-g1-seed20263209.log 2>&1",
+        "3404940       08:24 /home/catid/venvs/dnn/bin/python scripts/train.py --run-id phase2-bp50m-work-g1-seed20263209 --method bp_adamw --source fineweb --validation-tokens 0 --seed 20263209 --tokens 50000000 --checkpoint-every 10000000"
+      ],
+      "run_id": "phase2-bp50m-work-g1-seed20263209",
+      "tokens_budget": 50000000
+    },
+    {
+      "gpu_binding": "0",
+      "host": "loki",
+      "last_metric": {
+        "elapsed_s": 519.8064672489418,
+        "loss": 4.845649719238281,
+        "seed": 20263210,
+        "step": 34025,
+        "tokens": 34807575,
+        "tokens_per_s": 66962.56622345456
+      },
+      "manifest_method": "pc_alm",
+      "manifest_method_mismatch": true,
+      "method": "bp_adamw",
+      "process_count": 3,
+      "raw_commands": [
+        "3575857       08:24 bash -c cd /var/tmp/pcalm && CUDA_VISIBLE_DEVICES=0 setsid bash -c '/home/catid/venvs/dnn/bin/python scripts/run_manifest.py --run-id phase2-bp50m-loki-g0-seed20263210 --phase 2 --tokens 50000000 > /tmp/phase2-bp50m-loki-g0-seed20263210.log 2>&1 && CUDA_VISIBLE_DEVICES=0 /home/catid/venvs/dnn/bin/python scripts/train.py --run-id phase2-bp50m-loki-g0-seed20263210 --method bp_adamw --source fineweb --validation-tokens 0 --seed 20263210 --tokens 50000000 --checkpoint-every 10000000 >> /tmp/phase2-bp50m-loki-g0-seed20263210.log 2>&1' </dev/null >/dev/null 2>&1 &",
+        "3575858       08:24 bash -c /home/catid/venvs/dnn/bin/python scripts/run_manifest.py --run-id phase2-bp50m-loki-g0-seed20263210 --phase 2 --tokens 50000000 > /tmp/phase2-bp50m-loki-g0-seed20263210.log 2>&1 && CUDA_VISIBLE_DEVICES=0 /home/catid/venvs/dnn/bin/python scripts/train.py --run-id phase2-bp50m-loki-g0-seed20263210 --method bp_adamw --source fineweb --validation-tokens 0 --seed 20263210 --tokens 50000000 --checkpoint-every 10000000 >> /tmp/phase2-bp50m-loki-g0-seed20263210.log 2>&1",
+        "3575994       08:23 /home/catid/venvs/dnn/bin/python scripts/train.py --run-id phase2-bp50m-loki-g0-seed20263210 --method bp_adamw --source fineweb --validation-tokens 0 --seed 20263210 --tokens 50000000 --checkpoint-every 10000000"
+      ],
+      "run_id": "phase2-bp50m-loki-g0-seed20263210",
+      "tokens_budget": 50000000
+    },
+    {
+      "gpu_binding": "1",
+      "host": "loki",
+      "last_metric": {
+        "elapsed_s": 521.5131610659882,
+        "loss": 5.119656562805176,
+        "seed": 20263211,
+        "step": 34117,
+        "tokens": 34901691,
+        "tokens_per_s": 66923.89299747505
+      },
+      "manifest_method": "pc_alm",
+      "manifest_method_mismatch": true,
+      "method": "bp_adamw",
+      "process_count": 3,
+      "raw_commands": [
+        "3576017       08:23 bash -c cd /var/tmp/pcalm && CUDA_VISIBLE_DEVICES=1 setsid bash -c '/home/catid/venvs/dnn/bin/python scripts/run_manifest.py --run-id phase2-bp50m-loki-g1-seed20263211 --phase 2 --tokens 50000000 > /tmp/phase2-bp50m-loki-g1-seed20263211.log 2>&1 && CUDA_VISIBLE_DEVICES=1 /home/catid/venvs/dnn/bin/python scripts/train.py --run-id phase2-bp50m-loki-g1-seed20263211 --method bp_adamw --source fineweb --validation-tokens 0 --seed 20263211 --tokens 50000000 --checkpoint-every 10000000 >> /tmp/phase2-bp50m-loki-g1-seed20263211.log 2>&1' </dev/null >/dev/null 2>&1 &",
+        "3576018       08:23 bash -c /home/catid/venvs/dnn/bin/python scripts/run_manifest.py --run-id phase2-bp50m-loki-g1-seed20263211 --phase 2 --tokens 50000000 > /tmp/phase2-bp50m-loki-g1-seed20263211.log 2>&1 && CUDA_VISIBLE_DEVICES=1 /home/catid/venvs/dnn/bin/python scripts/train.py --run-id phase2-bp50m-loki-g1-seed20263211 --method bp_adamw --source fineweb --validation-tokens 0 --seed 20263211 --tokens 50000000 --checkpoint-every 10000000 >> /tmp/phase2-bp50m-loki-g1-seed20263211.log 2>&1",
+        "3576259       08:22 /home/catid/venvs/dnn/bin/python scripts/train.py --run-id phase2-bp50m-loki-g1-seed20263211 --method bp_adamw --source fineweb --validation-tokens 0 --seed 20263211 --tokens 50000000 --checkpoint-every 10000000"
+      ],
+      "run_id": "phase2-bp50m-loki-g1-seed20263211",
+      "tokens_budget": 50000000
+    }
+  ],
+  "cwd": "/home/catid/pcalm",
+  "generated_utc": "2026-10-30T00:08:40.349001+00:00",
+  "host": "foureyes",
+  "manifest_not_registry": [
+    "debug-bp10m",
+    "debug-bp10m2",
+    "phase0-final-20261029",
+    "phase1-bp1m-foureyes-g0-seed20261029",
+    "phase1-bp1m-foureyes-g1-seed20261030",
+    "phase1-bp1m-foureyes-g2-seed20261031",
+    "phase1-bp1m-foureyes-g3-seed20261032",
+    "phase2-bp50m-foureyes-g0-seed20261304",
+    "phase2-bp50m-foureyes-g0-seed20261508",
+    "phase2-bp50m-foureyes-g0-seed20263200",
+    "phase2-bp50m-foureyes-g1-seed20261305",
+    "phase2-bp50m-foureyes-g1-seed20261509",
+    "phase2-bp50m-foureyes-g1-seed20263201",
+    "phase2-bp50m-foureyes-g2-seed20261306",
+    "phase2-bp50m-foureyes-g2-seed20261510",
+    "phase2-bp50m-foureyes-g2-seed20263202",
+    "phase2-bp50m-foureyes-g3-seed20261307",
+    "phase2-bp50m-foureyes-g3-seed20261511",
+    "phase2-bp50m-foureyes-g3-seed20263203"
+  ],
+  "registry_duplicate_ids": {
+    "phase1-bp10m-loki-g0-seed20261116": [
+      17,
+      25
+    ],
+    "phase1-bp10m-loki-g1-seed20261117": [
+      18,
+      26
+    ]
+  },
+  "registry_missing_manifest": [
+    "phase0-data-smoke-20261029",
+    "phase0-data-smoke-finalize-20261029",
+    "phase0-ddp-equivalence-20261029",
+    "phase0-nccl-cross-node-attempt-20261029",
+    "phase0-nccl-local-20261029",
+    "phase0-reference-20261029",
+    "phase1-bp10m-foureyes-g0-seed20261100",
+    "phase1-bp10m-foureyes-g1-seed20261101",
+    "phase1-bp10m-foureyes-g2-seed20261102",
+    "phase1-bp10m-foureyes-g3-seed20261103",
+    "pilot-fineweb-2046",
+    "pilot-fineweb-2046-retry",
+    "pilot-fineweb-worker-10240",
+    "pilot-fineweb-worker-2046",
+    "pilot-fineweb-worker-resume-2046",
+    "smoke-bp-2046"
+  ],
+  "registry_not_results": [
+    "phase0-data-smoke-20261029",
+    "phase0-data-smoke-finalize-20261029",
+    "phase0-ddp-equivalence-20261029",
+    "phase0-nccl-cross-node-attempt-20261029",
+    "phase0-nccl-local-20261029",
+    "phase0-reference-20261029",
+    "pilot-fineweb-worker-2046",
+    "pilot-fineweb-worker-resume-2046"
+  ],
+  "registry_rows": 113,
+  "registry_unique_ids": 111,
+  "results_duplicate_ids": {
+    "phase1-bp10m-loki-g0-seed20261116": [
+      10,
+      18
+    ],
+    "phase1-bp10m-loki-g1-seed20261117": [
+      11,
+      19
+    ]
+  },
+  "results_not_registry": [],
+  "results_rows": 105,
+  "results_unique_ids": 103
+}

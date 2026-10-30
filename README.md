@@ -60,14 +60,18 @@ Create a manifest before either command. A bounded 1M-token BP pilot (diagnostic
 
 ```bash
 PY=/home/catid/venvs/dnn/bin/python
-$PY scripts/run_manifest.py --run-id pilot-bp-1m --phase 1 --tokens 1000000
+$PY scripts/run_manifest.py --run-id pilot-bp-1m --method bp_adamw --phase 1 --tokens 1000000
 $PY scripts/train.py --run-id pilot-bp-1m --method bp_adamw --source fineweb --validation-tokens 0 --tokens 1000000
 ```
 
 The final command is intentionally guarded and will refuse the current blocked gate. After every required gate and method smoke has passed, the recorded command is:
 
 ```bash
-$PY scripts/run_manifest.py --run-id final-bp-1b-seed0 --phase 4 --tokens 1000000000
+$PY scripts/run_manifest.py --run-id final-bp-1b-seed0 --method bp_adamw --phase 4 --tokens 1000000000
 $PY scripts/train.py --run-id final-bp-1b-seed0 --method bp_adamw --source fineweb \
   --validation-tokens 10000000 --tokens 1000000000 --allow-1b --checkpoint-every 10000000
 ```
+
+For a read-only provenance audit of active processes and registry/results
+consistency, run `$PY scripts/audit_registry.py`. It records a snapshot in
+`reports/registry_audit.json` and never signals training jobs.
